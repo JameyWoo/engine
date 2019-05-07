@@ -1,0 +1,146 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79251617				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>构造一个map的方法是</p>
+
+<blockquote>
+  <p>map &lt; string, int&gt; m; <br>
+  map &lt; int, string&gt; m; <br>
+  map &lt; string, string&gt; m;</p>
+</blockquote>
+
+<p>在&lt; &gt;中指定一对键(key)值(value)的类型. <br>
+在map中可以通过重载了的[]来通过键访问值 <br>
+即</p>
+
+<blockquote>
+  <p>m[“a”] = 1; <br>
+  m[“hello”] = 666;</p>
+</blockquote>
+
+<p>map常用函数如下</p>
+
+<blockquote>
+  <p>size()　　　　　　//返回map中元素数 <br>
+  clear()　　　　　　//清空map <br>
+  begin()　　　　　　//返回指向map开头的迭代器 <br>
+  end()　　　　　　//返回指向map末尾的迭代器 <br>
+  insert( (key, val) )　　　　　　//向map中擦汗如元素(key, val) <br>
+  erase(key)　　　　　　//删除含有key的元素 <br>
+  find(key)　　　　　　//搜索与key一致的元素, 并返回指向该元素的迭代器. <br>
+  　　　　　　　　　　　//没有与key一致的元素, 则返回末尾end()　</p>
+</blockquote>
+
+<p>map和set一样通过平衡二叉搜索树实现, 因此元素的插入, 删除, 搜索以及”[ ]”运算符的复杂度都为O(logn)</p>
+
+<p>使用迭代器顺序访问每一对键和值</p>
+
+<blockquote>
+  <p>map&lt; string, int&gt; :: iterator it = m.begin(); <br>
+  cout &lt;&lt; it-&gt;first &lt;&lt; endl; 　　　　　//print the key <br>
+  cout &lt;&lt; it-&gt;second &lt;&lt; endl; 　　　　　//print the value</p>
+</blockquote>
+
+<p>也可以使用STL提供的pair(结构体模板) 对map的元素进行访问 <br>
+<a href="http://blog.csdn.net/liangzhaoyang1/article/details/51413108" rel="nofollow">pair详细说明</a></p>
+
+<blockquote>
+  <p>pair&lt; string, int&gt; item = *it; <br>
+  cout &lt;&lt; item.first; 　　　　　 //the key; <br>
+  cout &lt;&lt; item.second; 　　　　　//the value <br>
+  item = make_pair(“heo”, 23);</p>
+</blockquote>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;map&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">map</span> &lt;<span class="hljs-built_in">string</span>, <span class="hljs-keyword">int</span>&gt;</span> m;
+    m[<span class="hljs-string">"a"</span>] = <span class="hljs-number">97</span>;
+    m[<span class="hljs-string">"b"</span>] = <span class="hljs-number">98</span>;
+    <span class="hljs-stl_container"><span class="hljs-built_in">map</span> &lt;<span class="hljs-built_in">string</span>, <span class="hljs-keyword">int</span>&gt;</span> :: iterator it = m.begin();
+    <span class="hljs-built_in">cout</span> &lt;&lt; it-&gt;first &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; it-&gt;second &lt;&lt; endl;  <span class="hljs-comment">//print the key and the value</span>
+    it++;
+    pair &lt;<span class="hljs-built_in">string</span>, <span class="hljs-keyword">int</span>&gt; item = *it;
+    <span class="hljs-built_in">cout</span> &lt;&lt; item.first &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; item.second &lt;&lt; endl;
+}</code></pre>
+
+<p>map的键值的唯一性怎么样?</p>
+
+<p>test 1: <br>
+向一个已有(“a”, “A”)的map中再添加, map不变, 可知相同的元素是唯一的</p>
+
+<p>test 2: <br>
+向一个有(“a”, “A”)的map中添加(“a”, “aa”), map还是不变, 这是为什么? 它内部检测是否唯一的机制难道是如果键存在, 那么这个insert就失效?</p>
+
+<p>所以修改值的方法只能是用迭代器的方法直接修改</p>
+
+<p>常用函数用法代码::</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;map&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-comment">//construct a map</span>
+    <span class="hljs-stl_container"><span class="hljs-built_in">map</span> &lt; <span class="hljs-built_in">string</span>, <span class="hljs-built_in">string</span> &gt;</span> alpha;
+
+    <span class="hljs-comment">//the size</span>
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"the size is "</span> &lt;&lt; alpha.size() &lt;&lt; endl;
+
+    <span class="hljs-comment">//three ways to insert</span>
+    alpha.insert(make_pair(<span class="hljs-string">"a"</span>, <span class="hljs-string">"A"</span>));
+    alpha.insert(pair&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">string</span>&gt;(<span class="hljs-string">"b"</span>,<span class="hljs-string">"B"</span>));
+    pair&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">string</span>&gt; pp(<span class="hljs-string">"c"</span>, <span class="hljs-string">"C"</span>);
+    alpha.insert(pp);
+
+    <span class="hljs-comment">//cannot insert</span>
+    alpha.insert(make_pair(<span class="hljs-string">"a"</span>, <span class="hljs-string">"aa"</span>));
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"now the size is "</span> &lt;&lt; alpha.size() &lt;&lt; endl;
+
+    <span class="hljs-comment">//use the iterator to traversal</span>
+    <span class="hljs-stl_container"><span class="hljs-built_in">map</span> &lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">string</span>&gt;</span> :: iterator it = alpha.begin();
+    <span class="hljs-keyword">while</span>(it != alpha.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"the first is "</span> &lt;&lt; it-&gt;first &lt;&lt; <span class="hljs-string">" and "</span>;
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"the second is "</span> &lt;&lt; it-&gt;second &lt;&lt; endl;
+        it++;
+    }
+
+    <span class="hljs-comment">//use the fuction of erase</span>
+    alpha.erase(<span class="hljs-string">"b"</span>);
+
+    <span class="hljs-comment">//traversal again</span>
+    it = alpha.begin();
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    <span class="hljs-keyword">while</span>(it != alpha.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"the first is "</span> &lt;&lt; it-&gt;first &lt;&lt; <span class="hljs-string">" and "</span>;
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"the second is "</span> &lt;&lt; it-&gt;second &lt;&lt; endl;
+        it++;
+    }
+
+    <span class="hljs-comment">//use find</span>
+    <span class="hljs-keyword">if</span>(alpha.find(<span class="hljs-string">"b"</span>) == alpha.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"there is no the key---\"b\"\n"</span>;
+    }
+    <span class="hljs-keyword">if</span>(alpha.find(<span class="hljs-string">"c"</span>) != alpha.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"yes, there is , and it is "</span>;
+        <span class="hljs-built_in">cout</span> &lt;&lt; alpha.find(<span class="hljs-string">"c"</span>)-&gt;second &lt;&lt; endl;
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

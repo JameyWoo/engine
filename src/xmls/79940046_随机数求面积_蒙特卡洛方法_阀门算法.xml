@@ -1,0 +1,74 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79940046				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>如何求pi呢?</p>
+
+<p>维基百科上的pi是这样的<strong><a href="https://zh.wikipedia.org/wiki/%E5%9C%93%E5%91%A8%E7%8E%87#%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%97%B6%E4%BB%A3%E4%B8%8E%E8%BF%AD%E4%BB%A3%E7%AE%97%E6%B3%95" rel="nofollow">pi</a></strong></p>
+
+<p>MOOC上介绍了两种求pi的算法</p>
+
+<p>一种是百科里的<strong>阀门算法</strong> <br>
+<img src="https://img-blog.csdn.net/20180414142909668?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""> <br>
+代码实现较为简单, <strong>计算的精确度似乎很高.</strong></p>
+
+<p>不得不说这个求pi的公式看上去非常优美. </p>
+
+<pre class="prettyprint"><code class=" hljs livecodeserver"><span class="hljs-comment"># -*- coding:-utf -*-</span>
+<span class="hljs-built_in">from</span> <span class="hljs-built_in">random</span> import *
+<span class="hljs-constant">pi</span> = <span class="hljs-number">0.0</span>
+<span class="hljs-keyword">for</span> i <span class="hljs-operator">in</span> range(<span class="hljs-number">0</span>, <span class="hljs-number">10000</span>):
+    <span class="hljs-constant">pi</span> += (<span class="hljs-number">1</span>/pow(<span class="hljs-number">16</span>, i)*(<span class="hljs-number">4</span>/(<span class="hljs-number">8</span>*i+<span class="hljs-number">1</span>) - <span class="hljs-number">2</span>/(<span class="hljs-number">8</span>*i+<span class="hljs-number">4</span>) - <span class="hljs-number">1</span>/(<span class="hljs-number">8</span>*i+<span class="hljs-number">5</span>) - <span class="hljs-number">1</span>/(<span class="hljs-number">8</span>*i+<span class="hljs-number">6</span>)))
+print(<span class="hljs-constant">pi</span>)</code></pre>
+
+<p><strong>今天想介绍的是蒙特卡洛方法, 这是一种用统计学思维解决数学计算问题的方法.</strong></p>
+
+<p>简单来说就是, 在图形上撒点, 当点数趋近于无穷大时, 在圆上的点比上在整个正方形的点*4结果就是pi了</p>
+
+<pre class="prettyprint"><code class=" hljs livecodeserver"><span class="hljs-built_in">from</span> <span class="hljs-built_in">random</span> import <span class="hljs-built_in">random</span>
+<span class="hljs-built_in">from</span> <span class="hljs-built_in">time</span> import perf_counter
+Points = <span class="hljs-number">5000</span>*<span class="hljs-number">5000</span>
+cnt = <span class="hljs-number">0</span>
+start = perf_counter()
+<span class="hljs-keyword">for</span> i <span class="hljs-operator">in</span> range(Points):
+    x, y = <span class="hljs-built_in">random</span>(), <span class="hljs-built_in">random</span>()
+    dis = x ** <span class="hljs-number">2</span> +y ** <span class="hljs-number">2</span>
+    <span class="hljs-keyword">if</span> dis &lt;= <span class="hljs-number">1.0</span>:
+        cnt += <span class="hljs-number">1</span>
+<span class="hljs-constant">pi</span> = <span class="hljs-number">4</span>*cnt/Points
+print(<span class="hljs-string">"{:.7f}"</span>.<span class="hljs-built_in">format</span>(<span class="hljs-constant">pi</span>))
+print(<span class="hljs-string">"运行时间是: {:.7f}s"</span>.<span class="hljs-built_in">format</span>(perf_counter() - start))</code></pre>
+
+<p><strong>实测: 消耗相同的计算力, pi的精度远远没有阀门算法高</strong></p>
+
+<p>但这不失为一种对精度要求不高的计算的简便方法.</p>
+
+<p>如对函数y  = x*x, 和y = 0, x = 1, x = 0围绕图形的面积 <br>
+计算机随机生成随机数, 简单计算一下就可以得到面积, 而不用使用复杂的数学推导.</p>
+
+<p><strong>这种计算思维很值得学习</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs livecodeserver"><span class="hljs-built_in">from</span> <span class="hljs-built_in">random</span> import <span class="hljs-built_in">random</span>
+<span class="hljs-built_in">time</span> = <span class="hljs-number">2000</span>*<span class="hljs-number">2000</span>
+cnt = <span class="hljs-number">0.0</span>
+<span class="hljs-keyword">for</span> i <span class="hljs-operator">in</span> range(<span class="hljs-built_in">time</span>):
+    x, y = <span class="hljs-built_in">random</span>(), <span class="hljs-built_in">random</span>()
+    <span class="hljs-keyword">if</span> <span class="hljs-number">0</span> &lt;= x*x &lt;= y:
+        cnt += <span class="hljs-number">1</span>
+S = cnt/<span class="hljs-built_in">time</span>
+print(<span class="hljs-string">"{:.4f}"</span>.<span class="hljs-built_in">format</span>(S))</code></pre>
+
+<p><strong>话说π真的是很奇妙的东西啊</strong></p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

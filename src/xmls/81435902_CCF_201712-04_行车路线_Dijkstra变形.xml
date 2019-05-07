@@ -1,0 +1,120 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81435902				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>201712-04行车路线 <a href="http://118.190.20.162/view.page?gpid=T65" rel="nofollow">传送门</a></p>
+
+<p>这看似是一个很复杂的问题, 实际上, 额…</p>
+
+<p>首先它有<strong>基础的最短路问题的影子</strong>,题目有20%的数据是没有小道的,可用Dijkstra算法直接求那么本着那更多的部分分的战略, 我们<strong>先写基础程序</strong>(先假设全部都是大道) </p>
+
+<p>OK, 初稿裸的dijkstra是20分, 那么考试的时候这20分也比较稳了, <strong>距离满分也只有80分罢了… 罢了… 罢了…</strong></p>
+
+<dl>
+<dt>查看数据描述:</dt>
+<dd>
+<p><code>对于30%的评测用例，1 ≤ n ≤ 8，1 ≤ m ≤ 10</code> 这句话告诉我们即使想不出正解, 正确的暴力也是可以得到30分的.</p>
+
+<p><code>对于另外20%的评测用例，所有的小道不相交</code> 小道不相交意味着什么?意味着我们不用考虑连续的小道,那么不用正解也是可以的到这40分的, 因为这样的话, 小道的权值就直接变成它长度的平方了.那么开始水第二版 </p>
+</dd>
+</dl>
+
+<p><del>OK, 第二版提交上去,得了60分了,并没有花多少功夫,也不难. 所以按照这种难度上300分还是挺有希望的</del></p>
+
+<p>那么剩下的数据已经不算小了<code>1 ≤ n ≤ 500，1 ≤ m ≤ 105，1 ≤ a, b ≤ n，t是0或1，c ≤ 105。</code>,要拿满分必定是要正解的, 虽然这个数据来看可能并不需要优化.</p>
+
+<p>剩下的问题就是,如何在最短路问题中,解决小道可能连起来的问题.乍一看很玄,没什么思路. </p>
+
+<p>我想, <strong>获取可以复杂化这个dis数组,改成结构体,存储距离的同时存储它的大小道性质以及小道长度</strong>. 这样的话,那么从一个结点到另一个结点,这个结点是小道还是大道会影响后面最短路的选择吗?</p>
+
+<p>似乎是会的: <strong>思考这样一种情况: 现在从A节点更新到B节点,A结点选的是小道,这种情况下A-B选大道更优,可是实际情况是,如果A结点选大道,A-B选小道可以获得更优的结果.那么得不出正确的解.</strong></p>
+
+<p>后面的最优解可能是从前面的次优解继承过来的. 但我们可以发现,<strong>能够利用的A结点信息最多只有两种,分别是大道和小道,那么我们是否可以同时对一个存储这两种路径的解呢?</strong> 应该是可行的.直觉告诉我,这就是正解了. </p>
+
+<p>结果得了70, 这么复杂的程序, 到头来也不知道是我思路错了还是实现错了. </p>
+
+<p>搜博客之后, 发现把int改成long long, 结果得了90分, 最后10分也不知道那里错了.</p>
+
+<p>附90分代码. </p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> to, val;
+    <span class="hljs-keyword">bool</span> isb;
+    Node (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> t, <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> v, <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> i) : to(t), val(v), isb(i) {}
+};
+
+<span class="hljs-keyword">struct</span> Dis {
+    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> last, dis; <span class="hljs-comment">// if !big (small), then how long before.</span>
+}; 
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> maxn = <span class="hljs-number">505</span>, INF = <span class="hljs-number">0x3f3f3f3f</span>;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Node&gt;</span> G[maxn];
+<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> n, m, vis[maxn] = {};
+Dis dis[maxn][<span class="hljs-number">2</span>];
+
+<span class="hljs-keyword">void</span> Dijkstra()
+{
+    dis[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>].dis = dis[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>].dis = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> k = <span class="hljs-number">0</span>; k &lt; n; ++k) {
+        <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> u = -<span class="hljs-number">1</span>, _min = INF;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+            <span class="hljs-keyword">if</span> (!vis[i] &amp;&amp; (dis[i][<span class="hljs-number">0</span>].dis &lt; _min || dis[i][<span class="hljs-number">1</span>].dis &lt; _min)) {
+                _min = min(dis[i][<span class="hljs-number">0</span>].dis, dis[i][<span class="hljs-number">1</span>].dis);
+                u = i;
+            }
+        }
+        vis[u] = <span class="hljs-keyword">true</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> i = <span class="hljs-number">0</span>, v, w; i &lt; G[u].size(); ++i) {
+            v = G[u][i].to, w = G[u][i].val;
+            <span class="hljs-keyword">if</span> (!G[u][i].isb) {
+                <span class="hljs-keyword">if</span> (w + dis[u][<span class="hljs-number">0</span>].dis &lt; dis[v][<span class="hljs-number">0</span>].dis) dis[v][<span class="hljs-number">0</span>].dis = w + dis[u][<span class="hljs-number">0</span>].dis;
+                <span class="hljs-keyword">if</span> (w + dis[u][<span class="hljs-number">1</span>].dis &lt; dis[v][<span class="hljs-number">0</span>].dis) dis[v][<span class="hljs-number">0</span>].dis = w + dis[u][<span class="hljs-number">1</span>].dis;
+            } <span class="hljs-keyword">else</span> {
+                <span class="hljs-keyword">if</span> (dis[u][<span class="hljs-number">0</span>].dis + w * w &lt; dis[v][<span class="hljs-number">1</span>].dis) {
+                    dis[v][<span class="hljs-number">1</span>].dis = dis[u][<span class="hljs-number">0</span>].dis + w * w;
+                    dis[v][<span class="hljs-number">1</span>].last = w;
+                }
+                <span class="hljs-keyword">if</span> (dis[u][<span class="hljs-number">1</span>].last != -<span class="hljs-number">1</span>) {
+                    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> d = dis[u][<span class="hljs-number">1</span>].dis + (dis[u][<span class="hljs-number">1</span>].last + w)*(dis[u][<span class="hljs-number">1</span>].last + w) - dis[u][<span class="hljs-number">1</span>].last*dis[u][<span class="hljs-number">1</span>].last;
+                    dis[v][<span class="hljs-number">1</span>].dis = min(dis[v][<span class="hljs-number">1</span>].dis, d);
+                    dis[v][<span class="hljs-number">1</span>].last = dis[u][<span class="hljs-number">1</span>].last + w;
+                }
+            }
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i) {
+        dis[i][<span class="hljs-number">0</span>].dis = dis[i][<span class="hljs-number">1</span>].dis = INF;
+        dis[i][<span class="hljs-number">0</span>].last = dis[i][<span class="hljs-number">1</span>].last = -<span class="hljs-number">1</span>;
+    }
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> i = <span class="hljs-number">0</span>, a, b, c, d; i &lt; m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; a &gt;&gt; b &gt;&gt; c &gt;&gt; d;
+        G[b].push_back(Node(c, d, a));
+        G[c].push_back(Node(b, d, a));
+    }
+    Dijkstra();
+    <span class="hljs-built_in">cout</span> &lt;&lt; min(dis[n][<span class="hljs-number">0</span>].dis, dis[n][<span class="hljs-number">1</span>].dis);
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

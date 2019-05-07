@@ -1,0 +1,182 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/88362610				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>很好的博客文章：<br>
+1、<a href="https://blog.csdn.net/liigo/article/details/582231" rel="nofollow">https://blog.csdn.net/liigo/article/details/582231</a><br>
+2、<a href="https://blog.csdn.net/ostrichmyself/article/details/5271335" rel="nofollow">https://blog.csdn.net/ostrichmyself/article/details/5271335</a><br>
+3、<a href="http://www.embeddedlinux.org.cn/emb-linux/system-development/201701/06-6096.html" rel="nofollow">http://www.embeddedlinux.org.cn/emb-linux/system-development/201701/06-6096.html</a></p>
+<hr>
+<p>下表引用自 <a href="http://www.embeddedlinux.org.cn/emb-linux/system-development/201701/06-6096.html" rel="nofollow">该链接</a></p>
+<table>
+	<thead>
+		<tr>
+			<th align="center">
+				常用命令</th>
+			<th align="center">
+				简写命令</th>
+			<th align="center">
+				用法</th>
+			<th align="center">
+				说明</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td align="center">
+				file</td>
+			<td align="center">
+				f</td>
+			<td align="center">
+				file filename</td>
+			<td align="center">
+				在gdb中载入某可执行文件</td>
+		</tr>
+		<tr>
+			<td align="center">
+				list</td>
+			<td align="center">
+				l</td>
+			<td align="center">
+				list [开始，结束]</td>
+			<td align="center">
+				列出文件的代码清单，支持指定行号</td>
+		</tr>
+		<tr>
+			<td align="center">
+				print</td>
+			<td align="center">
+				p</td>
+			<td align="center">
+				p 变量名</td>
+			<td align="center">
+				答应出变量的值</td>
+		</tr>
+		<tr>
+			<td align="center">
+				break</td>
+			<td align="center">
+				b</td>
+			<td align="center">
+				break 行号or函数名</td>
+			<td align="center">
+				在指定行号或函数上设置断点</td>
+		</tr>
+		<tr>
+			<td align="center">
+				clear</td>
+			<td align="center">
+				cl</td>
+			<td align="center">
+				clear 行号or函数名</td>
+			<td align="center">
+				删除指定行号或函数上的断点</td>
+		</tr>
+		<tr>
+			<td align="center">
+				continue</td>
+			<td align="center">
+				c</td>
+			<td align="center">
+				continue [开始，结束]</td>
+			<td align="center">
+				从断点处继续运行</td>
+		</tr>
+		<tr>
+			<td align="center">
+				next</td>
+			<td align="center">
+				n</td>
+			<td align="center">
+				next</td>
+			<td align="center">
+				运行到下一行</td>
+		</tr>
+		<tr>
+			<td align="center">
+				step</td>
+			<td align="center">
+				s</td>
+			<td align="center">
+				step</td>
+			<td align="center">
+				单步调试</td>
+		</tr>
+		<tr>
+			<td align="center">
+				run</td>
+			<td align="center">
+				r</td>
+			<td align="center">
+				run</td>
+			<td align="center">
+				执行程序</td>
+		</tr>
+	</tbody>
+</table>
+<hr>
+<p>下表引用自<a href="https://blog.csdn.net/liigo/article/details/582231" rel="nofollow">链接1</a></p>
+<div class="table-box"><table cellspacing="0" cellpadding="2" width="100%" border="1"><tbody><tr><td width="138" bgcolor="#d4d0c8"><strong><font face="Courier New">&nbsp;命令</font></strong></td>
+            <td width="500" bgcolor="#d4d0c8"><strong><font face="Courier New">&nbsp;解释</font></strong></td>
+            <td nowrap="nowrap" bgcolor="#d4d0c8"><strong><font face="Courier New">&nbsp;示例</font></strong></td>
+        </tr><tr><td width="138"><font face="Courier New">file &lt;文件名&gt;</font></td>
+            <td><font face="Courier New">加载被调试的可执行程序文件。<br>因为一般都在被调试程序所在目录下执行GDB，因而文本名不需要带路径。</font></td>
+            <td width="220"><font face="Courier New">(gdb) file gdb-sample</font></td>
+        </tr><tr><td width="138"><font face="Courier New">r</font></td>
+            <td><font face="Courier New">Run的简写，运行被调试的程序。<br>如果此前没有下过断点，则执行完整个程序；如果有断点，则程序暂停在第一个可用断点处。</font></td>
+            <td width="180"><font face="Courier New">(gdb) r</font></td>
+        </tr><tr><td width="138"><font face="Courier New">c</font></td>
+            <td><font face="Courier New">Continue的简写，继续执行被调试程序，直至下一个断点或程序结束。</font></td>
+            <td width="180"><font face="Courier New">(gdb) c</font></td>
+        </tr><tr><td width="138"><font face="Courier New">b &lt;行号&gt;<br>b &lt;函数名称&gt;<br>b *&lt;函数名称&gt;<br>b *&lt;代码地址&gt; </font>
+            <p><font face="Courier New">d [编号]</font></p>
+            </td>
+            <td><font face="Courier New">b: Breakpoint的简写，设置断点。两可以使用“行号”“函数名称”“执行地址”等方式指定断点位置。<br>其中在函数名称前面加“*”符号表示将断点设置在“由编译器生成的prolog代码处”。如果不了解汇编，可以不予理会此用法。 </font>
+            <p><font face="Courier New">d: Delete breakpoint的简写，删除指定编号的某个断点，或删除所有断点。断点编号从1开始递增。</font></p>
+            </td>
+            <td width="180"><font face="Courier New">(gdb) b 8<br>(gdb) b main<br>(gdb) b *main<br>(gdb) b *0x804835c </font>
+            <p><font face="Courier New">(gdb) d</font></p>
+            </td>
+        </tr><tr><td width="138"><font face="Courier New">s, n</font></td>
+            <td><font face="Courier New">s: 执行一行源程序代码，如果此行代码中有函数调用，则进入该函数；<br>n: 执行一行源程序代码，此行代码中的函数调用也一并执行。 </font>
+            <p><font face="Courier New">s 相当于其它调试器中的“Step Into (单步跟踪进入)”；<br>n 相当于其它调试器中的“Step Over (单步跟踪)”。</font></p>
+            <p><font face="Courier New">这两个命令必须在有源代码调试信息的情况下才可以使用（GCC编译时使用“-g”参数）。</font></p>
+            </td>
+            <td width="180"><font face="Courier New">(gdb) s<br>(gdb) n</font></td>
+        </tr><tr><td width="138"><font face="Courier New">si, ni</font></td>
+            <td><font face="Courier New">si命令类似于s命令，ni命令类似于n命令。所不同的是，这两个命令（si/ni）所针对的是汇编指令，而s/n针对的是源代码。</font></td>
+            <td width="180"><font face="Courier New">(gdb) si<br>(gdb) ni</font></td>
+        </tr><tr><td width="138"><font face="Courier New">p &lt;变量名称&gt;</font></td>
+            <td><font face="Courier New">Print的简写，显示指定变量（临时变量或全局变量）的值。</font></td>
+            <td width="180"><font face="Courier New">(gdb) p i<br>(gdb) p nGlobalVar</font></td>
+        </tr><tr><td nowrap="nowrap" width="155"><font face="Courier New">display ... </font>
+            <p><font face="Courier New">undisplay &lt;编号&gt;</font></p>
+            </td>
+            <td><font face="Courier New">display，设置程序中断后欲显示的数据及其格式。<br>例如，如果希望每次程序中断后可以看到即将被执行的下一条汇编指令，可以使用命令<br>“display /i $pc”<br>其中 $pc 代表当前汇编指令，/i 表示以十六进行显示。当需要关心汇编代码时，此命令相当有用。 </font>
+            <p><font face="Courier New">undispaly，取消先前的display设置，编号从1开始递增。</font></p>
+            </td>
+            <td width="180"><font face="Courier New">(gdb) display /i $pc </font>
+            <p><font face="Courier New">(gdb) undisplay 1</font></p>
+            </td>
+        </tr><tr><td width="138"><font face="Courier New">i</font></td>
+            <td><font face="Courier New">Info的简写，用于显示各类信息，详情请查阅“help i”。</font></td>
+            <td width="180"><font face="Courier New">(gdb) i r</font></td>
+        </tr><tr><td width="138"><font face="Courier New">q</font></td>
+            <td><font face="Courier New">Quit的简写，退出GDB调试环境。</font></td>
+            <td width="180"><font face="Courier New">(gdb) q</font></td>
+        </tr><tr><td width="138"><font face="Courier New">help [命令名称]</font></td>
+            <td><font face="Courier New">GDB帮助命令，提供对GDB名种命令的解释说明。<br>如果指定了“命令名称”参数，则显示该命令的详细说明；如果没有指定参数，则分类显示所有GDB命令，供用户进一步浏览和查询。</font></td>
+            <td width="180"><font face="Courier New">(gdb) help display</font></td>
+        </tr></tbody></table></div>
+<hr>
+<p>以供查询方便</p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

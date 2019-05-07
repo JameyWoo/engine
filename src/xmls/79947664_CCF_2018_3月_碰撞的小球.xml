@@ -1,0 +1,75 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79947664				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>今天计划花几个小时尝试一下CCF认证考试的题目, 结果做的快要崩溃了.</p>
+
+<p>花了不到半小时做完前两道题目, 然后尝试第三题, 一道好复杂的字符串匹配题, 无从下手, 写了一般干脆跳过, 做起第四题. 一看还蛮简单的? 哎, 做了好久, 发现还是做不出来. 这他妈情况太复杂了, 果然现在还是太菜了. </p>
+
+<p>所以我估计我到考场上的情况, 就是半小时做两题, 三个半小时做零题. 真让人崩溃. </p>
+
+<p>第二题碰撞的小球和之前做过的一道贪心问题很像,把问题抽象出来, 找到它的本质. 其实是道不错的题目. 似乎暴力模拟也可以求解.</p>
+
+<p>里面用到了一个映射的思路, 我觉得很好, 所以写个题解</p>
+
+
+
+<h4 id="问题描述">问题描述</h4>
+
+<p>　　数轴上有一条长度为L（L为偶数)的线段，左端点在原点，右端点在坐标L处。有n个不计体积的小球在线段上，开始时所有的小球都处在偶数坐标上，速度方向向右，速度大小为1单位长度每秒。 <br>
+　　当小球到达线段的端点（左端点或右端点）的时候，会立即向相反的方向移动，速度大小仍然为原来大小。 <br>
+　　当两个小球撞到一起的时候，两个小球会分别向与自己原来移动的方向相反的方向，以原来的速度大小继续移动。 <br>
+　　现在，告诉你线段的长度L，小球数量n，以及n个小球的初始位置，请你计算t秒之后，各个小球的位置。 <br>
+提示 <br>
+　　因为所有小球的初始位置都为偶数，而且线段的长度为偶数，可以证明，不会有三个小球同时相撞，小球到达线段端点以及小球之间的碰撞时刻均为整数。 <br>
+　　同时也可以证明两个小球发生碰撞的位置一定是整数（但不一定是偶数）。 <br>
+输入格式 <br>
+　　输入的第一行包含三个整数n, L, t，用空格分隔，分别表示小球的个数、线段长度和你需要计算t秒之后小球的位置。 <br>
+　　第二行包含n个整数a1, a2, …, an，用空格分隔，表示初始时刻n个小球的位置。 <br>
+输出格式 <br>
+　　输出一行包含n个整数，用空格分隔，第i个整数代表初始时刻位于ai的小球，在t秒之后的位置。</p>
+
+
+
+<h5 id="样例输入">样例输入</h5>
+
+<p>3 10 5 <br>
+4 6 8</p>
+
+<h5 id="样例输出">样例输出</h5>
+
+<p>7 9 9</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">int</span> a[<span class="hljs-number">105</span>] = {};
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, l, t, c[<span class="hljs-number">105</span>] = {}, b[<span class="hljs-number">105</span>] = {};
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; l &gt;&gt; t;
+    t %= <span class="hljs-number">2</span>*l;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; a[i];
+        c[i] = a[i]; 
+        <span class="hljs-keyword">if</span>(t &lt;= l - a[i]) b[i] = a[i] + t;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(t &lt;= <span class="hljs-number">2</span>*l - a[i]) b[i] = l-(t-(l-a[i]));
+        <span class="hljs-keyword">else</span> b[i] = a[i] - (<span class="hljs-number">2</span>*l - t);
+    }
+    sort(b, b + n);
+    sort(c, c + n);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; ++j) {
+            <span class="hljs-keyword">if</span>(a[i] == c[j]) <span class="hljs-built_in">cout</span> &lt;&lt; b[j] &lt;&lt; <span class="hljs-string">' '</span>;
+        }
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

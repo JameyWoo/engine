@@ -1,0 +1,138 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<div class="problembox">
+    <div class="problemheadbar">问题描述</div>
+    <div class="problemdesc">
+    <table class="probtable" align="center" width="100%" cellpadding="0" cellspacing="1">
+    <tbody><tr><td class="probref">试题编号：</td><td>201803-4</td></tr>
+    <tr><td class="probref">试题名称：</td><td>棋局评估</td></tr>
+    <tr><td class="probref">时间限制：</td><td>1.0s</td></tr>
+    <tr><td class="probref">内存限制：</td><td>256.0MB</td></tr>
+    <tr><td class="probref">问题描述：</td><td><div class="pdsec">问题描述</div><div class="pdcont">　　Alice和Bob正在玩井字棋游戏。<br>
+　　井字棋游戏的规则很简单：两人轮流往3*3的棋盘中放棋子，Alice放的是“X”，Bob放的是“O”，Alice执先。当同一种棋子占据一行、一列或一条对角线的三个格子时，游戏结束，该种棋子的持有者获胜。当棋盘被填满的时候，游戏结束，双方平手。<br>
+　　Alice设计了一种对棋局评分的方法：<br>
+　　- 对于Alice已经获胜的局面，评估得分为(棋盘上的空格子数+1)；<br>
+　　- 对于Bob已经获胜的局面，评估得分为 -(棋盘上的空格子数+1)；<br>
+　　- 对于平局的局面，评估得分为0；<br>
+<br>
+<img src="https://img-blog.csdn.net/20180905152819422?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" width="195" height="198"><br>
+　　例如上图中的局面，Alice已经获胜，同时棋盘上有2个空格，所以局面得分为2+1=3。<br>
+　　由于Alice并不喜欢计算，所以他请教擅长编程的你，如果两人都以最优策略行棋，那么当前局面的最终得分会是多少？</div><div class="pdsec">输入格式</div><div class="pdcont">　　输入的第一行包含一个正整数<i>T</i>，表示数据的组数。<br>
+　　每组数据输入有3行，每行有3个整数，用空格分隔，分别表示棋盘每个格子的状态。0表示格子为空，1表示格子中为“X”，2表示格子中为“O”。保证不会出现其他状态。<br>
+　　保证输入的局面合法。(即保证输入的局面可以通过行棋到达，且保证没有双方同时获胜的情况)<br>
+　　保证输入的局面轮到Alice行棋。</div><div class="pdsec">输出格式</div><div class="pdcont">　　对于每组数据，输出一行一个整数，表示当前局面的得分。</div><div class="pdsec">样例输入</div><div class="pddata">3<br>
+1 2 1<br>
+2 1 2<br>
+0 0 0<br>
+2 1 1<br>
+0 2 1<br>
+0 0 2<br>
+0 0 0<br>
+0 0 0<br>
+0 0 0</div><div class="pdsec">样例输出</div><div class="pddata">3<br>
+-4<br>
+0</div><div class="pdsec">样例说明</div><div class="pdcont">　　第一组数据：<br>
+　　Alice将棋子放在左下角(或右下角)后，可以到达问题描述中的局面，得分为3。<br>
+　　3为Alice行棋后能到达的局面中得分的最大值。<br>
+　　第二组数据：<br>
+<br>
+<img src="https://img-blog.csdn.net/20180905153009417?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" width="195" height="198"><br>
+<br>
+　　Bob已经获胜(如图)，此局面得分为-(3+1)=-4。<br>
+　　第三组数据：<br>
+　　井字棋中若双方都采用最优策略，游戏平局，最终得分为0。</div><div class="pdsec">数据规模和约定</div><div class="pdcont">　　对于所有评测用例，1 ≤ <i>T</i> ≤ 5。</div>
+
+    </td></tr>
+    </tbody></table>
+    </div>
+</div>
+
+<p>题目分析转载自<a href="http://www.cnblogs.com/chuxinbufu/p/9583044.html" rel="nofollow">该博客</a>, 非常感谢博主分享解题方法。</p>
+
+<p></p><h4 id="以下">以下</h4><p></p>
+
+<hr>
+
+<p></p><div id="cnblogs_post_body" class="blogpost-body"><p>先说说极大极小算法，是指给可能出现的所有状态赋予一个评估值，两个玩家通过计算不同下棋策略对应不同的评估值，来决定如何下棋。对于井字棋游戏来说，它的博弈树（各种走法组合形成的树）如下：</p></div><p></p>
+
+<p><img src="https://images2018.cnblogs.com/blog/1432102/201809/1432102-20180904104644282-1923380.png" alt=""></p>
+
+<p>Alice(MAX)下X，Bob(MIN)下O，直到到达了树的终止状态即一位棋手占领一行，一列、一对角线或所有方格都被填满。Utility指效用函数，定义游戏者在状态S下的数值。在这道题中，就是指：</p>
+
+<p>- 对于Alice已经获胜的局面，评估得分为(棋盘上的空格子数+1)；<br>　　- 对于Bob已经获胜的局面，评估得分为 -(棋盘上的空格子数+1)；<br>　　- 对于平局的局面，评估得分为0；</p>
+
+<p>所以，在上图策略树中，无论当前局势如何，Alice（MAX）总会选择最大的评估分对应的走法，Bob（MIN）总会选择最小的评估分对应的走法。这样才能使自己尽快的赢得比赛（这一点是关键，要想清楚）。题目中只给出了策略树中叶子节点的评估分的计算方法（赢，输或平局情况的评估分计算方法），那如何计算策略树中每个非叶子节点对应的评估分值呢？</p>
+
+<p>答案是采用深度优先搜索对整个策略树进行后序遍历，这样，先计算策略树中叶子节点的评估值，在一层层的往上计算非叶子节点的评估值，最终，会得到整个策略树的评估值，这样就可以确定玩家在当前情况下应该如何走棋了。</p>
+
+<p>根据以上思路：</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;
+<span class="hljs-keyword">int</span> <span class="hljs-built_in">map</span>[<span class="hljs-number">10</span>], T;
+
+<span class="hljs-keyword">int</span> check()
+{
+    <span class="hljs-keyword">int</span> it = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">3</span>; ++i) { <span class="hljs-comment">// 找出是否可以结束。</span>
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">map</span>[i] == <span class="hljs-built_in">map</span>[i + <span class="hljs-number">3</span>] &amp;&amp; <span class="hljs-built_in">map</span>[i + <span class="hljs-number">3</span>] == <span class="hljs-built_in">map</span>[i + <span class="hljs-number">6</span>] &amp;&amp; <span class="hljs-built_in">map</span>[i]) {
+            it = <span class="hljs-built_in">map</span>[i];
+            <span class="hljs-keyword">break</span>;
+        }
+        <span class="hljs-keyword">int</span> k = <span class="hljs-number">3</span>*(i - <span class="hljs-number">1</span>) + <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">map</span>[k] == <span class="hljs-built_in">map</span>[k + <span class="hljs-number">1</span>] &amp;&amp; <span class="hljs-built_in">map</span>[k] == <span class="hljs-built_in">map</span>[k + <span class="hljs-number">2</span>] &amp;&amp; <span class="hljs-built_in">map</span>[k]) {
+            it = <span class="hljs-built_in">map</span>[k];
+            <span class="hljs-keyword">break</span>;
+        }
+    }
+    <span class="hljs-keyword">if</span> (!it) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">map</span>[<span class="hljs-number">1</span>] == <span class="hljs-built_in">map</span>[<span class="hljs-number">5</span>] &amp;&amp; <span class="hljs-built_in">map</span>[<span class="hljs-number">1</span>] == <span class="hljs-built_in">map</span>[<span class="hljs-number">9</span>] &amp;&amp; <span class="hljs-built_in">map</span>[<span class="hljs-number">1</span>]) it = <span class="hljs-built_in">map</span>[<span class="hljs-number">1</span>];
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">map</span>[<span class="hljs-number">3</span>] == <span class="hljs-built_in">map</span>[<span class="hljs-number">5</span>] &amp;&amp; <span class="hljs-built_in">map</span>[<span class="hljs-number">5</span>] == <span class="hljs-built_in">map</span>[<span class="hljs-number">7</span>] &amp;&amp; <span class="hljs-built_in">map</span>[<span class="hljs-number">5</span>]) it = <span class="hljs-built_in">map</span>[<span class="hljs-number">5</span>];
+    }
+    <span class="hljs-keyword">int</span> cnt = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">9</span>; ++i)
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">map</span>[i] == <span class="hljs-number">0</span>) cnt++;
+    <span class="hljs-keyword">if</span> (it == <span class="hljs-number">0</span> &amp;&amp; cnt == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (it == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> cnt + <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (it == <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> - (cnt + <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+}
+
+<span class="hljs-keyword">int</span> dfs(<span class="hljs-keyword">int</span> it)
+{
+    <span class="hljs-keyword">int</span> chec = check();
+    <span class="hljs-keyword">if</span> (chec != -<span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> chec;
+    <span class="hljs-keyword">int</span> ans = it == <span class="hljs-number">1</span> ? -INF : INF;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">9</span>; ++i) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">map</span>[i]) <span class="hljs-keyword">continue</span>;
+        <span class="hljs-keyword">if</span> (it == <span class="hljs-number">1</span>) {
+            <span class="hljs-built_in">map</span>[i] = <span class="hljs-number">1</span>;
+            ans = max(ans, dfs(<span class="hljs-number">2</span>));
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-built_in">map</span>[i] = <span class="hljs-number">2</span>;
+            ans = min(ans, dfs(<span class="hljs-number">1</span>));
+        }
+        <span class="hljs-built_in">map</span>[i] = <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">return</span> ans;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; T;
+    <span class="hljs-keyword">while</span> (T--) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">9</span>; ++i) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; <span class="hljs-built_in">map</span>[i];
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; dfs(<span class="hljs-number">1</span>) &lt;&lt; endl;;
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

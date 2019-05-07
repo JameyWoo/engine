@@ -1,0 +1,189 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81040956				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>二叉树也可以是静态的, 和指针的动态所不同的是,<strong>二叉树的静态是用结构体数组实现的, 访问指针变成了访问数组下标所在结点, 原来指针指向的位置变成了存储下标.</strong></p>
+
+<p>可以说这种方法对于不了解指针的人来说是非常友好了.</p>
+
+<p>结构体定义:</p>
+
+<pre class="prettyprint"><code class=" hljs vbscript">struct Node {
+    <span class="hljs-built_in">int</span> data, <span class="hljs-built_in">left</span>, <span class="hljs-built_in">right</span>;
+} node[maxn];</code></pre>
+
+<p>昨天我使用前序和后序构建静态二叉树时, 发现按照动态的方式无法构建, 今天早上醒来, 突然发现, <strong>其实我面临的问题只有一个, 那就是, 动态分配内存对应静态里面是怎样的?</strong> 于是我发现其实就是<strong>给root赋一个递增的id, 表示给它分配的下标</strong>, 于是所谓”静态分配内存”就做好了.</p>
+
+<p>由于下标id是递增的, 所以刚开始应该开辟结点数量上限大小的数组. 因此这部分空间也不算浪费.</p>
+
+<p>二叉树可以写成静态的, <strong>普通的树也可以</strong>. 只是普通的树的孩子结点是不确定的, 那么我们如何管理它的孩子节点呢? 像下面这样吗?</p>
+
+<pre class="prettyprint"><code class=" hljs cs"><span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> data;
+    <span class="hljs-keyword">int</span> child[maxn];
+} node [Maxn];</code></pre>
+
+<p>非也非也, 如果是这样, 将会有巨大的空间浪费. 其实一个结点的孩子结点数量是不确定的, 那么我们可以<strong>用不定长数组vector去存储这些结点的下标</strong>, 从而节省空间.</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> data;
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> child;
+} node[maxn];</code></pre>
+
+<hr>
+
+<p><strong>静态二叉树代码:</strong></p>
+
+<pre class="prettyprint"><code class=" hljs avrasm"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+using namespace <span class="hljs-keyword">std</span><span class="hljs-comment">;</span>
+
+struct Node {
+    int data, left, right<span class="hljs-comment">;</span>
+    Node () { left = right = -<span class="hljs-number">1</span><span class="hljs-comment">; }</span>
+} node[<span class="hljs-number">10</span>]<span class="hljs-comment">;</span>
+
+void init() // 初始化好一个静态的二叉树 
+{
+    node[<span class="hljs-number">1</span>]<span class="hljs-preprocessor">.data</span> = <span class="hljs-number">1</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">1</span>]<span class="hljs-preprocessor">.left</span> = <span class="hljs-number">2</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">1</span>]<span class="hljs-preprocessor">.right</span> = <span class="hljs-number">3</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">2</span>]<span class="hljs-preprocessor">.data</span> = <span class="hljs-number">7</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">2</span>]<span class="hljs-preprocessor">.left</span> = <span class="hljs-number">4</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">2</span>]<span class="hljs-preprocessor">.right</span> = -<span class="hljs-number">1</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">3</span>]<span class="hljs-preprocessor">.data</span> = <span class="hljs-number">4</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">3</span>]<span class="hljs-preprocessor">.left</span> = -<span class="hljs-number">1</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">3</span>]<span class="hljs-preprocessor">.right</span> = <span class="hljs-number">5</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">4</span>]<span class="hljs-preprocessor">.data</span> = <span class="hljs-number">5</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">4</span>]<span class="hljs-preprocessor">.left</span> = -<span class="hljs-number">1</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">4</span>]<span class="hljs-preprocessor">.right</span> = -<span class="hljs-number">1</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">5</span>]<span class="hljs-preprocessor">.data</span> = <span class="hljs-number">2</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">5</span>]<span class="hljs-preprocessor">.left</span> = -<span class="hljs-number">1</span><span class="hljs-comment">;</span>
+    node[<span class="hljs-number">5</span>]<span class="hljs-preprocessor">.right</span> = -<span class="hljs-number">1</span><span class="hljs-comment">;</span>
+}
+
+void preOrder(int root)
+{
+    if (root == -<span class="hljs-number">1</span>) return<span class="hljs-comment">;</span>
+    cout &lt;&lt; node[root]<span class="hljs-preprocessor">.data</span> &lt;&lt; <span class="hljs-string">' '</span><span class="hljs-comment">;</span>
+    preOrder(node[root]<span class="hljs-preprocessor">.left</span>)<span class="hljs-comment">;</span>
+    preOrder(node[root]<span class="hljs-preprocessor">.right</span>)<span class="hljs-comment">;</span>
+}
+
+void inOrder(int root)
+{
+    if (root == -<span class="hljs-number">1</span>) return<span class="hljs-comment">;</span>
+    inOrder(node[root]<span class="hljs-preprocessor">.left</span>)<span class="hljs-comment">;</span>
+    cout &lt;&lt; node[root]<span class="hljs-preprocessor">.data</span> &lt;&lt; <span class="hljs-string">' '</span><span class="hljs-comment">;</span>
+    inOrder(node[root]<span class="hljs-preprocessor">.right</span>)<span class="hljs-comment">;</span>
+}
+
+int main()
+{
+    init()<span class="hljs-comment">;</span>
+    int root = <span class="hljs-number">1</span><span class="hljs-comment">;</span>
+    preOrder(root)<span class="hljs-comment">;</span>
+    cout &lt;&lt; endl<span class="hljs-comment">;</span>
+    inOrder(root)<span class="hljs-comment">;</span>
+}
+<span class="hljs-comment">/*
+5
+1 7 5 4 2
+5 7 1 4 2
+*/</span></code></pre>
+
+<hr>
+
+<p><strong>静态二叉树重构代码:</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-comment">// 下面一行去掉, 我已经成功了! </span>
+<span class="hljs-comment">// 好像无法完成? 静态的无法用这种方法重建二叉树 </span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1005</span>;
+<span class="hljs-keyword">int</span> id = <span class="hljs-number">0</span>; 
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> data, left, right;
+    Node () { left = right = -<span class="hljs-number">1</span>; }
+} node[maxn];
+
+<span class="hljs-keyword">int</span> buildTree(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> pre, <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> vin)
+{
+    <span class="hljs-keyword">if</span> (pre.empty() || vin.empty()) <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">int</span> val = pre[<span class="hljs-number">0</span>], index = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">int</span> root = ++id;
+    node[root].data = val;
+    <span class="hljs-keyword">while</span> (vin[index] != val) index++;
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> preLeft, preRight, vinLeft, vinRight;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; index; ++i) {
+        preLeft.push_back(pre[i + <span class="hljs-number">1</span>]);
+        vinLeft.push_back(vin[i]);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = index + <span class="hljs-number">1</span>; i &lt; pre.size(); ++i) {
+        preRight.push_back(pre[i]);
+        vinRight.push_back(vin[i]);
+    }
+    node[root].left = buildTree(preLeft, vinLeft);
+    node[root].right = buildTree(preRight, vinRight);
+    <span class="hljs-keyword">return</span> root;
+}
+
+<span class="hljs-keyword">void</span> preOrder(<span class="hljs-keyword">int</span> root)
+{
+    <span class="hljs-keyword">if</span> (root == -<span class="hljs-number">1</span>) <span class="hljs-keyword">return</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; node[root].data &lt;&lt; <span class="hljs-string">' '</span>;
+    preOrder(node[root].left);
+    preOrder(node[root].right);
+}
+
+<span class="hljs-keyword">void</span> inOrder(<span class="hljs-keyword">int</span> root)
+{
+    <span class="hljs-keyword">if</span> (root == -<span class="hljs-number">1</span>) <span class="hljs-keyword">return</span>;
+    inOrder(node[root].left);
+    <span class="hljs-built_in">cout</span> &lt;&lt; node[root].data &lt;&lt; <span class="hljs-string">' '</span>;
+    inOrder(node[root].right);
+}
+
+<span class="hljs-keyword">void</span> orderShow(<span class="hljs-keyword">int</span> root)
+{
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"the root node's id is : "</span> &lt;&lt; root &lt;&lt; endl &lt;&lt; <span class="hljs-string">"前序遍历:"</span> &lt;&lt; endl; 
+    preOrder(root);
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl &lt;&lt; <span class="hljs-string">"中序遍历:"</span> &lt;&lt; endl; 
+    inOrder(root);
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, x;
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> pre, vin;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x;
+        pre.push_back(x);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x;
+        vin.push_back(x);
+    }
+    <span class="hljs-keyword">int</span> root = buildTree(pre, vin);
+    orderShow(root);
+}
+<span class="hljs-comment">/*
+5
+1 7 5 4 2
+5 7 1 4 2
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

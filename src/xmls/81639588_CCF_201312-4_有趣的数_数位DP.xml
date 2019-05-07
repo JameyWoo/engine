@@ -1,0 +1,91 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81639588				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>CCF 201312-4 有趣的数 <a href="http://118.190.20.162/view.page?gpid=T2" rel="nofollow">传送门</a></p>
+
+<p>这道题似乎就是所谓<strong>数位DP</strong>, 如果没有接触过这一类题目, 真的是很难会想出完整的方法, 毕竟有6个状态, 然后在状态之间进行递推.</p>
+
+<p>我们定义六种状态, s0-s5, 对每个长度的状态我们都从其他可能推过来的状态推过来.</p>
+
+<p><strong>为什么是六种? 这六种状态是哪六种?</strong></p>
+
+<p>这些状态分为四大类:分别有1,2,3,4个数字的情况.</p>
+
+<dl>
+<dt>只有一个数字的状态:</dt>
+<dd>s0:只有数字2 <br>
+就这一种了, 为什么? 根据规则我们知道,0必须在1前面,2必须在3前面 <br>
+所以第一个数字一定是2,这也是所有状态的规则</dd>
+
+<dt>只有两个数字的状态:</dt>
+<dd>s1:数字0,2 <br>
+数字2必须为首数字 <br>
+s2:数字2,3</dd>
+
+<dt>只有三个数字的状态:</dt>
+<dd>s3:数字2,0,1 <br>
+s4:数字2,0,3</dd>
+
+<dt>四个数字全有的状态:</dt>
+<dd>s5:数字0,1,2,3</dd>
+</dl>
+
+<p>上面定义了所有可能的状态,那么下面就来推导一下状态转移,从而实现递推过程.</p>
+
+<p>对s0状态,无论长度多少,都只能用有一种,所以方程是: <br>
+<strong><code>s[0][len] = 1</code></strong></p>
+
+<p>对s1状态,可由s0末端加入一个0或者上一个s1末端加入0或2,所以方程就是 <br>
+<strong><code>s[1][len] = s[1][len-1]*2 + s[0][len-1]</code></strong></p>
+
+<p>对s2状态,可由s0末端加入一个3或者上一个s2末端加入3,所以方程为 <br>
+<strong><code>s[2][len] = s[2][len-1] + s[0][len-1]</code></strong></p>
+
+<p>对s3状态,可由s1末端加入一个1或者上一个s3末端加入1或2,所以方程为 <br>
+<strong><code>s[3][len] = s[3][len-1]*2 + s[1][len-1]</code></strong></p>
+
+<p>对s4状态,可由s2末端加入一个0或s1末端加上3或者上一个s4末端加入0或3,所以方程为 <br>
+<strong><code>s[4][len] = s[4][len-1]*2 + s[2][len-1] + s[1][len - 1]</code></strong></p>
+
+<p>对s5状态,可由s3末端加入3或s4末端加入1或者上一个s5末端加入1或3,所以方程为 <br>
+<strong><code>s[5][len] = s[5][len-1]*2 + s[3][len-1] + s[4][len-1]</code></strong></p>
+
+<p><strong>按照上述状态转移方程, 转移状态即可</strong>.我们的答案就是第六个状态<code>s5</code>.</p>
+
+<p>100分代码</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs vbscript">#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+<span class="hljs-keyword">const</span> <span class="hljs-built_in">int</span> mod = <span class="hljs-number">1000000007</span>;
+
+<span class="hljs-built_in">int</span> main()
+{
+    long long s[<span class="hljs-number">6</span>][<span class="hljs-number">1005</span>] = {}, n;
+    cin &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> <span class="hljs-built_in">len</span> = <span class="hljs-number">1</span>; <span class="hljs-built_in">len</span> &lt;= n; ++<span class="hljs-built_in">len</span>) {
+        s[<span class="hljs-number">0</span>][<span class="hljs-built_in">len</span>] = <span class="hljs-number">1</span>;
+        s[<span class="hljs-number">1</span>][<span class="hljs-built_in">len</span>] = (s[<span class="hljs-number">1</span>][<span class="hljs-built_in">len</span>-<span class="hljs-number">1</span>]*<span class="hljs-number">2</span> + s[<span class="hljs-number">0</span>][<span class="hljs-built_in">len</span>-<span class="hljs-number">1</span>])%mod;
+        s[<span class="hljs-number">2</span>][<span class="hljs-built_in">len</span>] = (s[<span class="hljs-number">2</span>][<span class="hljs-built_in">len</span>-<span class="hljs-number">1</span>] + s[<span class="hljs-number">0</span>][<span class="hljs-built_in">len</span>-<span class="hljs-number">1</span>])%mod;
+        s[<span class="hljs-number">3</span>][<span class="hljs-built_in">len</span>] = (s[<span class="hljs-number">3</span>][<span class="hljs-built_in">len</span>-<span class="hljs-number">1</span>]*<span class="hljs-number">2</span> + s[<span class="hljs-number">1</span>][<span class="hljs-built_in">len</span>-<span class="hljs-number">1</span>])%mod;
+        s[<span class="hljs-number">4</span>][<span class="hljs-built_in">len</span>] = (s[<span class="hljs-number">4</span>][<span class="hljs-built_in">len</span>-<span class="hljs-number">1</span>]*<span class="hljs-number">2</span> + s[<span class="hljs-number">2</span>][<span class="hljs-built_in">len</span>-<span class="hljs-number">1</span>] + s[<span class="hljs-number">1</span>][<span class="hljs-built_in">len</span> - <span class="hljs-number">1</span>])%mod;
+        s[<span class="hljs-number">5</span>][<span class="hljs-built_in">len</span>] = (s[<span class="hljs-number">5</span>][<span class="hljs-built_in">len</span>-<span class="hljs-number">1</span>]*<span class="hljs-number">2</span> + s[<span class="hljs-number">3</span>][<span class="hljs-built_in">len</span>-<span class="hljs-number">1</span>] + s[<span class="hljs-number">4</span>][<span class="hljs-built_in">len</span>-<span class="hljs-number">1</span>])%mod;
+    }
+    cout &lt;&lt; s[<span class="hljs-number">5</span>][n];
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

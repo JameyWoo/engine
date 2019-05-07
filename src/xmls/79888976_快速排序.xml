@@ -1,0 +1,122 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79888976				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>关于快速排序, 网上有各种教程, 就不细说.</p>
+
+<p>思路就是: <br>
+<strong>找到一个基准数, 然后把小于这个数的数它放在左边, 把大于它的数放在它右边. 然后分治地解决左边和右边的排序.</strong></p>
+
+<p>一般基准有左边第一个数, 中间数, 随机某个数. 在不同的问题下, 选定不同的基准数实际时间复杂度可能会有极大差别, 理论上, 推荐随机的基准数.</p>
+
+<p>实现快速排序的具体方式也有很多种, 但是基本的思路就是上面介绍的.</p>
+
+<p><a href="https://www.luogu.org/problemnew/show/P1177" rel="nofollow">洛谷的快速排序模板题</a></p>
+
+<p>AC代码是以中间数为基准数, 而之前的以左边第一个数为基准数的代码都只通过了60%的样例.</p>
+
+<p>下面是代码:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">void</span> quickSort(<span class="hljs-keyword">int</span> *a, <span class="hljs-keyword">int</span> l, <span class="hljs-keyword">int</span> r)
+{
+    <span class="hljs-keyword">int</span> x = l, y = r, mid = a[(l + r) &gt;&gt; <span class="hljs-number">1</span>];
+    <span class="hljs-keyword">do</span> {
+        <span class="hljs-keyword">while</span>(a[x] &lt; mid) x++;
+        <span class="hljs-keyword">while</span>(a[y] &gt; mid) y--;
+        <span class="hljs-keyword">if</span>(x &lt;= y) {
+            swap(a[x], a[y]);
+            x++, y--;
+        }
+    } <span class="hljs-keyword">while</span>(x &lt;= y);
+    <span class="hljs-keyword">if</span>(x &lt; r) quickSort(a, x, r);
+    <span class="hljs-keyword">if</span>(y &gt; l) quickSort(a, l, y);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">int</span> *a = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[n+<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; a[i]; 
+    }
+    quickSort(a, <span class="hljs-number">0</span>, n - <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}</code></pre>
+
+<p>样例:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs ">10
+6 1 2 7 9 3 4 5 10 8
+
+7
+4 7 3 1 4 8 6
+
+7
+9 4 7 3 1 4 8 6 </code></pre>
+
+<p>其实快排的代码算是挺短的, 但是在实际的过程中出现了很多难以预料的错误. <br>
+有的程序出不来, 有的没有排序排错了. </p>
+
+<p><strong>需要注意的是, 代码中有很多while循环, 对它们的功能要有很清晰的理解. 还有很多类似&lt;, &lt;= 这类的情况, 也要非常注意. 这些地方都非常容易出错. </strong></p>
+
+<p>以下是以左边第一个数为基准的情况</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-comment">//以最左边为基准数 </span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">void</span> quickSort(<span class="hljs-keyword">int</span> *a, <span class="hljs-keyword">int</span> left, <span class="hljs-keyword">int</span> right)
+{
+    <span class="hljs-keyword">if</span>(right &lt; left) <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">int</span> key = a[left], l = left, r = right;
+    <span class="hljs-keyword">while</span>(l &lt; r) {
+        <span class="hljs-keyword">while</span>(a[r] &gt;= key &amp;&amp; l &lt; r) r--;
+        <span class="hljs-keyword">while</span>(a[l] &lt;= key &amp;&amp; l &lt; r) l++;
+        <span class="hljs-keyword">if</span>(l &lt; r) swap(a[l], a[r]);
+    }
+    swap(a[left], a[l]);
+    quickSort(a, left, l - <span class="hljs-number">1</span>);
+    quickSort(a, l + <span class="hljs-number">1</span>, right);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">std</span>::ios::sync_with_stdio(<span class="hljs-keyword">false</span>);
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">int</span> *a = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span> [n+<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; a[i];
+    }
+    quickSort(a, <span class="hljs-number">0</span>, n - <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+}</code></pre>
+
+<p>总之, 孰能生巧. 对于我这种蒟蒻来说, 要轻松的写好快排, 还是要多加练习, 让手把快排背下来.</p>
+
+<p>刚才六分钟手打了一个快排, 零调试, 零bug(偷笑</p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

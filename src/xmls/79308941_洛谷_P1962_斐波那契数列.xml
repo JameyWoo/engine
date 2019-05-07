@@ -1,0 +1,61 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79308941				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><a href="https://www.luogu.org/problemnew/show/P1962" rel="nofollow">这道题是洛谷上提高+/省选-的题目.</a></p>
+
+<p>看上去是道简单的斐波那契数列, 可是看看数据范围, 用普通的递推方式肯定超时.</p>
+
+<p>那么这道题该怎么做呢?</p>
+
+<p>标准的做法似乎是<strong>矩阵快速幂</strong>(题解提到),  然而笔者还不会, 再看题解, 发现有其他的方法. 是一个从没见过或者见过但没有印象的斐波那契数的性质</p>
+
+<p><strong>f(2n) = f(n+1)^2 - f(n-1)^2;</strong> <br>
+<strong>f(2n+1) = f(n+1)^2 + f(n)^2;</strong></p>
+
+<p>这样的话, 求解一个很大的n, 就可以对折求解了, 时间复杂度为O(logn)? <br>
+应该是吧.</p>
+
+<p>方法是用递归, 记忆化搜索, 但是记忆的结果不是储存在数组里面的, 而是储存在map里, 因为开不了这么大的数组(结果是离散的, 并不连续)</p>
+
+<p>因为map的缘故, 效率比矩阵快速幂要低了不少, 不过</p>
+
+<p>对于蒟蒻的我来说, 比赛的时候更愿意用这种方法. 因为它更好写, 而且能AC.</p>
+
+<p>附代码</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+<span class="hljs-preprocessor">#define N 1000000007</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-stl_container"><span class="hljs-built_in">map</span> &lt; <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span>, <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> &gt;</span> mm;
+
+<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> fib(<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> n) {
+    <span class="hljs-keyword">if</span>(n == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span>(n == <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span>(mm.find(n) == mm.end()) {
+        <span class="hljs-keyword">if</span>(n%<span class="hljs-number">2</span> == <span class="hljs-number">0</span>) mm[n] = fib(n/<span class="hljs-number">2</span>+<span class="hljs-number">1</span>)*fib(n/<span class="hljs-number">2</span>+<span class="hljs-number">1</span>) % N - fib(n/<span class="hljs-number">2</span>-<span class="hljs-number">1</span>)*fib(n/<span class="hljs-number">2</span>-<span class="hljs-number">1</span>) % N;
+        <span class="hljs-keyword">else</span> mm[n] = fib((n+<span class="hljs-number">1</span>)/<span class="hljs-number">2</span>) * fib((n+<span class="hljs-number">1</span>)/<span class="hljs-number">2</span>) % N + fib((n-<span class="hljs-number">1</span>)/<span class="hljs-number">2</span>) * fib((n-<span class="hljs-number">1</span>)/<span class="hljs-number">2</span>) % N;
+    }
+    <span class="hljs-keyword">return</span> mm[n];
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    mm[<span class="hljs-number">1</span>] = <span class="hljs-number">1</span>, mm[<span class="hljs-number">2</span>] = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-built_in">cout</span> &lt;&lt; fib(n) % N;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

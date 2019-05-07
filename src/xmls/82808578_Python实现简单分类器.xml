@@ -1,0 +1,196 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/82808578				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h2><a id="toc_0"></a><div class="toc"><h3>分类器实现步骤</h3><ul><ul><li><a href="#toc_0" rel="nofollow">@[toc](分类器实现步骤)</a></li><li><a href="#python_15" rel="nofollow">第一步，导入我们需要的python库</a></li><li><a href="#_24" rel="nofollow">第二步，获取训练数据并解析坐标</a></li><li><a href="#_57" rel="nofollow">第三步，随机化数据</a></li><li><a href="#_71" rel="nofollow">第四步、生成分界线斜率</a></li><li><a href="#_84" rel="nofollow">第五步、处理测试数据</a></li><li><a href="#_106" rel="nofollow">第六步、输出展示分类结果</a></li><li><a href="#_129" rel="nofollow">输入数据</a></li><li><a href="#_148" rel="nofollow">完整代码</a></li></ul></ul></div></h2>
+<p>今天重新开始学习机器学习，训练了一个简单的分类器。</p>
+<p>如何工作的呢？给定一组训练数据，他们的参数有三个，x轴坐标，y轴坐标，类别。即<code>(x, y, c)</code>。如图所示<br>
+<img src="https://img-blog.csdn.net/20180921232602680?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述"><br>
+红色的圆点代表第一类点，类别编号为1；蓝色的倒三角形代表第二类点，类别编号为0.</p>
+<p>我们的目的，是根据这些训练数据，拟合出一条边界线，来将两种类别的数据划分开来，这个系统就叫做分类器。鉴于笔者水平尚浅，故暂时只能训练从原点出发的线性分类器。</p>
+<p>下面就讨论这个简单分类器的具体实现，对于入门者来说，其实也可以学到不少东西。</p>
+<hr>
+<h2><a id="python_15"></a>第一步，导入我们需要的python库</h2>
+<p>在这份代码中，我用到了<code>numpy</code>库和<code>matplotlib</code>库，并且在<code>jupyter notebook</code>中实现了内置<code>matplotlib</code>。</p>
+<pre><code>%matplotlib inline
+import matplotlib.pyplot as plt
+import numpy as np
+</code></pre>
+<h2><a id="_24"></a>第二步，获取训练数据并解析坐标</h2>
+<p>我们的输入格式是这样的：</p>
+<blockquote>
+<p>1.0 3.0 1,<br>
+3.0 1.0 0,<br>
+2.0 2.0 1,<br>
+4.0 1.0 0,<br>
+2.0 4.0 1,<br>
+4.5 1.0 0,<br>
+3.0 2.5 1,<br>
+5.0 2.0 0</p>
+</blockquote>
+<p>每行代表一个坐标的信息，分别是横坐标，纵坐标，类别。每组数据间用<code>,</code> 分隔，因此可以很简单的用<code>split</code>函数将数据划分。具体到每个坐标的信息，我们可以利用<code>numpy</code>的<code>fromstring</code>函数获取一个字符串信息，并把他们转化为<code>float</code>类型。</p>
+<pre><code class="language-python"><code class="prism  language-python">get <span class="token operator">=</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token string">"请输入训练数据，第三个参数为类别"</span><span class="token punctuation">)</span>
+get <span class="token operator">=</span> get<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">','</span><span class="token punctuation">)</span>
+train_data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+x1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+y1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+x0 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+y0 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span> each <span class="token keyword">in</span> get<span class="token punctuation">:</span>
+    train_data<span class="token punctuation">.</span>append<span class="token punctuation">(</span>np<span class="token punctuation">.</span>fromstring<span class="token punctuation">(</span>each<span class="token punctuation">,</span> dtype<span class="token operator">=</span><span class="token builtin">float</span><span class="token punctuation">,</span> sep<span class="token operator">=</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> each <span class="token keyword">in</span> train_data<span class="token punctuation">:</span>
+    <span class="token keyword">if</span> each<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        x1<span class="token punctuation">.</span>append<span class="token punctuation">(</span>each<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        y1<span class="token punctuation">.</span>append<span class="token punctuation">(</span>each<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        x0<span class="token punctuation">.</span>append<span class="token punctuation">(</span>each<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        y0<span class="token punctuation">.</span>append<span class="token punctuation">(</span>each<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></code></pre>
+<h2><a id="_57"></a>第三步，随机化数据</h2>
+<p>为了使我们的数据更加准确，我们需要用到随机化数据。如果不随机化会怎么样呢？不随机化，我们的分类器就可能陷入某种极端情况，从而得出错误的解。</p>
+<p>代码中，我们使用<code>numpy</code>的随机技术。</p>
+<p>1、首先初始化随机种子，由于我希望每次都随机，所以我给随机种子传递的参数也是随机的<br>
+2、随机化排列，这样可以得到一个随机的排列，以在后续处理数据时相对公平。</p>
+<pre><code class="language-python"><code class="prism  language-python">np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>seed<span class="token punctuation">(</span>np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>randint<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">10000</span><span class="token punctuation">,</span> size<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+order1 <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>permutation<span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>x1<span class="token punctuation">)</span><span class="token punctuation">)</span>
+order0 <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>permutation<span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>x0<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></code></pre>
+<h2><a id="_71"></a>第四步、生成分界线斜率</h2>
+<p>这一步是最核心的一步，我们通过输入的训练数据对直线斜率进行调整。方法就是利用预测值与期望值之间的误差进行拟合，同时使用学习率<code>learn</code>和一些调整量<code>adjust</code>，使得过去和现在的训练能同时起到作用，而不偏颇。</p>
+<pre><code class="language-python"><code class="prism  language-python">slope <span class="token operator">=</span> <span class="token number">1.0</span>
+adjust <span class="token operator">=</span> <span class="token number">0.0</span>
+learn <span class="token operator">=</span> <span class="token number">0.5</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>x1<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    slope <span class="token operator">+=</span> <span class="token punctuation">(</span>y1<span class="token punctuation">[</span>order1<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">-</span> slope<span class="token operator">*</span>x1<span class="token punctuation">[</span>order1<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">+</span> adjust<span class="token punctuation">)</span><span class="token operator">/</span>x1<span class="token punctuation">[</span>order1<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token operator">*</span>learn
+    slope <span class="token operator">+=</span> <span class="token punctuation">(</span>y0<span class="token punctuation">[</span>order0<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">-</span> slope<span class="token operator">*</span>x0<span class="token punctuation">[</span>order0<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">-</span> adjust<span class="token punctuation">)</span><span class="token operator">/</span>x0<span class="token punctuation">[</span>order0<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token operator">*</span>learn
+<span class="token keyword">print</span><span class="token punctuation">(</span>slope<span class="token punctuation">)</span>
+</code></code></pre>
+<h2><a id="_84"></a>第五步、处理测试数据</h2>
+<p>对测试数据的读入，我们的处理和训练数据是一样的。<br>
+通过对预边界测试和实际值的对比，我们得出测试数据的类别信息，从而实现分类。</p>
+<pre><code class="language-python"><code class="prism  language-python">get <span class="token operator">=</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token string">"请输入测试数据："</span><span class="token punctuation">)</span>
+get <span class="token operator">=</span> get<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">','</span><span class="token punctuation">)</span>
+test_data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+x2 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+y2 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> get<span class="token punctuation">:</span>
+    test_data<span class="token punctuation">.</span>append<span class="token punctuation">(</span>np<span class="token punctuation">.</span>fromstring<span class="token punctuation">(</span>i<span class="token punctuation">,</span> dtype<span class="token operator">=</span><span class="token builtin">float</span><span class="token punctuation">,</span> sep<span class="token operator">=</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> test_data<span class="token punctuation">:</span>
+    x2<span class="token punctuation">.</span>append<span class="token punctuation">(</span>i<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    y2<span class="token punctuation">.</span>append<span class="token punctuation">(</span>i<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>x2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> x2<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">*</span>slope <span class="token operator">&gt;</span> y2<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+</code></code></pre>
+<h2><a id="_106"></a>第六步、输出展示分类结果</h2>
+<p>图像是最直观的，因此我们利用<code>matplotlib</code>来展示结果。</p>
+<pre><code class="language-python"><code class="prism  language-python">x <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+y <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> x<span class="token punctuation">:</span>
+    y<span class="token punctuation">.</span>append<span class="token punctuation">(</span>slope<span class="token operator">*</span>i<span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>xlim<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>ylim<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> linestyle<span class="token operator">=</span><span class="token string">'-'</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x1<span class="token punctuation">,</span> y1<span class="token punctuation">,</span> <span class="token string">'o'</span><span class="token punctuation">,</span> color<span class="token operator">=</span><span class="token string">'red'</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x0<span class="token punctuation">,</span> y0<span class="token punctuation">,</span> <span class="token string">'v'</span><span class="token punctuation">,</span> color<span class="token operator">=</span><span class="token string">'blue'</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x2<span class="token punctuation">,</span> y2<span class="token punctuation">,</span> <span class="token string">'x'</span><span class="token punctuation">,</span> color<span class="token operator">=</span><span class="token string">'black'</span><span class="token punctuation">)</span>
+</code></code></pre>
+<p>如图<br>
+<img src="https://img-blog.csdn.net/20180921235122971?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述"><br>
+可见，我们的分类器准确度还是比较高的。</p>
+<hr>
+<h2><a id="_129"></a>输入数据</h2>
+<pre><code class="language-python"><code class="prism  language-python"><span class="token comment"># 训练集</span>
+<span class="token number">1.0</span> <span class="token number">3.0</span> <span class="token number">1</span><span class="token punctuation">,</span>
+<span class="token number">3.0</span> <span class="token number">1.0</span> <span class="token number">0</span><span class="token punctuation">,</span>
+<span class="token number">2.0</span> <span class="token number">2.0</span> <span class="token number">1</span><span class="token punctuation">,</span>
+<span class="token number">4.0</span> <span class="token number">1.0</span> <span class="token number">0</span><span class="token punctuation">,</span>
+<span class="token number">2.0</span> <span class="token number">4.0</span> <span class="token number">1</span><span class="token punctuation">,</span>
+<span class="token number">4.5</span> <span class="token number">1.0</span> <span class="token number">0</span><span class="token punctuation">,</span>
+<span class="token number">3.0</span> <span class="token number">2.5</span> <span class="token number">1</span><span class="token punctuation">,</span>
+<span class="token number">5.0</span> <span class="token number">2.0</span> <span class="token number">0</span>
+
+<span class="token comment"># 测试集</span>
+<span class="token number">4.0</span> <span class="token number">3.0</span><span class="token punctuation">,</span>
+<span class="token number">2.5</span> <span class="token number">2.5</span><span class="token punctuation">,</span>
+<span class="token number">3.6</span> <span class="token number">1.5</span><span class="token punctuation">,</span>
+<span class="token number">5.0</span> <span class="token number">1.5</span>
+</code></code></pre>
+<h2><a id="_148"></a>完整代码</h2>
+<pre><code class="language-python"><code class="prism  language-python"><span class="token operator">%</span>matplotlib inline
+<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+
+get <span class="token operator">=</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token string">"请输入训练数据，第三个参数为类别"</span><span class="token punctuation">)</span>
+get <span class="token operator">=</span> get<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">','</span><span class="token punctuation">)</span>
+train_data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+x1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+y1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+x0 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+y0 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span> each <span class="token keyword">in</span> get<span class="token punctuation">:</span>
+    train_data<span class="token punctuation">.</span>append<span class="token punctuation">(</span>np<span class="token punctuation">.</span>fromstring<span class="token punctuation">(</span>each<span class="token punctuation">,</span> dtype<span class="token operator">=</span><span class="token builtin">float</span><span class="token punctuation">,</span> sep<span class="token operator">=</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> each <span class="token keyword">in</span> train_data<span class="token punctuation">:</span>
+    <span class="token keyword">if</span> each<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        x1<span class="token punctuation">.</span>append<span class="token punctuation">(</span>each<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        y1<span class="token punctuation">.</span>append<span class="token punctuation">(</span>each<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        x0<span class="token punctuation">.</span>append<span class="token punctuation">(</span>each<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        y0<span class="token punctuation">.</span>append<span class="token punctuation">(</span>each<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>seed<span class="token punctuation">(</span>np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>randint<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">10000</span><span class="token punctuation">,</span> size<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+order1 <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>permutation<span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>x1<span class="token punctuation">)</span><span class="token punctuation">)</span>
+order0 <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>permutation<span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>x0<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+slope <span class="token operator">=</span> <span class="token number">1.0</span>
+adjust <span class="token operator">=</span> <span class="token number">0.0</span>
+learn <span class="token operator">=</span> <span class="token number">0.5</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>x1<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    slope <span class="token operator">+=</span> <span class="token punctuation">(</span>y1<span class="token punctuation">[</span>order1<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">-</span> slope<span class="token operator">*</span>x1<span class="token punctuation">[</span>order1<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">+</span> adjust<span class="token punctuation">)</span><span class="token operator">/</span>x1<span class="token punctuation">[</span>order1<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token operator">*</span>learn
+    slope <span class="token operator">+=</span> <span class="token punctuation">(</span>y0<span class="token punctuation">[</span>order0<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">-</span> slope<span class="token operator">*</span>x0<span class="token punctuation">[</span>order0<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">-</span> adjust<span class="token punctuation">)</span><span class="token operator">/</span>x0<span class="token punctuation">[</span>order0<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token operator">*</span>learn
+<span class="token keyword">print</span><span class="token punctuation">(</span>slope<span class="token punctuation">)</span>
+
+get <span class="token operator">=</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token string">"请输入测试数据："</span><span class="token punctuation">)</span>
+get <span class="token operator">=</span> get<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">','</span><span class="token punctuation">)</span>
+test_data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+x2 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+y2 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> get<span class="token punctuation">:</span>
+    test_data<span class="token punctuation">.</span>append<span class="token punctuation">(</span>np<span class="token punctuation">.</span>fromstring<span class="token punctuation">(</span>i<span class="token punctuation">,</span> dtype<span class="token operator">=</span><span class="token builtin">float</span><span class="token punctuation">,</span> sep<span class="token operator">=</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> test_data<span class="token punctuation">:</span>
+    x2<span class="token punctuation">.</span>append<span class="token punctuation">(</span>i<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    y2<span class="token punctuation">.</span>append<span class="token punctuation">(</span>i<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>x2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> x2<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">*</span>slope <span class="token operator">&gt;</span> y2<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+x <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+y <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> x<span class="token punctuation">:</span>
+    y<span class="token punctuation">.</span>append<span class="token punctuation">(</span>slope<span class="token operator">*</span>i<span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>figure<span class="token punctuation">(</span>figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>xlim<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>ylim<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> linestyle<span class="token operator">=</span><span class="token string">'-'</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x1<span class="token punctuation">,</span> y1<span class="token punctuation">,</span> <span class="token string">'o'</span><span class="token punctuation">,</span> color<span class="token operator">=</span><span class="token string">'red'</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x0<span class="token punctuation">,</span> y0<span class="token punctuation">,</span> <span class="token string">'v'</span><span class="token punctuation">,</span> color<span class="token operator">=</span><span class="token string">'blue'</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x2<span class="token punctuation">,</span> y2<span class="token punctuation">,</span> <span class="token string">'x'</span><span class="token punctuation">,</span> color<span class="token operator">=</span><span class="token string">'black'</span><span class="token punctuation">)</span>
+</code></code></pre>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

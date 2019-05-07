@@ -1,0 +1,107 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81516296				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>201609-3 炉石传说 <a href="http://118.190.20.162/view.page?gpid=T45" rel="nofollow">传送门</a></p>
+
+<p>纯粹的模拟题, 按照规则一步步来模拟即可, 然而辣鸡的我之得了90分, 找了好久没有找出那10分的bug.</p>
+
+<p>要注意的一点是: <strong>操作数可能为0</strong></p>
+
+<p><del>还是贴一贴90分的辣鸡代码, 毕竟是一个一个敲出来的</del><del></del></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Man {
+    <span class="hljs-keyword">int</span> position, attack, health;
+    Man(<span class="hljs-keyword">int</span> p, <span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> h) : position(p), attack(a), health(h) {}
+};
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Man&gt;</span> man[<span class="hljs-number">2</span>];
+
+<span class="hljs-keyword">bool</span> cmp(Man x, Man y)
+{
+    <span class="hljs-keyword">return</span> x.position &lt; y.position;
+}
+
+<span class="hljs-keyword">void</span> show(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Man&gt;</span> man[<span class="hljs-number">2</span>])
+{
+    sort(man[<span class="hljs-number">0</span>].begin() + <span class="hljs-number">1</span>, man[<span class="hljs-number">0</span>].end(), cmp);
+    sort(man[<span class="hljs-number">1</span>].begin() + <span class="hljs-number">1</span>, man[<span class="hljs-number">1</span>].end(), cmp);
+    <span class="hljs-built_in">cout</span> &lt;&lt; man[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>].health &lt;&lt; endl &lt;&lt; man[<span class="hljs-number">0</span>].size() - <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; man[<span class="hljs-number">0</span>].size(); ++i)
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; man[<span class="hljs-number">0</span>][i].health;
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl &lt;&lt; man[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>].health &lt;&lt; endl &lt;&lt; man[<span class="hljs-number">1</span>].size() - <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; man[<span class="hljs-number">1</span>].size(); ++i)
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; man[<span class="hljs-number">1</span>][i].health;
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    man[<span class="hljs-number">0</span>].push_back(Man(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">30</span>));
+    man[<span class="hljs-number">1</span>].push_back(Man(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">30</span>));
+    <span class="hljs-keyword">int</span> n, time = <span class="hljs-number">0</span>, me = <span class="hljs-number">0</span>, you = <span class="hljs-number">1</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">while</span> (time != n) {
+        <span class="hljs-built_in">string</span> cmd;
+        <span class="hljs-keyword">while</span> (<span class="hljs-built_in">cin</span> &gt;&gt; cmd) {
+            time++;
+            <span class="hljs-keyword">if</span> (cmd == <span class="hljs-string">"summon"</span>) {
+                <span class="hljs-keyword">int</span> position, attack, health;
+                <span class="hljs-built_in">cin</span> &gt;&gt; position &gt;&gt; attack &gt;&gt; health;
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; man[me].size(); ++i)
+                    <span class="hljs-keyword">if</span> (man[me][i].position &gt;= position) man[me][i].position++;
+                man[me].push_back(Man(position, attack, health));
+            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cmd == <span class="hljs-string">"attack"</span>) {
+                <span class="hljs-keyword">int</span> att_me, att_you, m, y;
+                <span class="hljs-built_in">cin</span> &gt;&gt; att_me &gt;&gt; att_you;
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; man[me].size(); ++i)
+                    <span class="hljs-keyword">if</span> (man[me][i].position == att_me) m = i;
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; man[you].size(); ++i)
+                    <span class="hljs-keyword">if</span> (man[you][i].position == att_you) y = i;
+                man[me][m].health -= man[you][y].attack;
+                man[you][y].health -= man[me][m].attack;
+                <span class="hljs-keyword">if</span> (man[me][m].health &lt;= <span class="hljs-number">0</span>) {
+                    man[me].erase(man[me].begin() + m);
+                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; man[me].size(); ++i) {
+                        <span class="hljs-keyword">if</span> (man[me][i].position &gt; att_me) man[me][i].position--;
+                    }
+                }
+                <span class="hljs-keyword">if</span> (att_you != <span class="hljs-number">0</span> &amp;&amp; man[you][att_you].health &lt;= <span class="hljs-number">0</span>) {
+                    man[you].erase(man[you].begin() + y);
+                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; man[you].size(); ++i) {
+                        <span class="hljs-keyword">if</span> (man[you][i].position &gt; att_you) man[you][i].position--;
+                    }
+                }
+                <span class="hljs-keyword">if</span> (att_you == <span class="hljs-number">0</span> &amp;&amp; man[you][<span class="hljs-number">0</span>].health &lt;= <span class="hljs-number">0</span>) {
+                    <span class="hljs-built_in">cout</span> &lt;&lt; (me == <span class="hljs-number">0</span> ? <span class="hljs-number">1</span> : -<span class="hljs-number">1</span>) &lt;&lt; endl;
+                    show(man);
+                    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+                }
+            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cmd == <span class="hljs-string">"end"</span>) <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">if</span> (time == n) {
+                <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-number">0</span> &lt;&lt; endl;
+                show(man);
+                <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+            }
+        }
+        swap(me, you);
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-number">0</span> &lt;&lt; endl;
+    show(man);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

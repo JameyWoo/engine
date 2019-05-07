@@ -1,0 +1,92 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81625933				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>CCF 201409-4 最优配餐 <a href="http://118.190.20.162/view.page?gpid=T13" rel="nofollow">传送门</a></p>
+
+<p>这道题很水, 不过刚开始超时了. 有一个收获: <strong>对一张图里分散的点进行BFS时, 不必每次都将其作为源点, 进行BFS. 而可以全部压入队列中, 进行BFS. </strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> <span class="hljs-built_in">map</span>[<span class="hljs-number">1005</span>][<span class="hljs-number">1005</span>], cnt[<span class="hljs-number">1005</span>][<span class="hljs-number">1005</span>];
+<span class="hljs-keyword">int</span> lenth[<span class="hljs-number">1005</span>][<span class="hljs-number">1005</span>], n; <span class="hljs-comment">// 路长</span>
+<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> ans = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">bool</span> vis[<span class="hljs-number">1005</span>][<span class="hljs-number">1005</span>];
+<span class="hljs-keyword">int</span> move[<span class="hljs-number">4</span>][<span class="hljs-number">2</span>] = {{<span class="hljs-number">1</span>, <span class="hljs-number">0</span>}, {-<span class="hljs-number">1</span>, <span class="hljs-number">0</span>}, {<span class="hljs-number">0</span>, <span class="hljs-number">1</span>}, {<span class="hljs-number">0</span>, -<span class="hljs-number">1</span>}};
+<span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;pair&lt;<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span>&gt;</span> &gt; Q;
+
+<span class="hljs-keyword">void</span> bfs()
+{
+    <span class="hljs-keyword">while</span> (!Q.empty()) {
+        <span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> x = Q.front().first, y = Q.front().second;
+        Q.pop();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; ++i) {
+            <span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> xx = x + move[i][<span class="hljs-number">0</span>], yy = y + move[i][<span class="hljs-number">1</span>];
+            <span class="hljs-keyword">if</span> (vis[xx][yy]) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">map</span>[xx][yy] == -<span class="hljs-number">1</span> || <span class="hljs-built_in">map</span>[xx][yy] == -<span class="hljs-number">2</span>) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">if</span> (xx &lt; <span class="hljs-number">1</span> || xx &gt; n || yy &lt; <span class="hljs-number">1</span> || yy &gt; n) <span class="hljs-keyword">continue</span>;
+            vis[xx][yy] = <span class="hljs-keyword">true</span>;
+            <span class="hljs-keyword">if</span> (lenth[xx][yy] &lt; lenth[x][y] + <span class="hljs-number">1</span>) <span class="hljs-keyword">continue</span>;
+            lenth[xx][yy] = lenth[x][y] + <span class="hljs-number">1</span>;
+            Q.push(make_pair(xx, yy));
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    ios::sync_with_stdio(<span class="hljs-keyword">false</span>);
+    <span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> m, k, d;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m &gt;&gt; k &gt;&gt; d;
+    <span class="hljs-built_in">memset</span>(<span class="hljs-built_in">map</span>, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-built_in">map</span>));
+    <span class="hljs-built_in">memset</span>(cnt, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(cnt));
+    <span class="hljs-built_in">memset</span>(lenth, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span>(lenth));
+    <span class="hljs-built_in">memset</span>(vis, <span class="hljs-keyword">false</span>, <span class="hljs-keyword">sizeof</span>(vis));
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>, x, y; i &lt; m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y;
+        <span class="hljs-built_in">map</span>[x][y] = -<span class="hljs-number">2</span>; <span class="hljs-comment">// 分店</span>
+        lenth[x][y] = <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>, x, y, c; i &lt; k; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y &gt;&gt; c;
+        <span class="hljs-built_in">map</span>[x][y] = <span class="hljs-number">1</span>;
+        cnt[x][y] += c; <span class="hljs-comment">// 购物数量</span>
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>, x, y; i &lt; d; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y;
+        <span class="hljs-built_in">map</span>[x][y] = -<span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">map</span>[i][j] == -<span class="hljs-number">2</span>) {
+                Q.push(make_pair(i, j));
+                vis[i][j] = <span class="hljs-keyword">true</span>;
+            }
+        }
+    }
+    bfs();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">map</span>[i][j] == <span class="hljs-number">1</span>) {
+                ans += cnt[i][j]*lenth[i][j];
+            }
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,107 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81221949				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>P1939 【模板】矩阵加速（数列） <br>
+题目描述 <br>
+a[1]=a[2]=a[3]=1</p>
+
+<p>a[x]=a[x-3]+a[x-1] (x&gt;3)</p>
+
+<p>求a数列的第n项对1000000007（10^9+7）取余的值。</p>
+
+<p>输入输出格式 <br>
+输入格式： <br>
+第一行一个整数T，表示询问个数。</p>
+
+<p>以下T行，每行一个正整数n。</p>
+
+<p>输出格式： <br>
+每行输出一个非负整数表示答案。</p>
+
+<p>输入输出样例</p>
+
+<p>输入样例#1：  <br>
+3 <br>
+6 <br>
+8 <br>
+10 <br>
+输出样例#1：  <br>
+4 <br>
+9 <br>
+19</p>
+
+<hr>
+
+<p><strong>此题乍一看可以用离散数学里学过的递推公式求解, 但是x**3 - x**2 - 1 = 0个特征方程似乎是有虚数解, 那么看来是不行的.</strong></p>
+
+<p><strong>再回顾之前学过的矩阵快速幂求斐波那契数列,这个数列和斐波那契非常相似,都是递推,那么是否可以用同样的方法用矩阵去做呢?</strong></p>
+
+<p>结合题的名字”【模板】矩阵加速（数列）”, 标程应该就是这样了吧. </p>
+
+<p><strong>OK, 经过推导构造出了矩阵[[1, 0, 1], [1, 0, 0], [0, 1, 0]]. </strong></p>
+
+<p>思路和斐波那契数列的矩阵快速幂是一样的.</p>
+
+<p><strong>找出关系矩阵 -&gt; 矩阵计算 + 快速幂</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> LL;
+
+<span class="hljs-keyword">const</span> LL mode = <span class="hljs-number">1000000007</span>;
+
+<span class="hljs-keyword">void</span> calc(LL ans[<span class="hljs-number">3</span>][<span class="hljs-number">3</span>], LL matrix[<span class="hljs-number">3</span>][<span class="hljs-number">3</span>])
+{
+    LL tmp[<span class="hljs-number">3</span>][<span class="hljs-number">3</span>];
+    <span class="hljs-built_in">memset</span>(tmp, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(tmp));
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">3</span>; ++j) {
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">0</span>; k &lt; <span class="hljs-number">3</span>; ++k) {
+                tmp[i][j] += ans[i][k] * matrix[k][j];
+                tmp[i][j] %= mode;
+            }
+        }
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">3</span>; ++j) {
+            ans[i][j] = tmp[i][j];
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    LL T, n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; T;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; T; ++i) {
+        LL matrix[<span class="hljs-number">3</span>][<span class="hljs-number">3</span>] = {{<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>}, {<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>}, {<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>}};
+        LL ans[<span class="hljs-number">3</span>][<span class="hljs-number">3</span>] = {{<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>}, {<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>}, {<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>}};
+        <span class="hljs-built_in">cin</span> &gt;&gt; n;
+        <span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">3</span>) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-number">1</span> &lt;&lt; endl;
+            <span class="hljs-keyword">continue</span>;
+        }
+        n -= <span class="hljs-number">3</span>;
+        <span class="hljs-keyword">while</span> (n) {
+            <span class="hljs-keyword">if</span> (n &amp; <span class="hljs-number">1</span>) {
+                calc(ans, matrix);
+            }
+            calc(matrix, matrix);
+            n /= <span class="hljs-number">2</span>;
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; (ans[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] + ans[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] + ans[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>]) % mode &lt;&lt; endl;
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

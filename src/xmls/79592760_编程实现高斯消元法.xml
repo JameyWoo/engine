@@ -1,0 +1,103 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79592760				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>计算机计算线性方程组的解一般是用<strong>高斯消元法</strong>完成的.</p>
+
+<p>我写了一个简单的程序, 输入一个[(n*(n+1)]的增广矩阵, 求解各未知数的值.</p>
+
+<p>只能解答两种情况:</p>
+
+<p><strong>1. 线性方程组有唯一解</strong> <br>
+ <strong>2. 线性方程组无解</strong></p>
+
+<p>时间复杂度为O(n^3).</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cmath&gt;</span>
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> ESP = <span class="hljs-number">1e-8</span>;
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-keyword">double</span> a[<span class="hljs-number">105</span>][<span class="hljs-number">105</span>];
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt;= n; ++j) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; a[i][j];
+        }
+    }
+
+    <span class="hljs-comment">//消去的过程 </span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = i; j &lt; n; ++j) {
+            <span class="hljs-keyword">double</span> tmp = a[j][i-<span class="hljs-number">1</span>];
+            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> k = i-<span class="hljs-number">1</span>; k &lt;= n; ++k) {
+                a[j][k] = a[j][k]*(a[i-<span class="hljs-number">1</span>][i-<span class="hljs-number">1</span>]/tmp) - a[i-<span class="hljs-number">1</span>][k];
+            }
+        }
+    }
+
+    <span class="hljs-comment">//整理出结果的过程</span>
+    <span class="hljs-keyword">bool</span> flag = <span class="hljs-number">0</span>; <span class="hljs-comment">//判断是否无解 </span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = n-<span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; --i) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = i - <span class="hljs-number">1</span>; j &gt;= <span class="hljs-number">0</span>; --j) {
+            a[j][n] -= a[i][n]*(a[j][i]/a[i][i]);
+            a[j][i] = <span class="hljs-number">0</span>;
+        }
+        <span class="hljs-keyword">if</span>(<span class="hljs-built_in">fabs</span>(a[i][i]) &gt; ESP &amp;&amp; <span class="hljs-built_in">fabs</span>(a[i][n]) &lt;= ESP)
+            flag = <span class="hljs-number">1</span>;
+    }
+
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt;= n; ++j) {
+            <span class="hljs-built_in">cout</span>.setf(ios::fixed);
+            <span class="hljs-built_in">cout</span>.precision(<span class="hljs-number">3</span>);
+            <span class="hljs-built_in">cout</span>.width(<span class="hljs-number">8</span>);
+            <span class="hljs-built_in">cout</span> &lt;&lt; left &lt;&lt; a[i][j];
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl &lt;&lt; endl;
+    }
+
+    <span class="hljs-keyword">if</span>(flag) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"无解 !!!\n"</span>;
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+            <span class="hljs-built_in">cout</span>.setf(ios::fixed);
+            <span class="hljs-built_in">cout</span>.precision(<span class="hljs-number">3</span>);
+            <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"x"</span> &lt;&lt; i + <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-string">" = "</span> &lt;&lt; a[i][n]/a[i][i] &lt;&lt; endl;
+        }
+    }
+}
+<span class="hljs-comment">/*
+2
+1 2 3
+2 1 1
+
+2
+1 2 1
+2 1 1
+
+3
+1 2 3 4
+2 3 4 1
+3 4 1 2
+
+4
+1 2 3 4 0
+2 3 4 1 0
+3 4 1 2 0
+4 1 2 3 0
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

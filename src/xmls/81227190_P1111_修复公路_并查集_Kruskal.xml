@@ -1,0 +1,161 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81227190				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><a href="https://www.luogu.org/problemnew/show/P1111" rel="nofollow">传送门</a></p>
+
+<blockquote>
+  <p>题目背景 AA 地区在地震过后，连接所有村庄的公路都造成了损坏而无法通车。政府派人修复这些公路。</p>
+  
+  <p>题目描述 给出A地区的村庄数 NN ，和公路数 MM <br>
+  ，公路是双向的。并告诉你每条公路的连着哪两个村庄，并告诉你什么时候能修完这条公路。问最早什么时候任意两个村庄能够通车，即最早什么时候任意两条村庄都存在至少一条修复完成的道路（可以由多条公路连成一条道路）</p>
+  
+  <p>输入输出格式 输入格式： 第 11 行两个正整数 N,MN,M</p>
+  
+  <p>下面 MM 行，每行 33 个正整数 x, y, tx,y,t ，告诉你这条公路连着 x,yx,y 两个村庄，在时间t时能修复完成这条公路。</p>
+  
+  <p>输出格式： 如果全部公路修复完毕仍然存在两个村庄无法通车，则输出 -1−1 ，否则输出最早什么时候任意两个村庄能够通车。</p>
+  
+  <p>输入输出样例</p>
+  
+  <p>输入样例#1：  <br>
+  4 4 <br>
+  1 2 6 <br>
+  1 3 4 <br>
+  1 4 5 <br>
+  4 2 3 <br>
+  输出样例#1：  <br>
+  5</p>
+</blockquote>
+
+<p>此题一看,觉得是<strong>按照时间排序,然后一条一条边加过去,所有边都联通了那么就ok了</strong></p>
+
+<p>问题是: <strong>什么时候知道所有的边都联通了?</strong></p>
+
+<p>使用并查集是没错的, 但裸的并查集还不能解决问题 </p>
+
+<p><strong>难道每加入一个边都判断一下是否所有的点都在同一个集合里面? 这样是肯定会超时的.</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cs"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">1</span>; k &lt;= n; ++k) { <span class="hljs-comment">// 更新每个结点的祖先</span>
+    find(k);</code></pre>
+
+<pre class="prettyprint"><code class=" hljs cs"><span class="hljs-keyword">int</span> tmp = father[<span class="hljs-number">1</span>];
+<span class="hljs-keyword">bool</span> flag = <span class="hljs-keyword">false</span>;
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            <span class="hljs-keyword">if</span> (tmp != father[j]) {
+                flag = <span class="hljs-keyword">true</span>;
+                <span class="hljs-keyword">continue</span>;
+            }
+        }
+        <span class="hljs-keyword">if</span> (flag == <span class="hljs-keyword">false</span>) {
+            ans = Edge[i].t;
+            <span class="hljs-keyword">break</span>;
+        }</code></pre>
+
+<p>不论如何,先这样暴力地求解一下. </p>
+
+<p>woc, 这题地数据稍微有点水, 写得这么暴力都得了90分.</p>
+
+<p><del>那么接下来如何让它<strong>“温柔”</strong>一点呢? </del></p>
+
+<p>我觉得数据这么大, 读入这么多数, 是不是应该<strong>换成scanf来读入数据? </strong></p>
+
+<p><em>还是90分,果然像就这么水过去是不现实的,虽然其他的时间减少了,但超时的还是超时</em></p>
+
+<p>那么接下来有什么办法? </p>
+
+<p>Oh, yes! 想到解决方法了!!! 真棒!</p>
+
+<p><strong>可以建立一个count数组, 这个数组记录的是以该点为祖先的结点数量,初始化时全为1.</strong></p>
+
+<p>什么时候可以判断所有的点祖先相同呢?</p>
+
+<p>就是当某个count元素的值为n(结点个数)时. 如果每次都遍历一遍count数组,那么时间复杂度和之前一样, 但是, <strong>我们可以规定性地设定某个节点为最高级祖先(比如1), 那么每次加入边的时候就对它进行判断,如果其中有1,那么1作为祖先,否则照旧.同时转移count值</strong>, 每插入一条边判断count[1]的数量就OK了.</p>
+
+<p><strong>每个样例时间都不超过100ms.</strong></p>
+
+<hr>
+
+<p><strong>我靠! 看了下题解! 惊醒梦中人! 这就是一道最小生成树问题! 用并查集的Kruskal算法! 写过这么多次居然没反应过来! 尴尬了! </strong></p>
+
+<p><strong></strong><del>不过我的方法也不错 <br>
+<strong></strong></del></p><p>关键是启发了我想出一种统计祖先数量的方法! </p>
+
+<p>完整代码</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstdio&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> edge {
+    <span class="hljs-keyword">int</span> u, v, t;
+    edge(<span class="hljs-keyword">int</span> u, <span class="hljs-keyword">int</span> v, <span class="hljs-keyword">int</span> t) : u(u), v(v), t(t) {}
+};
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;edge&gt;</span> Edge;
+<span class="hljs-keyword">int</span> father[<span class="hljs-number">1005</span>];
+<span class="hljs-keyword">int</span> cnt[<span class="hljs-number">1005</span>] = {}; 
+
+<span class="hljs-keyword">bool</span> cmp(edge x, edge y)
+{
+    <span class="hljs-keyword">return</span> x.t &lt; y.t;
+}
+
+<span class="hljs-keyword">int</span> find(<span class="hljs-keyword">int</span> x)
+{
+    <span class="hljs-keyword">return</span> x == father[x] ? x : father[x] = find(father[x]);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, m, ans = -<span class="hljs-number">1</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt;= n; ++i) father[i] = i, cnt[i] = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-keyword">int</span> u, v, t;
+        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d %d %d"</span>, &amp;u, &amp;v, &amp;t);
+        Edge.push_back(edge(u, v, t)); 
+    } 
+    sort(Edge.begin(), Edge.end(), cmp);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; Edge.size(); ++i) {
+        <span class="hljs-keyword">int</span> u = Edge[i].u, v = Edge[i].v;
+        u = find(u), v = find(v);
+        <span class="hljs-keyword">if</span> (u != v) {
+            <span class="hljs-keyword">if</span> (u == <span class="hljs-number">1</span>) {
+                father[v] = <span class="hljs-number">1</span>;
+                cnt[<span class="hljs-number">1</span>] += cnt[v];
+            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (v == <span class="hljs-number">1</span>) {
+                father[u] = <span class="hljs-number">1</span>;
+                cnt[<span class="hljs-number">1</span>] += cnt[u];
+            } <span class="hljs-keyword">else</span> {
+                father[v] = u;
+                cnt[u] += cnt[v];
+            }
+        }
+        <span class="hljs-keyword">if</span> (cnt[<span class="hljs-number">1</span>] == n) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; Edge[i].t;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; -<span class="hljs-number">1</span>;
+}
+<span class="hljs-comment">/* 
+4 4
+1 2 6
+1 3 4
+1 4 5
+4 2 3
+*/</span> </code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

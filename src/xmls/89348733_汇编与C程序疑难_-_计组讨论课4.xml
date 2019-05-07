@@ -1,0 +1,45 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/89348733				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h2><a id="_0"></a>题一</h2>
+<p><img src="https://img-blog.csdnimg.cn/20190417083321317.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+<strong>代码一结果是0x80000000，代码二会出现运行错误。</strong></p>
+<p>代码一中，在计算变量除以整数时，编译器做了优化，自动将该变量转化成一系列位运算和加法运算。如除以-1，他直接把数据取反了，没有执行除法。而除以变量时，不会执行这样的优化，直接除了。而INT_MIN（有符号）除以-1，和任意整数除以0，一样，会出现错误，这与SIGFPE信号有关。<strong><a href="https://zh.wikipedia.org/wiki/SIGFPE" rel="nofollow">关于SIGFPE信号的wiki。</a></strong></p>
+<p>有以下相关的知识</p>
+<p>eflags寄存器<br>
+标志位</p>
+<p>查看eflags寄存器，他会把标志位为1的位打印出来<br>
+<code>i r eflags</code><br>
+<img src="https://img-blog.csdnimg.cn/2019041708400318.png" alt="在这里插入图片描述"></p>
+<p>SIGFPE 是一个进程在执行了一个错误的算术操作时给他发送的信号。一般有两种情况：<br>
+1、整数除以0<br>
+2、INT_MIN / -1<br>
+在linux命令行中会出现 <code>Floating point exception (core dumped)</code>，也就是<code>浮点数例外 (核心已转储)</code>。</p>
+<hr>
+<h2><a id="_22"></a>题二</h2>
+<p><img src="https://img-blog.csdnimg.cn/20190417090633211.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+原因如下，截自同学的PPT。</p>
+<p><img src="https://img-blog.csdnimg.cn/2019041709332526.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/20190417090736603.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+就是说，在老版本GCC中，执行两个如a = f（10）时，第一个会发生精度损失，而第二个不会，所以判断会出现“不等于”。而对于第二个代码，有三个f(10)的计算，所以前两个的结果都存到寄存器当中，发生了相同的精度损失，结果相同，所以判断“等于”。</p>
+<h2><a id="_30"></a>题三</h2>
+<p><img src="https://img-blog.csdnimg.cn/20190417093408426.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>bug1：申请了内存没有释放<br>
+bug2：没有对count的大小进行判断</p>
+<p>bug2中如果count很大，如2^30，乘以sizeof(int) = 4 之后，会发生溢出。</p>
+<p>malloc的函数原型为 <code>void *malloc(size_t size);</code><br>
+溢出经过强制类型转化后，会变成很小的数，然后没有分配正确的内存。如果不知情使用了这些内存，就会出错。</p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

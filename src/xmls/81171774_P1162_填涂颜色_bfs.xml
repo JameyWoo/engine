@@ -1,0 +1,181 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81171774				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<blockquote>
+  <p>题目描述 <br>
+  由数字 00 组成的方阵中，有一任意形状闭合圈，闭合圈由数字 11 构成，围圈时只走上下左右 44 个方向。现要求把闭合圈内的所有空间都填写成 22 .例如： 6 \times 66×6 的方阵（ n=6n=6 ），涂色前和涂色后的方阵如下：</p>
+  
+  <p>0 0 0 0 0 0 <br>
+  0 0 1 1 1 1 <br>
+  0 1 1 0 0 1 <br>
+  1 1 0 0 0 1 <br>
+  1 0 0 0 0 1 <br>
+  1 1 1 1 1 1 <br>
+  0 0 0 0 0 0 <br>
+  0 0 1 1 1 1 <br>
+  0 1 1 2 2 1 <br>
+  1 1 2 2 2 1 <br>
+  1 2 2 2 2 1 <br>
+  1 1 1 1 1 1 <br>
+  输入输出格式 <br>
+  输入格式： <br>
+  每组测试数据第一行一个整数 n(1 \le n \le 30)n(1≤n≤30)</p>
+  
+  <p>接下来 nn 行，由 00 和 11 组成的 n \times nn×n 的方阵。</p>
+  
+  <p>方阵内只有一个闭合圈，圈内至少有一个 00 。</p>
+  
+  <p>//感谢黄小U饮品指出本题数据和数据格式不一样. 已修改(输入格式)</p>
+  
+  <p>输出格式： <br>
+  已经填好数字 22 的完整方阵。</p>
+  
+  <p>输入输出样例 <br>
+  输入样例#1：  <br>
+  6 <br>
+  0 0 0 0 0 0 <br>
+  0 0 1 1 1 1 <br>
+  0 1 1 0 0 1 <br>
+  1 1 0 0 0 1 <br>
+  1 0 0 0 0 1 <br>
+  1 1 1 1 1 1 <br>
+  输出样例#1：  <br>
+  0 0 0 0 0 0 <br>
+  0 0 1 1 1 1 <br>
+  0 1 1 2 2 1 <br>
+  1 1 2 2 2 1 <br>
+  1 2 2 2 2 1 <br>
+  1 1 1 1 1 1 <br>
+  说明 <br>
+  1 \le n \le 301≤n≤30</p>
+</blockquote>
+
+<p>乍一看一道求联通块的问题, 好像不是很难的样子.</p>
+
+<p><strong>一开始思路是找到第一个0,然后bfs出所有能达到的零,这个过程中如果触摸到边界,记一个flag,表示是外围,否则内围 </strong></p>
+
+<p>一个错误: <strong>没有设置vis数组, 导致死循环.</strong></p>
+
+<p>结果60分.</p>
+
+<p>错在这种数据:</p>
+
+<blockquote>
+  <p>6 <br>
+  0 0 1 1 1 0 <br>
+  1 1 1 0 1 0 <br>
+  1 0 0 0 0 1 <br>
+  1 1 0 1 1 1 <br>
+  0 1 0 1 0 0 <br>
+  0 1 1 1 0 0</p>
+</blockquote>
+
+<p>题目并没有说外围也是联通的.</p>
+
+<p>so, 做针对性的修改后, 居然40分? wtf? 不增反降?</p>
+
+<p><strong>然后又调出数据, 找到了bug. 原来是遍历那些点需要bfs时, flag没有初始化为1. 是的, flag初始化两次. 其中一次在条件里面.</strong></p>
+
+<p>code show as belew.</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> row[<span class="hljs-number">4</span>] = {-<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>};
+<span class="hljs-keyword">int</span> column[<span class="hljs-number">4</span>] = {<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">1</span>};
+<span class="hljs-keyword">bool</span> flag = <span class="hljs-number">0</span>; <span class="hljs-comment">// 刚开始假设是内围</span>
+<span class="hljs-keyword">bool</span> vis[<span class="hljs-number">33</span>][<span class="hljs-number">33</span>] = {}, okya[<span class="hljs-number">33</span>][<span class="hljs-number">33</span>];
+
+<span class="hljs-keyword">void</span> bfs(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> &gt;</span> &amp;<span class="hljs-built_in">map</span>, <span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y, <span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;pair&lt;<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>&gt;</span> &gt;que;
+    que.push(make_pair(x, y));
+    vis[x][y] = okya[x][y] = <span class="hljs-keyword">true</span>;
+    <span class="hljs-keyword">while</span> (!que.empty()) {
+        pair&lt;<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>&gt; front = que.front();
+        que.pop();
+        <span class="hljs-built_in">map</span>[front.first][front.second] = -<span class="hljs-number">1</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; ++i) {
+            <span class="hljs-keyword">int</span> r = row[i] + front.first, c = column[i] + front.second;
+            <span class="hljs-keyword">if</span> (r &lt; <span class="hljs-number">0</span> || r &gt;= n || c &lt; <span class="hljs-number">0</span> || c &gt;= n) {
+                flag = <span class="hljs-number">1</span>; <span class="hljs-comment">// 到边界了, 说明是外围. </span>
+                <span class="hljs-keyword">continue</span>;
+            }
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">map</span>[r][c] == <span class="hljs-number">1</span> || vis[r][c]) <span class="hljs-keyword">continue</span>;
+            vis[r][c] = okya[r][c] = <span class="hljs-keyword">true</span>;
+            que.push(make_pair(r, c));
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> &gt;</span> <span class="hljs-built_in">map</span>(n, <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span>(n));
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; ++j) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; <span class="hljs-built_in">map</span>[i][j];
+        }
+    }
+    <span class="hljs-built_in">memset</span>(vis, <span class="hljs-keyword">false</span>, <span class="hljs-keyword">sizeof</span>(vis));
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; ++j) {
+            flag = <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">map</span>[i][j] == <span class="hljs-number">0</span> &amp;&amp; vis[i][j] == <span class="hljs-keyword">false</span>) {
+                flag = <span class="hljs-number">0</span>;
+                <span class="hljs-built_in">memset</span>(okya, <span class="hljs-keyword">false</span>, <span class="hljs-keyword">sizeof</span>(okya));
+                bfs(<span class="hljs-built_in">map</span>, i, j, n);
+                <span class="hljs-keyword">if</span> (flag == <span class="hljs-number">0</span>) <span class="hljs-keyword">break</span>;
+            }
+        }
+        <span class="hljs-keyword">if</span> (flag == <span class="hljs-number">0</span>) <span class="hljs-keyword">break</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; ++j) {
+            <span class="hljs-keyword">if</span> (okya[i][j]) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-number">2</span> &lt;&lt; <span class="hljs-string">' '</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">map</span>[i][j] == -<span class="hljs-number">1</span>) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-number">0</span> &lt;&lt; <span class="hljs-string">' '</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">map</span>[i][j] &lt;&lt; <span class="hljs-string">' '</span>;
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+}
+<span class="hljs-comment">/*
+思路就是找到第一个0,然后bfs出所有能达到的零,这个过程中如果触摸到边界,记一个flag,表示是外围,否则内围 
+一个错误: 没有设置vis数组. 
+结果60分.
+
+6
+0 0 0 0 0 0
+0 0 1 1 1 1
+0 1 1 0 0 1
+1 1 0 0 0 1
+1 0 0 0 0 1
+1 1 1 1 1 1
+
+查看了一下数据发现还有这种情况...所以以后考虑图的联通性还要考虑这样子的. 
+6
+0 0 1 1 1 0
+1 1 1 0 1 0
+1 0 0 0 0 1
+1 1 0 1 1 1
+0 1 0 1 0 0
+0 1 1 1 0 0 
+
+结果是40分, 其他情况错了? 
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

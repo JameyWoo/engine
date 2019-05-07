@@ -1,0 +1,159 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79144218				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>输入数字, 绘制如下图形 <br>
+<img src="https://img-blog.csdn.net/20180123201940745?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2poMjYyMjA3NTEyNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述" title=""> <br>
+<img src="https://img-blog.csdn.net/20180123201955748?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2poMjYyMjA3NTEyNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述" title=""> <br>
+依次类推</p>
+
+<p>这类使用递归画图的问题, 关键要找到规律. <br>
+把一张图的<strong>各个元素解构</strong>, <strong>得出递归关系</strong>. <br>
+如改图P(n)即为</p>
+
+<pre class="prettyprint"><code class=" hljs scss"> <span class="hljs-function">P(n-<span class="hljs-number">1</span>)</span> <span class="hljs-function">P(n-<span class="hljs-number">1</span>)</span>
+     <span class="hljs-function">P(n-<span class="hljs-number">1</span>)</span> 
+ <span class="hljs-function">P(n-<span class="hljs-number">1</span>)</span> <span class="hljs-function">P(n-<span class="hljs-number">1</span>)</span></code></pre>
+
+<p>找到每个图形的<strong>中心点</strong>, 然后<strong>分治</strong>地解决每个元素.</p>
+
+<p>如此图可以左上图为中心, 计算其他图相对此图的位置, 然后依次递归</p>
+
+<p>或以中间那个为中心点, 同理.</p>
+
+<p><em>使用二维数组存储图形</em>.</p>
+
+<p>代码如下:</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#define MAX 10000</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">char</span> <span class="hljs-built_in">map</span>[MAX][MAX];
+
+<span class="hljs-keyword">int</span> Pow( <span class="hljs-keyword">int</span> n )
+{
+    <span class="hljs-keyword">int</span> an = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i ){
+        an *= <span class="hljs-number">3</span>;
+    }
+    <span class="hljs-keyword">return</span> an;
+}
+
+<span class="hljs-keyword">void</span> print(<span class="hljs-keyword">char</span> <span class="hljs-built_in">map</span>[MAX][MAX], <span class="hljs-keyword">int</span> size)
+{
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; size; ++i )
+    {
+        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; size; ++j ) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">map</span>[i][j] &lt;&lt; <span class="hljs-string">' '</span>;
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+}
+
+<span class="hljs-keyword">void</span> draw(<span class="hljs-keyword">int</span> n, <span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)
+{
+    <span class="hljs-keyword">if</span>( n == <span class="hljs-number">1</span> ) {
+        <span class="hljs-built_in">map</span>[x][y] = <span class="hljs-string">'X'</span>;
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">int</span> size = Pow(n-<span class="hljs-number">2</span>);
+        draw(n - <span class="hljs-number">1</span>, x, y);
+        draw(n - <span class="hljs-number">1</span>, x + <span class="hljs-number">2</span>*size, y);
+        draw(n - <span class="hljs-number">1</span>, x + size, y + size);
+        draw(n - <span class="hljs-number">1</span>, x, y + <span class="hljs-number">2</span>*size);
+        draw(n - <span class="hljs-number">1</span>, x + <span class="hljs-number">2</span>*size, y + <span class="hljs-number">2</span>*size);
+    }
+}
+
+<span class="hljs-keyword">int</span> main( )
+{
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-built_in">memset</span>(<span class="hljs-built_in">map</span>, <span class="hljs-string">' '</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-built_in">map</span>));
+    draw(n, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    <span class="hljs-keyword">int</span> size = Pow(n-<span class="hljs-number">1</span>);
+    print(<span class="hljs-built_in">map</span>, size);
+}
+</code></pre>
+
+<p><a href="https://www.nowcoder.com/acm/contest/67/G" rel="nofollow">一道牛客网上练习赛的题目</a></p>
+
+<p>道理相同, 找到各图形间距的规律</p>
+
+<p>注意此题对输出格式有要求, 还应该注意内存不超过限度.</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#define MAX 5000</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">char</span> <span class="hljs-built_in">map</span>[MAX][MAX] = {};
+
+<span class="hljs-keyword">int</span> Pow(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">int</span> p = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i ) {
+        p *= <span class="hljs-number">3</span>;
+    }
+    <span class="hljs-keyword">return</span> p;
+}
+
+<span class="hljs-keyword">void</span> draw(<span class="hljs-keyword">int</span> n, <span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)
+{
+    <span class="hljs-keyword">if</span>( n == <span class="hljs-number">0</span> ) {
+        <span class="hljs-built_in">map</span>[x][y] = <span class="hljs-string">'O'</span>;
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">int</span> size = Pow(n-<span class="hljs-number">1</span>);
+        draw(n-<span class="hljs-number">1</span>, x, y - size);
+        draw(n-<span class="hljs-number">1</span>, x - size, y);
+        draw(n-<span class="hljs-number">1</span>, x + size, y);
+        draw(n-<span class="hljs-number">1</span>, x, y + size);
+    }
+}
+
+<span class="hljs-keyword">void</span> print(<span class="hljs-keyword">int</span> size)
+{
+    <span class="hljs-keyword">int</span> end[MAX];
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; size; ++i ) {
+        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>;j &lt; size; ++j ) {
+            <span class="hljs-keyword">if</span>(<span class="hljs-built_in">map</span>[i][j] != <span class="hljs-string">' '</span>) end[i] = j;
+        }
+    }
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; size; ++i ) {
+        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt;= end[i]; ++j ) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">map</span>[i][j];
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+}
+
+<span class="hljs-keyword">void</span> loop(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-built_in">memset</span>(<span class="hljs-built_in">map</span>, <span class="hljs-string">' '</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-built_in">map</span>));
+    <span class="hljs-keyword">int</span> size = Pow(n);
+    draw(n, size/<span class="hljs-number">2</span>, size/<span class="hljs-number">2</span>);
+    print(size);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> t, n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; t;
+    <span class="hljs-keyword">while</span>( t-- ) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; n;
+        loop(n);
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

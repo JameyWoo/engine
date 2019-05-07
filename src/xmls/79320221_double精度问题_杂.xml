@@ -1,0 +1,166 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79320221				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h4 id="无类型的文件-直接去掉后缀即可-如sublime的默认文件类型">无类型的文件, 直接去掉后缀即可, 如sublime的默认文件类型</h4>
+
+
+
+<h4 id="时间复杂度为logn无底数">时间复杂度为logn无底数</h4>
+
+<p>因为: <br>
+<strong>从理论上，无论底是什么都无关紧要，因为不同底的logn之间只存在常数倍的关系，这与n无关，不会影响复杂度的大小。</strong></p>
+
+<p>因为double这种浮点型的数在计算机中是按照二进制存储的, 而一个double数是64位, 8Byte期中指数位11位, 尾数为52位(二进制) <br>
+<a href="http://blog.csdn.net/cchd0001/article/details/46440845" rel="nofollow">一个介绍浮点数的连接</a></p>
+
+<table>
+<thead>
+<tr>
+  <th align="left">类型</th>
+  <th align="right">符号位</th>
+  <th align="center">指数位</th>
+  <th>尾数位</th>
+</tr>
+</thead>
+<tbody><tr>
+  <td align="left">float</td>
+  <td align="right">1</td>
+  <td align="center">8</td>
+  <td>23</td>
+</tr>
+<tr>
+  <td align="left">double</td>
+  <td align="right">1</td>
+  <td align="center">11</td>
+  <td>52</td>
+</tr>
+</tbody></table>
+
+
+<h4 id="小数转二进制方法"><strong>小数转二进制方法?</strong></h4>
+
+<p>整数位按照整数的方法转化, 小数位用乘2法 <br>
+例如0.6转二进制,文字描述该过程如下：</p>
+
+<blockquote>
+  <p>将该数字乘以2，取出整数部分作为二进制表示的第1位；然后再将小数部分乘以2，将得到的整数部分作为二进制表示的第2位；以此类推，知道小数部分为0。 <br>
+  特殊情况： 小数部分出现循环，无法停止，则用有限的二进制位无法准确表示一个小数，<strong>这也是在编程语言中表示小数会出现误差的原因</strong></p>
+</blockquote>
+
+<p><a href="http://blog.csdn.net/xingtanzjr/article/details/50803832" rel="nofollow">一个博客链接</a></p>
+
+
+
+<h4 id="小数的二进制转十进制呢-道理和十进制相同">小数的二进制转十进制呢? 道理和十进制相同</h4>
+
+<p>如:</p>
+
+<blockquote>
+  <p>0.101 转 十进制 <br>
+  0.101 = 1*2^-1 + 0*2^-2 + 1*2^-3</p>
+</blockquote>
+
+<p>给出一段粗糙代码</p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;string&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">double</span> d;
+    <span class="hljs-keyword">int</span> t = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">string</span> s = <span class="hljs-string">""</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; d;  <span class="hljs-comment">//输入小于1的小数 </span>
+    <span class="hljs-keyword">while</span>(t &lt;= <span class="hljs-number">16</span>) {
+        ++t, d *= <span class="hljs-number">2</span>;
+        <span class="hljs-keyword">if</span>(d &gt;= <span class="hljs-number">1.0</span>) {
+            s += <span class="hljs-string">'1'</span>;
+            d -= <span class="hljs-number">1.0</span>;
+        } <span class="hljs-keyword">else</span> s += <span class="hljs-string">'0'</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"0."</span> &lt;&lt; s;
+}</code></pre>
+
+
+
+<h4 id="还有常见的double爆精度问题">还有常见的double爆精度问题</h4>
+
+<p>因为double二进制存储的原因，计算机只会处理小数位15位， 所以 <br>
+看下面这个似乎匪夷所思的程序</p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">double</span> a = <span class="hljs-number">1e300</span>, b = <span class="hljs-number">1e100</span>;
+    <span class="hljs-keyword">double</span> c = <span class="hljs-number">1e300</span>;
+    a += b;
+    <span class="hljs-keyword">if</span>(a == c) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"now a is equal c \n"</span>;
+    }
+}</code></pre>
+
+<p>运行结果是</p>
+
+<blockquote>
+  <p>now a is equal c</p>
+</blockquote>
+
+
+
+<h4 id="hack指的是codeforce比赛中找别人漏洞的攻击方式"><strong>hack指的是codeforce比赛中找别人漏洞的“攻击方式”</strong></h4>
+
+<p>认为它的代码过不了什么数据， 就拿这个数据hack他</p>
+
+<p>这是百度知道一个关于如何hack的回答</p>
+
+<blockquote>
+  <p>对某一题，首先你自己要先过TEST。然后回到比赛的PROBLEM列表，把这题后面的锁锁上（锁上了就不能再提交了，所以没把握就别锁了），然后到ROOM里面，你就可以看别人代码了，下面有HACK按钮，点一下，输入你觉得他错的样例。</p>
+</blockquote>
+
+
+
+<h4 id="有一种常被我忽略的long-double类型-精度比double更高废话">有一种常被我忽略的long double类型， 精度比double更高（废话…)</h4>
+
+<p>在c的格式控制中如何使用格式控制呢？</p>
+
+<p>*float 应该使用 %f <br>
+*double 应该使用 %lf <br>
+*long double 应该使用 %Lf</p>
+
+<p>但double使用%f DevC++也不会警告</p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstdio&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">float</span> f = <span class="hljs-number">2.34</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%f\n"</span>, f);
+    <span class="hljs-keyword">double</span> d = <span class="hljs-number">1.23</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%lf\n"</span>, d);
+    <span class="hljs-keyword">long</span> <span class="hljs-keyword">double</span> ld = <span class="hljs-number">3.45</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%Lf\n"</span>, ld);
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

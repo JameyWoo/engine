@@ -1,0 +1,189 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79845206				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><div class="toc"><div class="toc">
+<ul>
+<li><a href="#time库" rel="nofollow">time库</a><ul>
+<li><a href="#时间获取函数" rel="nofollow">时间获取函数:</a></li>
+<li><a href="#时间格式化" rel="nofollow">时间格式化</a><ul>
+<li><a href="#参数" rel="nofollow">参数:</a></li>
+<li><a href="#实例" rel="nofollow">实例</a></li>
+</ul>
+</li>
+<li><a href="#程序计时" rel="nofollow">程序计时</a><ul>
+<li><a href="#制作一个简单的文本进度条" rel="nofollow">制作一个简单的文本进度条</a></li>
+<li><a href="#制作简易时钟" rel="nofollow">制作简易时钟</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</p>
+
+<h1 id="time库">time库</h1>
+
+<h2 id="时间获取函数">时间获取函数:</h2>
+
+<blockquote>
+  <p>time()   # 获取从1970.7.1 0:0到目前的秒数 <br>
+  ctime()  # 获取一个时间的字符串 <br>
+  gmtime()  #获取一个时间数据</p>
+</blockquote>
+
+<p>例如</p>
+
+<pre class="prettyprint"><code class=" hljs livecodeserver">&gt;&gt;&gt; <span class="hljs-built_in">time</span>.<span class="hljs-built_in">time</span>()
+<span class="hljs-number">1523105888.8286796</span>
+&gt;&gt;&gt; <span class="hljs-built_in">time</span>.ctime()
+<span class="hljs-string">'Sat Apr  7 20:58:12 2018'</span>
+&gt;&gt;&gt; <span class="hljs-built_in">time</span>.gmtime
+&lt;built-<span class="hljs-operator">in</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">gmtime</span>&gt;</span>
+&gt;&gt;&gt; <span class="hljs-built_in">time</span>.gmtime()
+<span class="hljs-built_in">time</span>.struct_time(tm_year=<span class="hljs-number">2018</span>, tm_mon=<span class="hljs-number">4</span>, tm_mday=<span class="hljs-number">7</span>, tm_hour=<span class="hljs-number">12</span>, tm_min=<span class="hljs-number">58</span>, tm_sec=<span class="hljs-number">22</span>, tm_wday=<span class="hljs-number">5</span>, tm_yday=<span class="hljs-number">97</span>, tm_isdst=<span class="hljs-number">0</span>)</code></pre>
+
+
+
+<h2 id="时间格式化">时间格式化</h2>
+
+<blockquote>
+  <p>strftime(tpl, ts) # 第一个参数模板, 第二个参数gmtime() <br>
+  strptime()  # 作用和strftime()相反, 结果得到一个gmtime()类型的值</p>
+</blockquote>
+
+<pre class="prettyprint"><code class=" hljs perl">&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%Y-%m-%d %H:%M:%S'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'2018-04-07 13:06:49'</span></code></pre>
+
+
+
+<h3 id="参数">参数:</h3>
+
+
+
+<pre class="prettyprint"><code class=" hljs haml"><span class="hljs-tag">%<span class="hljs-title">Y</span></span> 4位数的年0001-9999
+<span class="hljs-tag">%<span class="hljs-title">y</span></span> 2位数的年
+<span class="hljs-tag">%<span class="hljs-title">m</span></span> 月份00-12
+<span class="hljs-tag">%<span class="hljs-title">H</span></span> 24制小时
+<span class="hljs-tag">%<span class="hljs-title">h</span></span> 12制小时
+<span class="hljs-tag">%<span class="hljs-title">M</span></span> 分钟
+<span class="hljs-tag">%<span class="hljs-title">S</span></span> 秒
+<span class="hljs-tag">%<span class="hljs-title">B</span></span> 全拼的月份
+<span class="hljs-tag">%<span class="hljs-title">b</span></span> 缩写的月份
+<span class="hljs-tag">%<span class="hljs-title">A</span></span> 星期
+<span class="hljs-tag">%<span class="hljs-title">a</span></span> 缩写的星期
+<span class="hljs-tag">%<span class="hljs-title">p</span></span> 上午/下午</code></pre>
+
+
+
+<h3 id="实例">实例</h3>
+
+
+
+<pre class="prettyprint"><code class=" hljs perl">&gt;&gt;&gt; strftime(<span class="hljs-string">'%Y-%m-%d %H:%M:%S'</span>, t)
+Traceback (most recent call <span class="hljs-keyword">last</span>):
+  File <span class="hljs-string">"&lt;stdin&gt;"</span>, line <span class="hljs-number">1</span>, in &lt;module&gt;
+NameError: name <span class="hljs-string">'strftime'</span> is <span class="hljs-keyword">not</span> <span class="hljs-keyword">defined</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%Y-%m-%d %H:%M:%S'</span>, t)
+Traceback (most recent call <span class="hljs-keyword">last</span>):
+  File <span class="hljs-string">"&lt;stdin&gt;"</span>, line <span class="hljs-number">1</span>, in &lt;module&gt;
+NameError: name <span class="hljs-string">'t'</span> is <span class="hljs-keyword">not</span> <span class="hljs-keyword">defined</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%Y-%m-%d %H:%M:%S'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'2018-04-07 13:06:49'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%Y-%m-%d %H:%M:%S'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'2018-04-07 13:07:09'</span>
+&gt;&gt;&gt; strtime = <span class="hljs-string">'2018-04-07 13:07:09'</span>
+&gt;&gt;&gt; strptime(strtime, <span class="hljs-string">''</span><span class="hljs-variable">%Y</span>-<span class="hljs-variable">%m</span>-<span class="hljs-variable">%d</span> <span class="hljs-variable">%H</span>:<span class="hljs-variable">%M</span>:<span class="hljs-variable">%S</span><span class="hljs-string">')
+  File "&lt;stdin&gt;", line 1
+    strptime(strtime, '</span><span class="hljs-string">'%Y-%m-%d %H:%M:%S'</span>)
+                           ^
+SyntaxError: invalid syntax
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%Y-%m-%d %H:%M:%S'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'2018-04-07 13:08:42'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%y-%m-%d %H:%M:%S'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'18-04-07 13:08:47'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%y-%M-%d %H:%M:%S'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'18-08-07 13:08:55'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%y-%M-%D %H:%M:%S'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'18-09-04/07/18 13:09:06'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%y-%m-%d %H:%M:%S'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'18-04-07 13:09:16'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%d'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'07'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%D'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'04/07/18'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%m'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'04'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%M'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'10'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%M'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'10'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%B'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'April'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%h, time.gmtime())
+  File "&lt;stdin&gt;", line 1
+    time.strftime('</span><span class="hljs-variable">%h</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+                                    ^
+SyntaxError: EOL <span class="hljs-keyword">while</span> scanning string literal
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%m, time.gmtime())
+  File "&lt;stdin&gt;", line 1
+    time.strftime('</span><span class="hljs-variable">%m</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+                                    ^
+SyntaxError: EOL <span class="hljs-keyword">while</span> scanning string literal
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%p %h:%M:%S'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'PM Apr:13:15'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%p %H:%M:%S'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'PM 13:13:49'</span>
+&gt;&gt;&gt; <span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'%p %h:%M:%S'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>())
+<span class="hljs-string">'PM Apr:13:57'</span>
+&gt;&gt;&gt;</code></pre>
+
+
+
+<h2 id="程序计时">程序计时</h2>
+
+<blockquote>
+  <p>sleep() # 休眠, 以s为单位 <br>
+  perf_counter() # 当前时间, 以秒为单位, 获取差值</p>
+</blockquote>
+
+
+
+<h3 id="制作一个简单的文本进度条">制作一个简单的文本进度条</h3>
+
+<pre class="prettyprint"><code class=" hljs perl"><span class="hljs-comment">#-*- coding:-utf -*-</span>
+import <span class="hljs-keyword">time</span>
+scale = <span class="hljs-number">50</span>
+<span class="hljs-keyword">print</span>(<span class="hljs-string">'执行开始'</span>.center(scale, <span class="hljs-string">'-'</span>))
+start = <span class="hljs-keyword">time</span>.perf_counter();
+<span class="hljs-keyword">for</span> i in range(<span class="hljs-number">101</span>):
+    a = <span class="hljs-string">'*'</span><span class="hljs-variable">*(</span>i//<span class="hljs-number">2</span>)
+    b = <span class="hljs-string">'.'</span><span class="hljs-variable">*(</span><span class="hljs-number">50</span>-i//<span class="hljs-number">2</span>)
+    cur = <span class="hljs-keyword">time</span>.perf_counter() - start
+    <span class="hljs-keyword">print</span>(<span class="hljs-string">'\r{:&gt;3.0f}%[{}-&gt;{}]{:.2f}'</span>.<span class="hljs-keyword">format</span>(i, a, b, cur), end = <span class="hljs-string">''</span>)
+    <span class="hljs-keyword">time</span>.<span class="hljs-keyword">sleep</span>(<span class="hljs-number">0</span>.<span class="hljs-number">05</span>)
+<span class="hljs-keyword">print</span>()
+<span class="hljs-keyword">print</span>(<span class="hljs-string">'执行结束'</span>.center(scale, <span class="hljs-string">'-'</span>))</code></pre>
+
+<p>使用\r刷新当前行</p>
+
+
+
+<h3 id="制作简易时钟">制作简易时钟</h3>
+
+<pre class="prettyprint"><code class=" hljs perl">import <span class="hljs-keyword">time</span>
+<span class="hljs-keyword">while</span> <span class="hljs-number">1</span>:
+    <span class="hljs-keyword">print</span>(<span class="hljs-keyword">time</span>.strftime(<span class="hljs-string">'\r%Y-%m-%d  %H:%M:%S'</span>, <span class="hljs-keyword">time</span>.<span class="hljs-keyword">gmtime</span>()), end = <span class="hljs-string">''</span>)
+    <span class="hljs-keyword">time</span>.<span class="hljs-keyword">sleep</span>(<span class="hljs-number">1</span>)</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

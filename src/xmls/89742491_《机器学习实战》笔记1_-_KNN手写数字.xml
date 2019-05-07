@@ -1,0 +1,252 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/89742491				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p></p><div class="toc"><h3>文章目录</h3><ul><ul><li><a href="#KNN_1" rel="nofollow">简述KNN</a></li><ul><li><a href="#KNN_2" rel="nofollow">KNN原理</a></li><li><a href="#_5" rel="nofollow">优点</a></li><li><a href="#_10" rel="nofollow">缺点</a></li></ul><li><a href="#python_16" rel="nofollow">涉及到的python知识点</a></li><ul><li><a href="#1nptile_17" rel="nofollow">1、np.tile()广播</a></li><li><a href="#2oslistdir__21" rel="nofollow">2、os.listdir() 获取目录文件</a></li><li><a href="#3openfilename_r__24" rel="nofollow">3、open(filename, 'r') 打开文件</a></li><li><a href="#4argsort_27" rel="nofollow">4、argsort()</a></li><li><a href="#5python_30" rel="nofollow">5、python字典添加元素的方法</a></li><li><a href="#6pythonvalue_34" rel="nofollow">6、python字典按value排序</a></li><li><a href="#7_39" rel="nofollow">7、混淆矩阵</a></li><li><a href="#8recallprecisionFMeasure_58" rel="nofollow">8、recall、precision、F-Measure</a></li></ul><li><a href="#KNN_97" rel="nofollow">完整KNN示例代码</a></li></ul></ul></div><p></p>
+<h2><a id="KNN_1"></a>简述KNN</h2>
+<h3><a id="KNN_2"></a>KNN原理</h3>
+<p>通过计算特征向量之间距离的方法，找出距离待测试的向量最小的k个训练样本，统计他们的标签，标签数量最多的一个就是我们预测的结果。距离的计算可以自己定义，如欧式距离，曼哈顿距离哪个效果好就用哪个。k的选取也会对结果产生较大的影响，调整k值（所谓调参）以获得最好的效果。</p>
+<h3><a id="_5"></a>优点</h3>
+<p>1、算法简单，易于实现<br>
+2、可以作分类，也可以做回归<br>
+3、对异常值不敏感，准确度高，对数据没有假定</p>
+<h3><a id="_10"></a>缺点</h3>
+<p>1、时间复杂度、空间复杂度高。取决于“训练”的样本数量<br>
+2、不像是所谓机器学习，因为它没有训练模型的过程。</p>
+<hr>
+<h2><a id="python_16"></a>涉及到的python知识点</h2>
+<h3><a id="1nptile_17"></a>1、np.tile()广播</h3>
+<p>功能：在KNN中计算距离时，将当前特征向量广播到整个数据大小，以便利用python特性直接计算。<br>
+参考 <a href="https://blog.csdn.net/qq_18433441/article/details/54897250" rel="nofollow">https://blog.csdn.net/qq_18433441/article/details/54897250</a></p>
+<h3><a id="2oslistdir__21"></a>2、os.listdir() 获取目录文件</h3>
+<p>功能：获取某一目录下所有文件名，可用来遍历文件夹，读取数据</p>
+<h3><a id="3openfilename_r__24"></a>3、open(filename, ‘r’) 打开文件</h3>
+<p>功能：可以打开txt文件，获取到字符串信息，用split()或replace()等方法对文本进行处理。</p>
+<h3><a id="4argsort_27"></a>4、argsort()</h3>
+<p>功能：获取排序好的索引下标，可用来做递增或递减的部分遍历</p>
+<h3><a id="5python_30"></a>5、python字典添加元素的方法</h3>
+<p><code>classCount[one_label] = classCount.get(one_label, 0) + 1</code><br>
+如果没有one_label这个key，就置0，否则读取原来的value，然后+1.</p>
+<h3><a id="6pythonvalue_34"></a>6、python字典按value排序</h3>
+<p><code>sortedClassCount = sorted(classCount.items(), key = lambda x:x[1], reverse=True)</code><br>
+三个参数默认是迭代的对象、排序按哪个值排序，是否反转（默认为升序）<br>
+按键排序也可以这样实现<br>
+<img src="https://img-blog.csdnimg.cn/20190502090552199.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3><a id="7_39"></a>7、混淆矩阵</h3>
+<p>混淆矩阵是什么可以百度，它对分析数据的预测结果很有帮助。如图是一个手写数字识别的混淆矩阵，它把十个数字预测成了什么和他们实际是什么直观地展示了出来。<br>
+<img src="https://img-blog.csdnimg.cn/20190502090754949.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+代码：利用sklearn封装的函数得出混淆矩阵，并用seaborn作图</p>
+<pre><code class="prism language-py"><span class="token comment"># 绘制混淆矩阵</span>
+<span class="token keyword">def</span> <span class="token function">sklearn_confusion_matrix</span><span class="token punctuation">(</span>ytest<span class="token punctuation">,</span> ymodel<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>metrics <span class="token keyword">import</span> confusion_matrix
+    <span class="token keyword">import</span> seaborn <span class="token keyword">as</span> sns
+    <span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+    
+    mat <span class="token operator">=</span> confusion_matrix<span class="token punctuation">(</span>ytest<span class="token punctuation">,</span> ymodel<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>mat<span class="token punctuation">)</span>
+    sns<span class="token punctuation">.</span>heatmap<span class="token punctuation">(</span>mat<span class="token punctuation">,</span> square<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> annot<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> cbar<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>xlabel<span class="token punctuation">(</span><span class="token string">'predicted value'</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>ylabel<span class="token punctuation">(</span><span class="token string">'true value'</span><span class="token punctuation">)</span>
+
+sklearn_confusion_matrix<span class="token punctuation">(</span>test_labels<span class="token punctuation">,</span> result<span class="token punctuation">)</span>
+</code></pre>
+<h3><a id="8recallprecisionFMeasure_58"></a>8、recall、precision、F-Measure</h3>
+<p>这篇博客讲的非常好非常详细<br>
+<a href="https://www.cnblogs.com/Zhi-Z/p/8728168.html" rel="nofollow">https://www.cnblogs.com/Zhi-Z/p/8728168.html</a></p>
+<p>这些概念似乎是相对于二分类问题的，所以我们这个问题（手写数字识别）是无法得出这些统计学概念的，但不妨碍我们学习。<br>
+<img src="https://img-blog.csdnimg.cn/20190502091630332.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+图片来源：<a href="https://www.cnblogs.com/Zhi-Z/p/8728168.html" rel="nofollow">https://www.cnblogs.com/Zhi-Z/p/8728168.html</a></p>
+<p>一个代码示例</p>
+<pre><code class="prism language-py"><span class="token keyword">def</span> <span class="token function">get_precision_recall_f1</span><span class="token punctuation">(</span>trues<span class="token punctuation">,</span> predicts<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    TP <span class="token operator">=</span> TN <span class="token operator">=</span> FP <span class="token operator">=</span> FN <span class="token operator">=</span> <span class="token number">0</span>
+    precisioin <span class="token operator">=</span> recall <span class="token operator">=</span> f1 <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>trues<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> trues<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">1</span> <span class="token operator">and</span> predicts<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+            TP <span class="token operator">+=</span> <span class="token number">1</span>
+        <span class="token keyword">elif</span> trues<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token operator">and</span> predicts<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+            TN <span class="token operator">+=</span> <span class="token number">1</span>
+        <span class="token keyword">elif</span> trues<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">1</span> <span class="token operator">and</span> predicts<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+            FP <span class="token operator">+=</span> <span class="token number">1</span>
+        <span class="token keyword">elif</span> trues<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token operator">and</span> predicts<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+            FN <span class="token operator">+=</span> <span class="token number">1</span>
+    precision <span class="token operator">=</span> TP <span class="token operator">/</span> <span class="token punctuation">(</span>TP <span class="token operator">+</span> FP<span class="token punctuation">)</span>
+    recall <span class="token operator">=</span> TP <span class="token operator">/</span> <span class="token punctuation">(</span>TP <span class="token operator">+</span> FN<span class="token punctuation">)</span>
+    f1 <span class="token operator">=</span> <span class="token number">2</span><span class="token operator">*</span>precision<span class="token operator">*</span>recall <span class="token operator">/</span> <span class="token punctuation">(</span>precision <span class="token operator">+</span> recall<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> precision<span class="token punctuation">,</span> recall<span class="token punctuation">,</span> f1
+
+trues <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
+predicts <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
+sklearn_confusion_matrix<span class="token punctuation">(</span>trues<span class="token punctuation">,</span> predicts<span class="token punctuation">)</span>
+    
+precision<span class="token punctuation">,</span> recall<span class="token punctuation">,</span> f1 <span class="token operator">=</span> get_precision_recall_f1<span class="token punctuation">(</span>trues<span class="token punctuation">,</span> predicts<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"precision = {}, recall = {}, f1 = {}"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>precision<span class="token punctuation">,</span> recall<span class="token punctuation">,</span> f1<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>输出结果<br>
+<img src="https://img-blog.csdnimg.cn/20190502093540787.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<hr>
+<h2><a id="KNN_97"></a>完整KNN示例代码</h2>
+<p><strong>由于我是在jupyter notebook上写的代码，所以直接把它下载成py文件，看上去格式不怎么好。代码也无法直接运行，仅供参考。</strong></p>
+<pre><code class="prism language-py"><span class="token comment">#!/usr/bin/env python</span>
+<span class="token comment"># coding: utf-8</span>
+<span class="token comment"># In[52]:</span>
+
+
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+<span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+<span class="token keyword">import</span> os
+get_ipython<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>run_line_magic<span class="token punctuation">(</span><span class="token string">'matplotlib'</span><span class="token punctuation">,</span> <span class="token string">'inline'</span><span class="token punctuation">)</span>
+
+
+<span class="token comment"># In[53]:</span>
+
+
+<span class="token keyword">def</span> <span class="token function">getFileArray</span><span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    file_array <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    labels <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    train_files <span class="token operator">=</span> os<span class="token punctuation">.</span>listdir<span class="token punctuation">(</span>filename<span class="token punctuation">)</span>
+    <span class="token keyword">for</span> each <span class="token keyword">in</span> train_files<span class="token punctuation">:</span>
+        labels<span class="token punctuation">.</span>append<span class="token punctuation">(</span>each<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        tmp_file <span class="token operator">=</span> <span class="token builtin">open</span><span class="token punctuation">(</span>filename <span class="token operator">+</span> <span class="token string">'/'</span> <span class="token operator">+</span> each<span class="token punctuation">,</span> <span class="token string">'r'</span><span class="token punctuation">)</span>
+        contents <span class="token operator">=</span> tmp_file<span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span>
+        tmp <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1024</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            tmp<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">(</span>contents<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        file_array<span class="token punctuation">.</span>append<span class="token punctuation">(</span>tmp<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>file_array<span class="token punctuation">)</span><span class="token punctuation">,</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>labels<span class="token punctuation">)</span>
+
+
+<span class="token comment"># In[54]:</span>
+
+
+digits_matrix<span class="token punctuation">,</span> digit_labels <span class="token operator">=</span> getFileArray<span class="token punctuation">(</span><span class="token string">'./digits/trainingDigits'</span><span class="token punctuation">)</span>
+test_x<span class="token punctuation">,</span> test_labels <span class="token operator">=</span> getFileArray<span class="token punctuation">(</span><span class="token string">'./digits/testDigits'</span><span class="token punctuation">)</span>
+
+
+<span class="token comment"># In[55]:</span>
+
+
+<span class="token keyword">def</span> <span class="token function">knn</span><span class="token punctuation">(</span>xtest<span class="token punctuation">,</span> data<span class="token punctuation">,</span> label<span class="token punctuation">,</span> k<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># xtest为测试的特征向量，data、label为“训练”数据集，k为设定的阈值</span>
+<span class="token comment">#     print(xtest.shape)</span>
+<span class="token comment">#     print(label.shape)</span>
+    exp_xtest <span class="token operator">=</span> np<span class="token punctuation">.</span>tile<span class="token punctuation">(</span>xtest<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>label<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span> data
+    sq_diff <span class="token operator">=</span> exp_xtest<span class="token operator">**</span><span class="token number">2</span>
+    sum_diff <span class="token operator">=</span> sq_diff<span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span>axis<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+    distance <span class="token operator">=</span> sum_diff<span class="token operator">**</span><span class="token number">0.5</span>
+<span class="token comment">#     print(distance)</span>
+    sort_index <span class="token operator">=</span> distance<span class="token punctuation">.</span>argsort<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    classCount <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>k<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        one_label <span class="token operator">=</span> label<span class="token punctuation">[</span>sort_index<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span>
+        classCount<span class="token punctuation">[</span>one_label<span class="token punctuation">]</span> <span class="token operator">=</span> classCount<span class="token punctuation">.</span>get<span class="token punctuation">(</span>one_label<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span>
+    sortedClassCount <span class="token operator">=</span> <span class="token builtin">sorted</span><span class="token punctuation">(</span>classCount<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> key <span class="token operator">=</span> <span class="token keyword">lambda</span> x<span class="token punctuation">:</span>x<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> reverse<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+<span class="token comment">#     print(sortedClassCount)</span>
+    <span class="token keyword">return</span> sortedClassCount<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+
+
+<span class="token comment"># In[56]:</span>
+
+
+result <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>test_x<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    result<span class="token punctuation">.</span>append<span class="token punctuation">(</span>knn<span class="token punctuation">(</span>test_x<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> digits_matrix<span class="token punctuation">,</span> digit_labels<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+
+<span class="token comment"># In[57]:</span>
+
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>test_labels<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>test_labels<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+
+<span class="token comment"># In[51]:</span>
+
+
+<span class="token comment"># print(result)</span>
+wrong <span class="token operator">=</span> <span class="token number">0</span>
+right <span class="token operator">=</span> <span class="token number">0</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> result<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">!=</span> test_labels<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">:</span>
+        wrong <span class="token operator">+=</span> <span class="token number">1</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        right <span class="token operator">+=</span> <span class="token number">1</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"wrong = {} right = {}"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>wrong<span class="token punctuation">,</span> right<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"accurate: {}"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>right <span class="token operator">/</span> <span class="token punctuation">(</span>wrong <span class="token operator">+</span> right<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"wrong rate: {}"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>wrong <span class="token operator">/</span> <span class="token punctuation">(</span>wrong <span class="token operator">+</span> right<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+
+<span class="token comment"># In[70]:</span>
+
+
+<span class="token comment"># 绘制混淆矩阵</span>
+<span class="token keyword">def</span> <span class="token function">sklearn_confusion_matrix</span><span class="token punctuation">(</span>ytest<span class="token punctuation">,</span> ymodel<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>metrics <span class="token keyword">import</span> confusion_matrix
+    <span class="token keyword">import</span> seaborn <span class="token keyword">as</span> sns
+    <span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+    
+    mat <span class="token operator">=</span> confusion_matrix<span class="token punctuation">(</span>ytest<span class="token punctuation">,</span> ymodel<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>mat<span class="token punctuation">)</span>
+    sns<span class="token punctuation">.</span>heatmap<span class="token punctuation">(</span>mat<span class="token punctuation">,</span> square<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> annot<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> cbar<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>xlabel<span class="token punctuation">(</span><span class="token string">'predicted value'</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>ylabel<span class="token punctuation">(</span><span class="token string">'true value'</span><span class="token punctuation">)</span>
+
+sklearn_confusion_matrix<span class="token punctuation">(</span>test_labels<span class="token punctuation">,</span> result<span class="token punctuation">)</span>
+
+
+<span class="token comment"># In[68]:</span>
+
+
+dic1 <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">'1'</span><span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'3'</span><span class="token punctuation">:</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">}</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>dic1<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+x <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
+y <span class="token operator">=</span> <span class="token keyword">lambda</span> x<span class="token punctuation">:</span>x<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>y<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+
+<span class="token comment"># In[76]:</span>
+
+
+
+
+
+<span class="token comment"># In[92]:</span>
+
+
+<span class="token keyword">def</span> <span class="token function">get_precision_recall_f1</span><span class="token punctuation">(</span>trues<span class="token punctuation">,</span> predicts<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    TP <span class="token operator">=</span> TN <span class="token operator">=</span> FP <span class="token operator">=</span> FN <span class="token operator">=</span> <span class="token number">0</span>
+    precisioin <span class="token operator">=</span> recall <span class="token operator">=</span> f1 <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>trues<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> trues<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">1</span> <span class="token operator">and</span> predicts<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+            TP <span class="token operator">+=</span> <span class="token number">1</span>
+        <span class="token keyword">elif</span> trues<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token operator">and</span> predicts<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+            TN <span class="token operator">+=</span> <span class="token number">1</span>
+        <span class="token keyword">elif</span> trues<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">1</span> <span class="token operator">and</span> predicts<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+            FP <span class="token operator">+=</span> <span class="token number">1</span>
+        <span class="token keyword">elif</span> trues<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token operator">and</span> predicts<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+            FN <span class="token operator">+=</span> <span class="token number">1</span>
+    precision <span class="token operator">=</span> TP <span class="token operator">/</span> <span class="token punctuation">(</span>TP <span class="token operator">+</span> FP<span class="token punctuation">)</span>
+    recall <span class="token operator">=</span> TP <span class="token operator">/</span> <span class="token punctuation">(</span>TP <span class="token operator">+</span> FN<span class="token punctuation">)</span>
+    f1 <span class="token operator">=</span> <span class="token number">2</span><span class="token operator">*</span>precision<span class="token operator">*</span>recall <span class="token operator">/</span> <span class="token punctuation">(</span>precision <span class="token operator">+</span> recall<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> precision<span class="token punctuation">,</span> recall<span class="token punctuation">,</span> f1
+
+trues <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
+predicts <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
+sklearn_confusion_matrix<span class="token punctuation">(</span>trues<span class="token punctuation">,</span> predicts<span class="token punctuation">)</span>
+    
+precision<span class="token punctuation">,</span> recall<span class="token punctuation">,</span> f1 <span class="token operator">=</span> get_precision_recall_f1<span class="token punctuation">(</span>trues<span class="token punctuation">,</span> predicts<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"precision = {}, recall = {}, f1 = {}"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>precision<span class="token punctuation">,</span> recall<span class="token punctuation">,</span> f1<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

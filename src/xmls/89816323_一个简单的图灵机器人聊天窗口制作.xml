@@ -1,0 +1,135 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/89816323				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>用python3的tkinter库和图灵机器人API2.0做了一个简单的和机器人聊天的窗口。</p>
+<p>github地址：<a href="https://github.com/JameyWoo/turing_robot_gui" rel="nofollow">https://github.com/JameyWoo/turing_robot_gui</a></p>
+<p>界面展示<br>
+下面是输入框，上面是消息展示框。姬小野就是这个机器人的名字，可以比较智能地回答问题。<br>
+<img src="https://img-blog.csdnimg.cn/20190504182854275.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>参考：</p>
+<p>图灵机器人API 2.0 调用<br>
+<a href="https://blog.csdn.net/inskil/article/details/82288138" rel="nofollow">https://blog.csdn.net/inskil/article/details/82288138</a></p>
+<p>聊天对话窗：<br>
+<a href="https://www.jianshu.com/p/93481b3b4f1e" rel="nofollow">https://www.jianshu.com/p/93481b3b4f1e</a></p>
+<hr>
+<p>源代码</p>
+<pre><code class="prism language-py"><span class="token keyword">from</span> tkinter <span class="token keyword">import</span> <span class="token operator">*</span>
+<span class="token keyword">import</span> time
+<span class="token keyword">import</span> requests
+<span class="token keyword">import</span> json
+
+<span class="token keyword">def</span> <span class="token function">get_response</span><span class="token punctuation">(</span>msg<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># API返回的字段</span>
+    api <span class="token operator">=</span> <span class="token string">'http://openapi.tuling123.com/openapi/api/v2'</span>
+    dat <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token string">"perception"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+            <span class="token string">"inputText"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                <span class="token string">"text"</span><span class="token punctuation">:</span> msg
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token string">"inputImage"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                <span class="token string">"url"</span><span class="token punctuation">:</span> <span class="token string">"imageUrl"</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token string">"selfInfo"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                <span class="token string">"location"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                    <span class="token string">"city"</span><span class="token punctuation">:</span> <span class="token string">"北京"</span><span class="token punctuation">,</span>
+                    <span class="token string">"province"</span><span class="token punctuation">:</span> <span class="token string">"北京"</span><span class="token punctuation">,</span>
+                    <span class="token string">"street"</span><span class="token punctuation">:</span> <span class="token string">"信息路"</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token string">"userInfo"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+            <span class="token string">"apiKey"</span><span class="token punctuation">:</span> <span class="token string">"3850d0ff7176426d9ed6a9bb93ff8b02"</span><span class="token punctuation">,</span>
+            <span class="token string">"userId"</span><span class="token punctuation">:</span> <span class="token number">19990706</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    dat <span class="token operator">=</span> json<span class="token punctuation">.</span>dumps<span class="token punctuation">(</span>dat<span class="token punctuation">)</span>
+    r <span class="token operator">=</span> requests<span class="token punctuation">.</span>post<span class="token punctuation">(</span>api<span class="token punctuation">,</span> data<span class="token operator">=</span>dat<span class="token punctuation">)</span><span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment">#以下为r的内容</span>
+    <span class="token comment">#{'emotion': {'userEmotion': {'emotionId': 10300, 'd': 0, 'p': 0, 'a': 0},</span>
+    <span class="token comment">#              'robotEmotion': {'emotionId': 0, 'd': 0, 'p': 0, 'a': 0}},</span>
+    <span class="token comment">#  'intent': {'code': 10004, 'actionName': '', 'intentName': ''},</span>
+    <span class="token comment"># 'results': [{'resultType': 'text', 'values': {'text': '别兴奋别兴奋，很高兴认识你！'}, 'groupType': 1}]}</span>
+
+    mesage <span class="token operator">=</span> r<span class="token punctuation">[</span><span class="token string">'results'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'values'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'text'</span><span class="token punctuation">]</span>
+<span class="token comment">#     print(r['results'][0]['values']['text'])</span>
+    <span class="token keyword">return</span> mesage
+
+<span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+    <span class="token keyword">def</span> <span class="token function">sendMsg</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token comment">#发送消息</span>
+        strMsg <span class="token operator">=</span> <span class="token string">"我:"</span> <span class="token operator">+</span> time<span class="token punctuation">.</span>strftime<span class="token punctuation">(</span><span class="token string">"%Y-%m-%d %H:%M:%S"</span><span class="token punctuation">,</span>time<span class="token punctuation">.</span>localtime<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">+</span> <span class="token string">'\n'</span>
+        txtMsgList<span class="token punctuation">.</span>insert<span class="token punctuation">(</span>END<span class="token punctuation">,</span> strMsg<span class="token punctuation">,</span> <span class="token string">'greencolor'</span><span class="token punctuation">)</span>
+        send <span class="token operator">=</span> txtMsg<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'0.0'</span><span class="token punctuation">,</span> END<span class="token punctuation">)</span> <span class="token comment"># 输入发送的信息</span>
+        txtMsgList<span class="token punctuation">.</span>insert<span class="token punctuation">(</span>END<span class="token punctuation">,</span> send<span class="token punctuation">)</span> <span class="token comment"># 显示</span>
+        txtMsg<span class="token punctuation">.</span>delete<span class="token punctuation">(</span><span class="token string">'0.0'</span><span class="token punctuation">,</span> END<span class="token punctuation">)</span>
+        returnMsg<span class="token punctuation">(</span>send<span class="token punctuation">)</span>
+    <span class="token keyword">def</span> <span class="token function">returnMsg</span><span class="token punctuation">(</span>send<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        returnback <span class="token operator">=</span> get_response<span class="token punctuation">(</span>send<span class="token punctuation">)</span>
+        strMsg <span class="token operator">=</span> <span class="token string">"姬小野:"</span> <span class="token operator">+</span> time<span class="token punctuation">.</span>strftime<span class="token punctuation">(</span><span class="token string">"%Y-%m-%d %H:%M:%S"</span><span class="token punctuation">,</span>time<span class="token punctuation">.</span>localtime<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">+</span> <span class="token string">'\n'</span>
+        txtMsgList<span class="token punctuation">.</span>insert<span class="token punctuation">(</span>END<span class="token punctuation">,</span> strMsg<span class="token punctuation">,</span> <span class="token string">'greencolor'</span><span class="token punctuation">)</span>
+        txtMsgList<span class="token punctuation">.</span>insert<span class="token punctuation">(</span>END<span class="token punctuation">,</span> returnback<span class="token punctuation">)</span>
+        txtMsgList<span class="token punctuation">.</span>insert<span class="token punctuation">(</span>END<span class="token punctuation">,</span> <span class="token string">'\n'</span><span class="token punctuation">)</span>
+        txtMsg<span class="token punctuation">.</span>delete<span class="token punctuation">(</span><span class="token string">'0.0'</span><span class="token punctuation">,</span> END<span class="token punctuation">)</span>
+
+    <span class="token keyword">def</span> <span class="token function">cancelMsg</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token comment">#取消信息</span>
+        txtMsg<span class="token punctuation">.</span>delete<span class="token punctuation">(</span><span class="token string">'0.0'</span><span class="token punctuation">,</span> END<span class="token punctuation">)</span>
+
+    <span class="token keyword">def</span> <span class="token function">sendMsgEvent</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token comment">#发送消息事件</span>
+        <span class="token keyword">if</span> event<span class="token punctuation">.</span>keysym <span class="token operator">==</span><span class="token string">'Up'</span><span class="token punctuation">:</span>
+            sendMsg<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token comment">#创建窗口</span>
+    app <span class="token operator">=</span> Tk<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    app<span class="token punctuation">.</span>title<span class="token punctuation">(</span><span class="token string">'图灵机器人姬小野'</span><span class="token punctuation">)</span>
+
+    <span class="token comment">#创建frame容器</span>
+    frmLT <span class="token operator">=</span> Frame<span class="token punctuation">(</span>width <span class="token operator">=</span> <span class="token number">600</span><span class="token punctuation">,</span> height <span class="token operator">=</span> <span class="token number">360</span><span class="token punctuation">,</span> bg <span class="token operator">=</span> <span class="token string">'white'</span><span class="token punctuation">)</span>
+    frmLC <span class="token operator">=</span> Frame<span class="token punctuation">(</span>width <span class="token operator">=</span> <span class="token number">600</span><span class="token punctuation">,</span> height <span class="token operator">=</span> <span class="token number">160</span><span class="token punctuation">,</span> bg <span class="token operator">=</span> <span class="token string">'white'</span><span class="token punctuation">)</span>
+    frmLB <span class="token operator">=</span> Frame<span class="token punctuation">(</span>width <span class="token operator">=</span> <span class="token number">600</span><span class="token punctuation">,</span> height <span class="token operator">=</span> <span class="token number">30</span><span class="token punctuation">)</span>
+    frmRT <span class="token operator">=</span> Frame<span class="token punctuation">(</span>width <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">,</span> height <span class="token operator">=</span> <span class="token number">600</span><span class="token punctuation">)</span>
+
+    <span class="token comment">#创建控件</span>
+    txtMsgList <span class="token operator">=</span> Text<span class="token punctuation">(</span>frmLT<span class="token punctuation">)</span>
+    txtMsgList<span class="token punctuation">.</span>tag_config<span class="token punctuation">(</span><span class="token string">'greencolor'</span><span class="token punctuation">,</span>foreground <span class="token operator">=</span> <span class="token string">'#008C00'</span><span class="token punctuation">)</span><span class="token comment">#创建tag</span>
+    txtMsg <span class="token operator">=</span> Text<span class="token punctuation">(</span>frmLC<span class="token punctuation">)</span>
+    txtMsg<span class="token punctuation">.</span>bind<span class="token punctuation">(</span><span class="token string">"&lt;KeyPress-Up&gt;"</span><span class="token punctuation">,</span> sendMsgEvent<span class="token punctuation">)</span>
+    btnSend <span class="token operator">=</span> Button<span class="token punctuation">(</span>frmLB<span class="token punctuation">,</span> text <span class="token operator">=</span> <span class="token string">'发送'</span><span class="token punctuation">,</span> width <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span> command <span class="token operator">=</span> sendMsg<span class="token punctuation">)</span>
+    btnCancel <span class="token operator">=</span>Button<span class="token punctuation">(</span>frmLB<span class="token punctuation">,</span> text <span class="token operator">=</span> <span class="token string">'取消'</span><span class="token punctuation">,</span> width <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span> command <span class="token operator">=</span> cancelMsg<span class="token punctuation">)</span>
+    imgInfo <span class="token operator">=</span> PhotoImage<span class="token punctuation">(</span><span class="token builtin">file</span> <span class="token operator">=</span> <span class="token string">"background.png"</span><span class="token punctuation">)</span>
+    lblImage <span class="token operator">=</span> Label<span class="token punctuation">(</span>frmRT<span class="token punctuation">,</span> image <span class="token operator">=</span> imgInfo<span class="token punctuation">)</span>
+    lblImage<span class="token punctuation">.</span>image <span class="token operator">=</span> imgInfo
+
+    <span class="token comment">#窗口布局</span>
+    frmLT<span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> column <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> columnspan <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> padx <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> pady <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span>
+    frmLC<span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> column <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> columnspan <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> padx <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> pady <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span>
+    frmLB<span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> column <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> columnspan <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">)</span>
+    frmRT<span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> column <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> rowspan <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span> padx <span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> pady <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span>
+
+    <span class="token comment">#固定大小</span>
+    frmLT<span class="token punctuation">.</span>grid_propagate<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+    frmLC<span class="token punctuation">.</span>grid_propagate<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+    frmLB<span class="token punctuation">.</span>grid_propagate<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+    frmRT<span class="token punctuation">.</span>grid_propagate<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+
+    btnSend<span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> column <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    btnCancel<span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> column <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    lblImage<span class="token punctuation">.</span>grid<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    txtMsgList<span class="token punctuation">.</span>grid<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    txtMsg<span class="token punctuation">.</span>grid<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment">#主事件循环</span>
+    app<span class="token punctuation">.</span>mainloop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">if</span>  __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
+    main<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

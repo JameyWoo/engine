@@ -1,0 +1,174 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79255250				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>审核还没通过就更新: ) <br>
+把set_difference()这家伙给忘掉了 <br>
+已补充 <br>
+&lt;———————————————–&gt;</p>
+
+<p>看紫书P116, 发现这里的代码出现了几个没看过的函数, 百度了一下, 还真有, 而且用法比较奇特.</p>
+
+<p><strong>紫书上使用宏(macro)很巧妙, 以前这样没用过</strong> <br>
+<strong>typedef也给我减少写代码提供了新思路</strong></p>
+
+<p>主角是set相关的函数</p>
+
+<p>取两集合并集: <strong>set_union()</strong> <br>
+取两集合交集: <strong>set_intersection()</strong> <br>
+取第一集合对第二集合的差集:;<strong>set_difference()</strong></p>
+
+<p>要包含头文件algorithm</p>
+
+<p>函数的参数分别是</p>
+
+<blockquote>
+  <p>set_union(s1.begin(), s1.end(), s2.begin(), s2.end(), inserter(s3, s3.begin());</p>
+</blockquote>
+
+<p>以上, 把集合是s1, s2取并集, 放到集合s3中</p>
+
+<p>还有一种直接输出, 可设置元素间字符的</p>
+
+<blockquote>
+  <p>set_union(s1.begin(), s1.end(), s2.begin(), s2.end(), ostream_iterator&lt; int&gt;(cout,”\n”));</p>
+</blockquote>
+
+<p>要包含iterator头文件</p>
+
+<p>set_intersection函数与set_difference函数用法和set_union几乎是一样的</p>
+
+<p>值得注意的是 <br>
+这样写参数比较繁琐, 所以不如使<strong>用宏定义简化使用函数过程中的参数</strong></p>
+
+<blockquote>
+  <p>#define seT(x) x.begin(), x.end() <br>
+   #define sEt(x) inserter(x, x.begin()) <br>
+   或者更集中 <br>
+   #define seT(x, y) x.begin(), x.end(), y.begin(), y.end()</p>
+</blockquote>
+
+<p><strong>使用typedef简化类型</strong>, 或者说使类型更常规</p>
+
+<blockquote>
+  <p>typedef set&lt; int &gt; Set;</p>
+</blockquote>
+
+<p>示例一</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;set&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> Set;
+
+<span class="hljs-keyword">int</span> main()
+{
+    Set s1, s2, s3;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) {
+        s1.insert(i);
+        s2.insert(i + <span class="hljs-number">4</span>);
+    }
+    set_intersection(s1.begin(), s1.end(), s2.begin(), s2.end(), inserter(s3, s3.begin()));
+    set_union(s1.begin(), s1.end(), s2.begin(), s2.end(), inserter(s3, s3.begin()));
+    Set::iterator it = s3.begin();
+    <span class="hljs-keyword">while</span>(it != s3.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; *it &lt;&lt; endl;
+        it++;
+    }
+}</code></pre>
+
+<p>示例二</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iterator&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;set&gt; </span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-preprocessor">#define seT(x) x.begin(), x.end()</span>
+<span class="hljs-preprocessor">#define sEt(x) inserter(x, x.begin())</span>
+<span class="hljs-preprocessor">#define sET ostream_iterator&lt;int&gt;(cout, "\n")</span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-stl_container"><span class="hljs-built_in">set</span> &lt;<span class="hljs-keyword">int</span>&gt;</span> Set;
+
+<span class="hljs-keyword">int</span> main()
+{
+    Set s1, s2, s3;
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i ) {
+        s1.insert(i);
+        s2.insert(i+<span class="hljs-number">7</span>); 
+    }
+    set_union(seT(s1), seT(s2), sEt(s3));
+    Set :: iterator it = s3.begin();
+    <span class="hljs-keyword">while</span>(it != s3.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; *it &lt;&lt; endl;
+        it++; 
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    set_intersection(seT(s1), seT(s2), sET);
+}</code></pre>
+
+<p>示例三</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iterator&gt;</span>
+<span class="hljs-preprocessor">#include &lt;set&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-preprocessor">#define seT(x, y) x.begin(), x.end(), y.begin(), y.end()</span>
+<span class="hljs-preprocessor">#define sET ostream_iterator&lt;int&gt;(cout, "\n")</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> Set;
+
+<span class="hljs-keyword">int</span> main()
+{
+    Set s1, s2;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) {
+        s1.insert(i-<span class="hljs-number">3</span>);
+        s2.insert(i+<span class="hljs-number">2</span>);
+    }
+    set_intersection(seT(s1, s2), sET);
+}</code></pre>
+
+<p>示例四</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;set&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iterator&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-preprocessor">#define SET(x) x.begin(), x.end()</span>
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">typedef</span> <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> Set;
+    Set s1, s2, s3;
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++ i ) {
+        s1.insert(i+<span class="hljs-number">1</span>);
+        s2.insert(i+<span class="hljs-number">3</span>);
+    }
+    set_difference(SET(s1), SET(s2), inserter(s3, s3.begin()));
+    set_difference(SET(s1), SET(s2), ostream_iterator&lt;<span class="hljs-keyword">int</span>&gt;(<span class="hljs-built_in">cout</span>, <span class="hljs-string">"\n"</span>));
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

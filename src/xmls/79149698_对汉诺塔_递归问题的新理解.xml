@@ -1,0 +1,115 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79149698				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>开始学C++函数是看到汉诺塔问题觉得好难理解, 当时记了记代码, 了解了些原理就跳过了.昨天时隔许久重新写汉诺塔, 错误百出. 查阅资料, 在现有的知识基础上有了更多更深的理解.</p>
+
+<p>这次对汉诺塔问题的过程以及对应代码有了明确认识 <br>
+对<strong>递归或者说递推</strong>有了进一步认识</p>
+
+<p>写这篇博客除了加深相关认识和记录之外, 还有对以前的纠错和反思</p>
+
+<p>知乎上有很多关于<a href="https://www.zhihu.com/question/24385418" rel="nofollow"><strong>汉诺塔问题</strong></a>的理解, 有的非常形象和详细</p>
+
+<p>汉诺塔递归的精髓: <br>
+<strong>舍弃对全部过程的推导, 而局限于两步之间的关系!</strong> <br>
+其实这也是理解所有递归问题的关键.</p>
+
+<p>那么现在的我是如何理解汉诺塔的呢?</p>
+
+<p>我们知道汉诺塔移动次数是一个递推公式</p>
+
+<blockquote>
+  <p>Fn = 2*Fn-1 + 1 <br>
+   Fn = 2^n - 1</p>
+</blockquote>
+
+<p>根据上面的公式 <br>
+关于Fn过程我们可以理解为进行两个Fn-1过程, 再加一</p>
+
+<p>为什么这么做?</p>
+
+<p>假设我们要从A到C移动n个盘子, 那么中间某个过程必然存在1~n-1个盘子在B处, 第n个盘子在A处, 移动一次把它从A移动到C, 然后把n-1个盘子从B全部移动到C</p>
+
+<p>我们可以解析出三个过程:</p>
+
+<blockquote>
+  <ol>
+  <li>把1~n-1盘子从A移动到B, 此时以C为中转, 移动次数为Fn-1</li>
+  <li>把第n个盘子从A移动到C, 移动次数为1</li>
+  <li>把1~n-1盘子从B移动到C, 此时以A为中转, 移动次数为Fn-1</li>
+  </ol>
+</blockquote>
+
+<p>值得注意的是, n个盘子从第一处处移动到第二处, 中转为第三处, 这个过程和第一处第二处第三处是A还是B或C是无关的. 和第n+1个盘子也无关, 所以, 可以形象地理解为, 移动了n个盘子, 突然原先的地方又冒出一个盘子, 然后移动这个盘子, 再把之前的n个盘子进行移动.</p>
+
+<p>C++代码为:</p>
+
+<pre class="prettyprint"><code class=" hljs cs"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+
+<span class="hljs-keyword">using</span> namespace std;
+
+<span class="hljs-keyword">void</span> hanoi(<span class="hljs-keyword">int</span> n, <span class="hljs-keyword">char</span> <span class="hljs-keyword">from</span>, <span class="hljs-keyword">char</span> buffer, <span class="hljs-keyword">char</span> to)
+{
+    <span class="hljs-keyword">if</span>( n == <span class="hljs-number">1</span> ) {
+        cout &lt;&lt; <span class="hljs-string">"From "</span> &lt;&lt; <span class="hljs-keyword">from</span> &lt;&lt; <span class="hljs-string">" to "</span> &lt;&lt; to &lt;&lt; endl;
+    } <span class="hljs-keyword">else</span> {
+        hanoi(n - <span class="hljs-number">1</span>, <span class="hljs-keyword">from</span>, to, buffer);
+        hanoi(<span class="hljs-number">1</span>, <span class="hljs-keyword">from</span>, buffer, to);
+        hanoi(n - <span class="hljs-number">1</span>, buffer, <span class="hljs-keyword">from</span>, to);
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-keyword">char</span> <span class="hljs-keyword">from</span> = <span class="hljs-string">'A'</span>, buffer = <span class="hljs-string">'B'</span>, to = <span class="hljs-string">'C'</span>;
+    cin &gt;&gt; n;
+    hanoi(n, <span class="hljs-keyword">from</span>, buffer, to);
+}</code></pre>
+
+<p>对此代码中hanoi函数的理解尤其重要, 在里面n != 1时调用了三次hanoi, 即三次递归, 分别代表上面说明的三个过程.</p>
+
+<p>函数的参数变化是移动过程中中转位置的变化. <br>
+如: hanoi(n - 1, from, to, buffer);中, 中转位置是to</p>
+
+<p>这段代码是标准的汉诺塔问题求解方法</p>
+
+<p>下面是我之前的汉诺塔代码:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">void</span> hanoi(<span class="hljs-keyword">int</span> n, <span class="hljs-keyword">char</span> a, <span class="hljs-keyword">char</span> b, <span class="hljs-keyword">char</span> c)
+{
+    <span class="hljs-keyword">if</span>( n == <span class="hljs-number">1</span> ) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="hljs-string">" -------&gt; "</span> &lt;&lt; c &lt;&lt; endl;
+        <span class="hljs-keyword">return</span>;
+    }
+    hanoi(n-<span class="hljs-number">1</span>, a, c, b);
+    <span class="hljs-built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="hljs-string">" -------&gt; "</span> &lt;&lt; c &lt;&lt; endl;
+    hanoi(n-<span class="hljs-number">1</span>, b, a, c);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    hanoi(n, <span class="hljs-string">'A'</span>, <span class="hljs-string">'B'</span>, <span class="hljs-string">'C'</span>);
+}</code></pre>
+
+<p>可以看到我当时并不十分理解这个过程, 只是记忆了在这个代码中应该怎么写, 而这么写虽然是正确的, 但对汉诺塔移动的过程没有很清楚的描述.</p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

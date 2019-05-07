@@ -1,0 +1,119 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81712011				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<div class="lg-article am-g">
+<h2 id="题目背景">题目背景</h2>
+<p>（原创）</p>
+<p>有一天 pb和zs玩游戏 你需要帮zs求出每局的胜败情况</p>
+<h2 id="题目描述">题目描述</h2>
+<p>游戏规则是这样的： 每次一个人可以对给出的数进行分割，将其割成两个非零自然数，之后由另一个人选择留下两个数中的其中一个；之后由另一个人进行分割这个剩下的数，重复步骤……</p>
+<p>当一个人无法对数进行分割的时候游戏结束，另一个人获胜</p>
+<p>现在要你求出N次游戏的胜败</p>
+<p>每局由pb先进行分割，如果pb赢输出"pb wins" 如果zs赢输出"zs wins"</p>
+<p>注：双方都是绝顶聪明的</p>
+<h2 id="输入输出格式">输入输出格式</h2>
+<strong>输入格式：</strong><br>
+<p></p><p>第一行一个数N，表示数据组数</p>
+<p>之后N行，每行一个数M，表示每局初始的数</p>
+<strong>输出格式：</strong><br>
+<p></p><p>共N行，每行一串字符 表示游戏结果</p>
+<h2 id="输入输出样例">输入输出样例</h2>
+<div class="am-g">
+<div class="am-u-md-6 copy-region">
+<strong>输入样例#1：</strong>
+<a class="am-badge am-radius lg-bg-orange sample-copy"></a>
+<pre>5
+1
+3
+7
+20
+5</pre>
+</div>
+
+<div class="am-u-md-6 copy-region">
+<strong>输出样例#1：</strong>
+<a class="am-badge am-radius lg-bg-orange sample-copy">复制</a>
+<pre>zs wins
+zs wins
+zs wins
+pb wins
+zs wins
+</pre>
+</div>
+
+<p></p></div>
+
+<h2 id="说明">说明</h2>
+
+<p></p><pre>1&lt;N&lt;50
+1&lt;=m&lt;=1000000000</pre><p></p>
+
+<p></p></div>
+
+<p>这道题是洛谷博弈论专题的第一道入门题, 然而刚开始我是不会做的, 毕竟是道入门题, 我博弈论还没入门呢.</p>
+
+<p>这道题的做法就是: <strong>如果m为偶数, 那么先手赢(即pb), 如果m为奇数, 那么后手赢(即zs).</strong></p>
+
+<p><strong> 做法很简单, 可是我们要知道怎么做的</strong></p>
+
+<p>说实话我对于他们两个都聪明绝顶, 都会按照最优策略来走很不感冒. <strong>既然他们聪明绝顶, 那么先手明知道m为奇数时自己会输, 为什么不洒脱一点走呢? 也许乱走出奇迹?</strong></p>
+
+<p>那我们来试试看. 当<code>m = 13</code>时, 先手为什么会输. 前提是先手知道自己按照最优策略会输(因为轮到他分时为奇数), 所以开始乱走.</p>
+
+<pre><strong>
+先手：１３ = ４ +９
+后手：选４, ４ = １ +３
+先手：不得已选３，　３＝１＋２
+后手：选２，２＝１＋１
+后手赢
+</strong></pre>
+
+<p>不服? 再来一把</p>
+
+<pre><strong>
+先手：13＝６＋７
+后手：选６，６＝１＋５
+先手：选５，５＝１＋４
+后手：选４，４＝１＋３
+先手：３＝１＋２
+后手：２＝１＋１
+后手赢
+</strong></pre>
+
+<p>经过了两把测试, <strong>我们不管先手怎么走(乱走或所谓最优策略),只要他手里是奇数,都不得不拆成奇数+偶数</strong>, <strong>那么后手只要选择偶数, 他就可以把这个数化成<code>m = n + 1</code>(后手的最优策略)</strong>, 把奇数转移给先手. <strong>这样经过若干次转移之后, 后手手里一定会是<code>2</code>,然后<code>2 = 1 + 1</code>, 后手就赢了.</strong></p>
+
+<p>所以, 其实手里是奇数的人是没有胜算的, 所以这个状态是<strong>必败态</strong>. 而手里是偶数的人是有必胜的可能的, <strong>只有他才有最优策略而且只要他按照最优策略走, 他一定会赢</strong>, 因此这个状态是<strong>必胜态</strong>. 当然, 如果他sa, 就可能将<strong>必胜态</strong>拱手让人.</p>
+
+<p><strong>而理解这个博弈论问题的关键, 就是拥有偶数的策略: 每次减一. 因而可以再次将偶数态(必胜态)转移过来.</strong></p>
+
+<p>事实上, 刚接触此题时, 我对所谓<strong>绝顶聪明</strong>, 所谓<strong>最优策略</strong>很困惑, 两个人博弈, 凭什么说我走的是最佳策略结果却输了? 我是不是应该把所有走法都试一遍, 然后都输给你才算我输? </p>
+
+<p>我的理解是: <strong>必败态从来没有最佳策略, 博弈也不是双方的博弈, 而是处在必胜态的那方和自己博弈. 而这场博弈, 由于绝顶聪明的前提, 是必胜的, 而我们要做的, 只是找出谁有跟自己博弈的机会.</strong></p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, x;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">while</span> (n--) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x;
+        <span class="hljs-keyword">if</span> (x &amp; <span class="hljs-number">1</span>) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"zs wins"</span> &lt;&lt; endl;
+        <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"pb wins"</span> &lt;&lt; endl;
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

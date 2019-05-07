@@ -1,0 +1,34 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/88317440				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>今天准备把pip18.1升级到19.0.3的，可是没想到网上搜索到的大多数方法都不管用，尝试了n种网友分享的方法后，最后在pip官方网站找到了正确的升级方法。</p>
+<p>尝试的方法有以下几种：<br>
+1、<code>pip install --upgrade pip</code><br>
+2、<code>python -m pip install --upgrade pip</code><br>
+3、<code>pip install pip</code><br>
+4、到官网下载whl安装文件离线安装</p>
+<p>统统失败！！！</p>
+<p>最可笑的是，用每种方法，失败后都提示我用<code>python -m pip install --upgrade pip</code> 这种方法去安装。</p>
+<hr>
+<p>我是如何安装的呢？<br>
+先使用命令<br>
+<code>curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py</code><br>
+注意，这个命令要比较久的时间</p>
+<p>然后使用命令<br>
+<code>python get-pip.py</code><br>
+就安装好了！</p>
+<p>要是有其它的什么问题，可以进官网看看，官网文档还是比广大博主要靠谱的多啊！</p>
+<hr>
+<iframe src="https://pip.pypa.io/en/stable/installing/" width="100%" height="500"></iframe>
+<p>附官网安装文档：<a href="https://pip.pypa.io/en/stable/installing/" rel="nofollow">https://pip.pypa.io/en/stable/installing/</a></p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

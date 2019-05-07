@@ -1,0 +1,163 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79245957				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h1 id="stl中有支持排序和检索的函数如sort-二分查找-使用起来较为方便">STL中有支持排序和检索的函数如sort, 二分查找. 使用起来较为方便.</h1>
+
+
+
+<h2 id="sort函数">sort函数</h2>
+
+<p>添加在头文件algorithm中, 使用方法如: <br>
+sort(start,end[,排序方法])</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs mel"><span class="hljs-keyword">int</span> a[<span class="hljs-number">5</span>] = {<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">34</span>,<span class="hljs-number">4</span>,<span class="hljs-number">3</span>};
+<span class="hljs-keyword">sort</span>(a, a+<span class="hljs-number">5</span>);  <span class="hljs-comment">//这是最简单的sort方法, 使用默认的排序方法升序排列</span>
+
+<span class="hljs-keyword">sort</span>(a, a+<span class="hljs-number">5</span>, cmp); <span class="hljs-comment">// cmp为bool函数名, 是自定义规则比较函数</span>
+
+<span class="hljs-comment">//自定义的cmp函数</span>
+bool cmp(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)
+{
+    <span class="hljs-keyword">return</span> a &gt; b;
+}</code></pre>
+
+
+
+<h2 id="binarysearch">binary_search()</h2>
+
+<p>STL提供的一种bool二分搜索函数, 使用方式为:</p>
+
+<blockquote>
+  <p>binary_search(start, end, argu); <br>
+  if (binary_search(a, a+5, 3)){ }</p>
+</blockquote>
+
+<p>返回true或false</p>
+
+
+
+<h2 id="lowerbound">lower_bound()</h2>
+
+<p>返回第一个<strong>大于或等于x</strong>的第一个位置 <br>
+使用方法为:</p>
+
+<blockquote>
+  <p>lower_bound(start, end, x);  //返回的是指针</p>
+</blockquote>
+
+<p>一般这样:</p>
+
+<blockquote>
+  <p>int a[5] = {1,2,3,4,5}; <br>
+  int p = lower_bound(a, a+5, x) - a; <br>
+  cout &lt;&lt; a[p];  //p的值对应数组a的下标</p>
+</blockquote>
+
+
+
+<h2 id="upperbound">upper_bound()</h2>
+
+<p>返回第一个<strong>大于x</strong>的第一个位置 <br>
+使用方法为:</p>
+
+<blockquote>
+  <p>upper_bound(start, end, x);  //返回的是指针</p>
+</blockquote>
+
+<p>一般这样:</p>
+
+<blockquote>
+  <p>int a[5] = {1,2,3,4,5}; <br>
+  int p = upper_bound(a, a+5, x) - a; <br>
+  cout &lt;&lt; a[p];  //p的值对应数组a的下标</p>
+</blockquote>
+
+<p>参考书目见紫书P108, 以及网上各博客</p>
+
+
+
+<h1 id="更新-在实践中发现了一些上面没有的问题">更新, 在实践中发现了一些上面没有的问题</h1>
+
+<p>普通的二分查找函数是对升序的序列进行查找的, 也就是对一个降序序列查找是错误的, 那么这些函数和sort类似, 就应该添加一个方法函数, 如:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs autohotkey">bool cmp(int <span class="hljs-literal">a</span>, int b)
+{
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">a</span> &gt; b<span class="hljs-comment">;</span>
+}
+binary_search(<span class="hljs-literal">a</span>, <span class="hljs-literal">a</span>+<span class="hljs-number">1000</span>, <span class="hljs-number">33</span>, cmp)<span class="hljs-comment">;</span></code></pre>
+
+<p>其他函数类似.</p>
+
+<p>一个综合的应用如下</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;ctime&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstdlib&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">bool</span> cmp(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)
+{
+    <span class="hljs-keyword">return</span> a &gt; b;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    srand(time(NULL));
+    <span class="hljs-keyword">int</span> a[<span class="hljs-number">1000</span>] = {};
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000</span>; ++i ) {
+        a[i] = rand()%<span class="hljs-number">1000</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"sizeof a / int: "</span> &lt;&lt; <span class="hljs-keyword">sizeof</span>(a)/<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>) &lt;&lt; endl;
+
+    sort(a, a+<span class="hljs-number">1000</span>);
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000</span>; ++i ) {
+        <span class="hljs-comment">//cout &lt;&lt; a[i] &lt;&lt; endl;</span>
+    }
+    <span class="hljs-keyword">if</span>(binary_search(a, a+<span class="hljs-number">1000</span>, <span class="hljs-number">555</span>)){
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"yes ! there is 555\n"</span>;
+    }
+
+    sort(a, a+<span class="hljs-number">1000</span>, cmp);
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000</span>; ++i ) {
+        <span class="hljs-comment">//cout &lt;&lt; a[i] &lt;&lt; endl;</span>
+    }
+    <span class="hljs-keyword">if</span>(binary_search(a, a+<span class="hljs-number">1000</span>, <span class="hljs-number">555</span>, cmp)){
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"yes ! there is 555\n"</span>;
+    }
+
+    <span class="hljs-keyword">int</span> p = lower_bound(a, a+<span class="hljs-number">1000</span>, <span class="hljs-number">345</span>, cmp) - a;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"a[p] == "</span> &lt;&lt; a[p] &lt;&lt; endl;
+
+    p = upper_bound(a, a+<span class="hljs-number">1000</span>, <span class="hljs-number">345</span>, cmp) - a;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"a[p] == "</span> &lt;&lt; a[p] &lt;&lt; endl;
+}</code></pre>
+
+<p>输出结果为</p>
+
+<blockquote>
+  <p>sizeof a / int: 1000 <br>
+  yes ! there is 555 <br>
+  yes ! there is 555 <br>
+  a[p] == 345 <br>
+  a[p] == 344</p>
+</blockquote>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

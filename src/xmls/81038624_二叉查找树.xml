@@ -1,0 +1,398 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81038624				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><div class="toc"><div class="toc">
+<ul>
+<li><ul>
+<li><a href="#一-什么是二叉查找树" rel="nofollow">一. 什么是二叉查找树?</a></li>
+<li><a href="#二-如何建立一棵二叉树" rel="nofollow">二. 如何建立一棵二叉树?</a><ul>
+<li><a href="#1-定义结点的存储方式" rel="nofollow">1. 定义结点的存储方式.</a></li>
+<li><a href="#2-获取数据" rel="nofollow">2. 获取数据</a></li>
+<li><a href="#3-构建二叉查找树" rel="nofollow">3. 构建二叉查找树</a></li>
+<li><a href="#4-插入函数" rel="nofollow">4. 插入函数</a></li>
+<li><a href="#5-中序遍历二叉树" rel="nofollow">5. 中序遍历二叉树</a></li>
+</ul>
+</li>
+<li><a href="#三-删除操作" rel="nofollow">三. 删除操作</a><ul>
+<li><a href="#1-前驱与后继" rel="nofollow">1. 前驱与后继</a></li>
+<li><a href="#如何求得前驱和后继" rel="nofollow">如何求得前驱和后继</a><ul>
+<li><a href="#1-findmax函数" rel="nofollow">1) findMax()函数</a></li>
+<li><a href="#2-findmin函数" rel="nofollow">2) findMin()函数</a></li>
+</ul>
+</li>
+<li><a href="#2-删除的逻辑理解" rel="nofollow">2. 删除的逻辑理解</a></li>
+<li><a href="#3-完整代码" rel="nofollow">3. 完整代码</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</p>
+
+
+
+<h2 id="一-什么是二叉查找树">一. 什么是二叉查找树?</h2>
+
+<p>二叉查找树是一种特殊的二叉树, 又称为排序二叉树, 二叉搜索树, 二叉排序树.</p>
+
+<p>递归定义如下:</p>
+
+<blockquote>
+  <p><strong>1. 要么二叉查找树是一棵空树</strong> <br>
+  <strong>2.  要么二叉查找树由根结点, 左子树, 右子树组成, 其中左子树, 右子树都是二叉查找树, 且左子树上所有结点的数据域均小于或等于根节点的数据域, 有紫书上所有节点的数据域都大于根节点的数据域.</strong></p>
+</blockquote>
+
+<p>二叉查找树的性质? </p>
+
+<blockquote>
+  <p>二叉查找树具有二叉树的性质 <br>
+   <strong>二叉查找树是有序数, 它的中序遍历结果就是它的结点的增序.</strong></p>
+</blockquote>
+
+<p>从我之前对二叉树的讨论来看, 上次我之所以觉得无法仅凭一组数据就建立一棵二叉树, <strong>其原因就是那颗二叉树没有定义规则. </strong>学到二叉查找树这里, 之前的疑惑也解开了. <strong>二叉查找树是有规则的, 因此我们可以根据这个规则进行明确的插入操作, 而插入操作的集合, 其实就是建立一棵二叉查找树.</strong></p>
+
+<hr>
+
+<h2 id="二-如何建立一棵二叉树">二. 如何建立一棵二叉树?</h2>
+
+<h3 id="1-定义结点的存储方式">1. 定义结点的存储方式.</h3>
+
+<pre class="prettyprint"><code class=" hljs vbscript">struct Node {
+    <span class="hljs-built_in">int</span> data;
+    Node *<span class="hljs-built_in">left</span>, *<span class="hljs-built_in">right</span>;
+    Node () { <span class="hljs-built_in">left</span> = <span class="hljs-built_in">right</span> = <span class="hljs-literal">NULL</span>; }
+};</code></pre>
+
+<p>分别代表数据域, 左孩子结点, 有孩子结点. 建立构造函数, 方便后面操作.</p>
+
+
+
+<h3 id="2-获取数据">2. 获取数据</h3>
+
+<pre class="prettyprint"><code class=" hljs cpp">    <span class="hljs-keyword">int</span> n, x;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> v;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x;
+        v.push_back(x);
+    }
+    <span class="hljs-comment">/*
+    7
+    8 6 5 7 10 8 11
+    */</span></code></pre>
+
+
+
+<h3 id="3-构建二叉查找树">3. 构建二叉查找树</h3>
+
+<pre class="prettyprint"><code class=" hljs cpp">......
+Node *root = creatTree(v); 
+......
+Node* creatTree(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> v)
+{
+    Node *root = NULL;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; v.size(); ++i) {
+        insert(root, v[i]);
+    }
+    <span class="hljs-keyword">return</span> root;
+}</code></pre>
+
+<p>从上面的代码可以发现, 构建二叉查找树的过程其实就是不断插入结点的过程.</p>
+
+
+
+<h3 id="4-插入函数">4. 插入函数</h3>
+
+<pre class="prettyprint"><code class=" hljs lasso"><span class="hljs-literal">void</span> insert(Node<span class="hljs-subst">*</span> <span class="hljs-subst">&amp;</span>root, int val)
+{
+    <span class="hljs-keyword">if</span> (root <span class="hljs-subst">==</span> <span class="hljs-built_in">NULL</span>) {
+        root <span class="hljs-subst">=</span> <span class="hljs-literal">new</span> Node;
+        root<span class="hljs-subst">-&gt;</span><span class="hljs-built_in">data</span> <span class="hljs-subst">=</span> val;
+        <span class="hljs-keyword">return</span>;
+    }
+    <span class="hljs-keyword">if</span> (val <span class="hljs-subst">&lt;=</span> root<span class="hljs-subst">-&gt;</span><span class="hljs-built_in">data</span>) insert(root<span class="hljs-subst">-&gt;</span>left, val);
+    <span class="hljs-keyword">else</span> insert(root<span class="hljs-subst">-&gt;</span>right, val);
+}</code></pre>
+
+
+
+<h3 id="5-中序遍历二叉树">5. 中序遍历二叉树</h3>
+
+<pre class="prettyprint"><code class=" hljs lasso"><span class="hljs-literal">void</span> inOrder(Node <span class="hljs-subst">*</span>root)
+{
+    <span class="hljs-keyword">if</span> (root <span class="hljs-subst">==</span> <span class="hljs-built_in">NULL</span>) <span class="hljs-keyword">return</span>;
+    inOrder(root<span class="hljs-subst">-&gt;</span>left);
+    cout <span class="hljs-subst">&lt;&lt;</span> root<span class="hljs-subst">-&gt;</span><span class="hljs-built_in">data</span> <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">' '</span>;
+    inOrder(root<span class="hljs-subst">-&gt;</span>right);
+}</code></pre>
+
+<p>至此, 我们的二叉查找树就建立完成了.</p>
+
+<p><strong>值得注意的是, 在insert函数中, 传递root指针时, 一定要使用&amp;引用符号, 不然时无法修改值的.</strong></p>
+
+<p>完整代码如下:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> data;
+    Node *left, *right;
+    Node () { left = right = NULL; }
+};
+
+<span class="hljs-keyword">void</span> insert(Node* &amp;root, <span class="hljs-keyword">int</span> val)
+{
+    <span class="hljs-keyword">if</span> (root == NULL) {
+        root = <span class="hljs-keyword">new</span> Node;
+        root-&gt;data = val;
+        <span class="hljs-keyword">return</span>;
+    }
+    <span class="hljs-keyword">if</span> (val &lt;= root-&gt;data) insert(root-&gt;left, val);
+    <span class="hljs-keyword">else</span> insert(root-&gt;right, val);
+}
+
+Node* creatTree(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> v)
+{
+    Node *root = NULL;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; v.size(); ++i) {
+        insert(root, v[i]);
+    }
+    <span class="hljs-keyword">return</span> root;
+}
+
+<span class="hljs-keyword">void</span> inOrder(Node *root)
+{
+    <span class="hljs-keyword">if</span> (root == NULL) <span class="hljs-keyword">return</span>;
+    inOrder(root-&gt;left);
+    <span class="hljs-built_in">cout</span> &lt;&lt; root-&gt;data &lt;&lt; <span class="hljs-string">' '</span>;
+    inOrder(root-&gt;right);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, x;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> v;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x;
+        v.push_back(x);
+    }
+    Node *root = creatTree(v); 
+    inOrder(root);
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}
+<span class="hljs-comment">/*  
+7
+8 6 5 7 10 8 11
+*/</span></code></pre>
+
+<hr>
+
+
+
+<h2 id="三-删除操作">三. 删除操作</h2>
+
+<p>既然二叉查找树有插入的操作, 那么它必然有删除的操作.</p>
+
+<p>删除操作较为复杂, 涉及的知识稍多, 因此单独提出.</p>
+
+<p>我们思考这样一个问题: <strong>倘若我们要删除一个值为val的结点, 如果它有孩子结点的话, 那么必然需要有一个数来取代它的位置, 因为树的非叶子结点不可能为空.</strong></p>
+
+<p>那么我们选哪个数来取代它的位置呢? 有两个可供选择的方案: <strong>前驱</strong>与<strong>后继</strong></p>
+
+<h3 id="1-前驱与后继">1. 前驱与后继</h3>
+
+<blockquote>
+  <p><strong>前驱指的是一个结点的左子树里面的最大权值结点. 后继指的是一个结点的右子树里面的最小权值结点.</strong></p>
+</blockquote>
+
+<p>这两个结点很特殊, <strong>因为根据二叉查找树的有序性, 只有这两个结点有资格取代那个结点.</strong></p>
+
+<h3 id="如何求得前驱和后继">如何求得前驱和后继</h3>
+
+<p>思考一下会发现, 一个结点的左子树上的结点是比自己小的结点, 右子树上的结点是比自己大的结点, <strong>那么要找到该结点左子树里权值最大的结点, 只需从左子树根节点一直遍历右孩子结点, 直到右孩子结点指向NULL.</strong> </p>
+
+
+
+<h4 id="1-findmax函数">1) findMax()函数</h4>
+
+<pre class="prettyprint"><code class=" hljs lasso">Node<span class="hljs-subst">*</span> findMax(Node <span class="hljs-subst">*</span>root)
+{
+    <span class="hljs-keyword">while</span> (root<span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">!=</span> <span class="hljs-built_in">NULL</span>) root <span class="hljs-subst">=</span> root<span class="hljs-subst">-&gt;</span>right;
+    <span class="hljs-keyword">return</span> root;
+}</code></pre>
+
+<p>此函数用来查找左子树权值最大的结点并返回其指针.</p>
+
+
+
+<h4 id="2-findmin函数">2) findMin()函数</h4>
+
+<pre class="prettyprint"><code class=" hljs lasso">Node<span class="hljs-subst">*</span> findMin(Node <span class="hljs-subst">*</span>root)
+{
+    <span class="hljs-keyword">while</span> (root<span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">!=</span> <span class="hljs-built_in">NULL</span>) root <span class="hljs-subst">=</span> root<span class="hljs-subst">-&gt;</span>right;
+    <span class="hljs-keyword">return</span> root;
+}</code></pre>
+
+<p>此函数用来查找右子树权值最小的结点并返回其指针.</p>
+
+
+
+<h3 id="2-删除的逻辑理解">2. 删除的逻辑理解</h3>
+
+<p>删除操作的逻辑比较复杂. 可以这样解释:</p>
+
+<blockquote>
+  <ol>
+  <li>如果根节点为空, 则返回</li>
+  <li>如果根节点比val更大, 则转到左结点删除</li>
+  <li>如果根节点比val更小, 则转到右结点删除</li>
+  <li>如果相同, 那么       1)如果无右子结点, 则找到前驱赋值并删除前驱结点       2)如果无左子结点, 则找到后继赋值并删除后继节点       <em>一个优化: 可以存储父节点, 删除前驱时直接将其左结点接到其父节点的右结点. </em>       3)如果都没有, 则是叶子, 那么直接删除 <br>
+     4)如果都有, 任意选(或者优化:  (以避免树不平衡  <br>
+            &lt; 1 &gt;选择高度更高的 <br>
+            &lt; 2 &gt;2.随机或轮流选择前驱后继</li>
+  </ol>
+</blockquote>
+
+<pre class="prettyprint"><code class=" hljs lasso"><span class="hljs-literal">void</span> deleteNode(Node<span class="hljs-subst">*</span> <span class="hljs-subst">&amp;</span>root, int val)
+{
+    <span class="hljs-keyword">if</span> (root <span class="hljs-subst">==</span> <span class="hljs-built_in">NULL</span>) <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">if</span> (root<span class="hljs-subst">-&gt;</span><span class="hljs-built_in">data</span> <span class="hljs-subst">&lt;</span> val) deleteNode(root<span class="hljs-subst">-&gt;</span>right, val);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (root<span class="hljs-subst">-&gt;</span><span class="hljs-built_in">data</span> <span class="hljs-subst">&gt;</span> val) deleteNode(root<span class="hljs-subst">-&gt;</span>left, val);
+    <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">if</span> (root<span class="hljs-subst">-&gt;</span>left <span class="hljs-subst">==</span> <span class="hljs-built_in">NULL</span> <span class="hljs-subst">&amp;&amp;</span> root<span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">==</span> <span class="hljs-built_in">NULL</span>) {
+            root <span class="hljs-subst">=</span> <span class="hljs-built_in">NULL</span>;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (root<span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">==</span> <span class="hljs-built_in">NULL</span>) {
+            Node<span class="hljs-subst">*</span> pre <span class="hljs-subst">=</span> findMax(root<span class="hljs-subst">-&gt;</span>left);
+            root<span class="hljs-subst">-&gt;</span><span class="hljs-built_in">data</span> <span class="hljs-subst">=</span> pre<span class="hljs-subst">-&gt;</span><span class="hljs-built_in">data</span>;
+            deleteNode(root<span class="hljs-subst">-&gt;</span>left, pre<span class="hljs-subst">-&gt;</span><span class="hljs-built_in">data</span>); <span class="hljs-comment">// 为什么不可以直接pre? </span>
+        } <span class="hljs-keyword">else</span> {
+            Node<span class="hljs-subst">*</span> next <span class="hljs-subst">=</span> findMin(root<span class="hljs-subst">-&gt;</span>right);
+            root<span class="hljs-subst">-&gt;</span><span class="hljs-built_in">data</span> <span class="hljs-subst">=</span> next<span class="hljs-subst">-&gt;</span><span class="hljs-built_in">data</span>;
+            deleteNode(root<span class="hljs-subst">-&gt;</span>right, next<span class="hljs-subst">-&gt;</span><span class="hljs-built_in">data</span>);
+        }
+    }
+}</code></pre>
+
+<p>同样注意: <strong>不要忘记加引用符号 &amp; </strong></p>
+
+
+
+<h3 id="3-完整代码">3. 完整代码</h3>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> data;
+    Node *left, *right;
+    Node () { left = right = NULL; }
+};
+
+<span class="hljs-keyword">void</span> insert(Node* &amp;root, <span class="hljs-keyword">int</span> val) <span class="hljs-comment">// 一定要加这个引用符号!!! </span>
+{
+    <span class="hljs-keyword">if</span> (root == NULL) {
+        root = <span class="hljs-keyword">new</span> Node;
+        root-&gt;left = root-&gt;right = NULL;
+        root-&gt;data = val;
+        <span class="hljs-keyword">return</span>;
+    }
+    <span class="hljs-comment">//if (val == root-&gt;data) return;</span>
+    <span class="hljs-keyword">if</span> (val &gt; root-&gt;data) insert(root-&gt;right, val);
+    <span class="hljs-keyword">else</span> insert(root-&gt;left, val);
+}
+
+Node* creatBst(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> v)
+{
+    Node *root = NULL;
+    <span class="hljs-keyword">int</span> len = v.size();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; len; ++i) {
+        insert(root, v[i]);
+    }
+    <span class="hljs-keyword">return</span> root;
+}
+
+<span class="hljs-keyword">void</span> inOrder(Node *root)
+{
+    <span class="hljs-keyword">if</span> (root == NULL) <span class="hljs-keyword">return</span>;
+    inOrder(root-&gt;left);
+    <span class="hljs-built_in">cout</span> &lt;&lt; root-&gt;data &lt;&lt; <span class="hljs-string">' '</span>;
+    inOrder(root-&gt;right);
+}
+
+Node* findMax(Node *root)
+{
+    <span class="hljs-keyword">while</span> (root-&gt;right != NULL) root = root-&gt;right;
+    <span class="hljs-keyword">return</span> root;
+}
+
+Node* findMin(Node *root)
+{
+    <span class="hljs-keyword">while</span> (root-&gt;left != NULL) root = root-&gt;left;
+    <span class="hljs-keyword">return</span> root;
+}
+
+<span class="hljs-keyword">void</span> deleteNode(Node* &amp;root, <span class="hljs-keyword">int</span> val)
+{
+    <span class="hljs-keyword">if</span> (root == NULL) <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">if</span> (root-&gt;data &lt; val) deleteNode(root-&gt;right, val);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (root-&gt;data &gt; val) deleteNode(root-&gt;left, val);
+    <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">if</span> (root-&gt;left == NULL &amp;&amp; root-&gt;right == NULL) {
+            root = NULL;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (root-&gt;right == NULL) {
+            Node* pre = findMax(root-&gt;left);
+            root-&gt;data = pre-&gt;data;
+            deleteNode(root-&gt;left, pre-&gt;data); <span class="hljs-comment">// 为什么不可以直接pre? </span>
+        } <span class="hljs-keyword">else</span> {
+            Node* next = findMin(root-&gt;right);
+            root-&gt;data = next-&gt;data;
+            deleteNode(root-&gt;right, next-&gt;data);
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, x;
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> v;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x;
+        v.push_back(x);
+    }
+    Node* root = creatBst(v);
+    inOrder(root);
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    <span class="hljs-keyword">while</span> (<span class="hljs-built_in">cin</span> &gt;&gt; x) {
+        deleteNode(root, x);
+        inOrder(root);
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+}
+<span class="hljs-comment">/*
+7
+8 6 5 7 10 8 11
+
+7
+8 10 11 8 6 7 5
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

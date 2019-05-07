@@ -1,0 +1,44 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/87900006				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h2><a id="branch_0"></a>一、branch命令</h2>
+<p>1、<code>git branch branch-name</code> 新建分支branch<br>
+<img src="https://img-blog.csdnimg.cn/20190223233920379.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+2、<code>git branch -d branch-name</code> 删除分支<br>
+<img src="https://img-blog.csdnimg.cn/20190223234038765.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+3、<code>git branch</code> 或<code>git status</code>查看当前分支，<code>git chechout branch-name</code> 切换当前分支，可以看到使用<code>git branch</code> 是当前分支前面会有<code>*</code>符号<br>
+<img src="https://img-blog.csdnimg.cn/20190223234404201.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2><a id="merge_8"></a>二、merge合并分支</h2>
+<p>1、在分支状态下无法push，使用merge命令将其合并到master中<br>
+先切换到master <code>git checkout master</code><br>
+然后合并分支<code>git merge branch-test</code><br>
+最后push <code>git push</code><br>
+在github上查看发现其已经更新<br>
+<img src="https://img-blog.csdnimg.cn/20190223235905551.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+2、合并冲突(会产生一些冲突的情况）</p>
+<h2><a id="pull__17"></a>三、pull ，更新本地仓库，显化差异</h2>
+<p>如果在本地仓库修改了一个文件，在push到远程仓库之前，远程仓库也发生了本地不知道的更改，那么就会发生冲突，无法更改。<br>
+<img src="https://img-blog.csdnimg.cn/20190224115623906.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+这是就需要用到pull命令，将远程仓库更新的内容pull到本地，查看冲突文件，发现远程和本地的冲突被标示出来。<br>
+<img src="https://img-blog.csdnimg.cn/20190224115813151.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2><a id="clone_23"></a>四、clone，从远程仓库工作的流程</h2>
+<p>1、在工作区克隆远程仓库<br>
+<code>git clone 'url'</code><br>
+<img src="https://img-blog.csdnimg.cn/20190224120153277.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>2、对readme文件进行修改和增加一个文件<br>
+<img src="https://img-blog.csdnimg.cn/20190224120402143.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+3、进行add，commit，push之后，在远程仓库看到更改。</p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

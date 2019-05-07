@@ -1,0 +1,71 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81605367				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>CCF 201412-4 最优灌溉 <a href="http://118.190.20.162/view.page?gpid=T18" rel="nofollow">传送门</a></p>
+
+<p>以前的CCF第四题居然这么水, 出了一道裸的最小生成树. 写了6分钟就100分了. 光看题目, <code>最优灌溉</code>, 还以为是网络流问题.</p>
+
+<p><del>辣鸡代码, 不值一看</del></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Edge {
+    <span class="hljs-keyword">int</span> from, to, cost;
+    Edge () {}
+    Edge (<span class="hljs-keyword">int</span> f, <span class="hljs-keyword">int</span> t, <span class="hljs-keyword">int</span> c) : from(f), to(t), cost(c) {}
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1005</span>;
+<span class="hljs-keyword">int</span> n, m, ans = <span class="hljs-number">0</span>, cnt = <span class="hljs-number">0</span>;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Edge&gt;</span> edge;
+<span class="hljs-keyword">int</span> father[maxn];
+
+<span class="hljs-keyword">bool</span> cmp(Edge x, Edge y)
+{
+    <span class="hljs-keyword">return</span> x.cost &lt; y.cost;
+}
+
+<span class="hljs-keyword">int</span> find(<span class="hljs-keyword">int</span> x)
+{
+    <span class="hljs-keyword">return</span> x == father[x] ? x:father[x] = find(father[x]);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        father[i] = i;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>, u, v, c; i &lt; m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; u &gt;&gt; v &gt;&gt; c;
+        edge.push_back(Edge(u, v, c));
+    }
+    sort(edge.begin(), edge.end(), cmp);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; edge.size(); ++i) {
+        <span class="hljs-keyword">int</span> x = find(edge[i].from), y = find(edge[i].to);
+        <span class="hljs-keyword">int</span> cost = edge[i].cost;
+        <span class="hljs-keyword">if</span> (x != y) {
+            ans += cost;
+            cnt++;
+            father[x] = y;
+        }
+        <span class="hljs-keyword">if</span> (cnt == n - <span class="hljs-number">1</span>) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        }
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

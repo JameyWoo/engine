@@ -1,0 +1,159 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/84176769				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h3><a id="ScikitLearnAPI_0"></a>Scikit-Learn的评估器API遵照以下设计原则:</h3>
+<ol>
+<li>统一性</li>
+<li>内省</li>
+<li>限制对象层级</li>
+<li>函数组合</li>
+<li>明智的默认值</li>
+</ol>
+<hr>
+<h2><a id="ScikitLearnAPI_9"></a>使用Scikit-Learn评估器API训练模型的常用步骤:</h2>
+<h4><a id="__ScikitLearn__11"></a>一.  通过从Scikit-Learn中导入适当的<strong>模型评估器</strong>, 选择<strong>模型类</strong></h4>
+<p>如从线性模型中选择线性回归模型</p>
+<pre><code class="prism language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>linear_model <span class="token keyword">import</span> LinearRegression
+</code></pre>
+<p>ps. sklearn是scikit-learn在python程序中的包名</p>
+<h4><a id="___19"></a>二. 用合适的数值对模型类进行实例化, 配置模型超参数</h4>
+<p>超参数: hyperparameter<br>
+超参数指的是在模型拟合数据之前必须被确定的参数. 在Scikit-Learn中, 通常在模型初始化阶段选择超参数</p>
+<p>如这个线性回归模型中</p>
+<pre><code class="prism language-py">model <span class="token operator">=</span> LinearRegression<span class="token punctuation">(</span>fit_intercept<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+</code></pre>
+<p>fit_intercept 参数代表是否要拟合直线的截距</p>
+<h4><a id="___30"></a>三. 整理数据, 获取特征矩阵和目标数组</h4>
+<p>要训练模型, 当然需要训练数据. 这个过程就是获取数据, 并将数据格式化.</p>
+<pre><code class="prism language-py"><span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+
+rng <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>RandomState<span class="token punctuation">(</span><span class="token number">42</span><span class="token punctuation">)</span>
+x <span class="token operator">=</span> <span class="token number">10</span> <span class="token operator">*</span> rng<span class="token punctuation">.</span>rand<span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+y <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> x <span class="token operator">-</span> <span class="token number">1</span> <span class="token operator">+</span> rng<span class="token punctuation">.</span>randn<span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+</code></pre>
+<p>我们随机化生成了一些数据, 作为训练数据, 这些数据可视化图形如下图<br>
+<img src="https://img-blog.csdnimg.cn/20181117114904746.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+我们还需要把X转化为列向量</p>
+<pre><code class="prism language-py">X <span class="token operator">=</span> x<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> np<span class="token punctuation">.</span>newaxis<span class="token punctuation">]</span>
+</code></pre>
+<h4><a id="_fit_47"></a>四. 调用模型实例的fit()方法对数据进行拟合</h4>
+<pre><code class="prism language-py">model<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span> y<span class="token punctuation">)</span>
+</code></pre>
+<p>拟合结束后, 我们可以查看拟合得到的直线的斜率以及截距.</p>
+<pre><code class="prism language-py">model<span class="token punctuation">.</span>coef_ <span class="token comment"># 斜率</span>
+model<span class="token punctuation">.</span>intercept_ <span class="token comment"># 截距</span>
+</code></pre>
+<h4><a id="__58"></a>五. 对新数据引用模型:</h4>
+<p># 下面这行是我自己写的英语句子, 尴尬<br>
+<strong>In supervised learning model, we usually use the predict() method to predict the label of new data</strong><br>
+# 这行句子用的谷歌翻译<br>
+<strong>In the unsupervised learning model, the transform() or predict() method is usually used to transform or infer the nature of the data.</strong></p>
+<p>代码表现上为</p>
+<pre><code class="prism language-py">xfit <span class="token operator">=</span> np<span class="token punctuation">.</span>linspace<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">11</span><span class="token punctuation">)</span> <span class="token comment"># 生成测试数据</span>
+Xfit <span class="token operator">=</span> xfit<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> np<span class="token punctuation">.</span>newaxis<span class="token punctuation">]</span> <span class="token comment"># 格式化</span>
+yfit <span class="token operator">=</span> model<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>Xfit<span class="token punctuation">)</span> <span class="token comment"># 预测</span>
+plt<span class="token punctuation">.</span>scatter<span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>xfit<span class="token punctuation">,</span> yfit<span class="token punctuation">)</span> <span class="token comment"># 可视化</span>
+</code></pre>
+<p>预测成功!<br>
+<img src="https://img-blog.csdnimg.cn/201811171157547.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<hr>
+<p>完整代码实现</p>
+<pre><code class="prism language-py"><span class="token comment">#!/usr/bin/env python</span>
+<span class="token comment"># coding: utf-8</span>
+
+<span class="token comment"># In[14]:</span>
+
+
+get_ipython<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>run_line_magic<span class="token punctuation">(</span><span class="token string">'matplotlib'</span><span class="token punctuation">,</span> <span class="token string">'inline'</span><span class="token punctuation">)</span>
+<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+
+rng <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>RandomState<span class="token punctuation">(</span><span class="token number">42</span><span class="token punctuation">)</span>
+x <span class="token operator">=</span> <span class="token number">10</span> <span class="token operator">*</span> rng<span class="token punctuation">.</span>rand<span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+y <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> x <span class="token operator">-</span> <span class="token number">1</span> <span class="token operator">+</span> rng<span class="token punctuation">.</span>randn<span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>scatter<span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span>
+
+
+<span class="token comment"># In[15]:</span>
+
+
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>linear_model <span class="token keyword">import</span> LinearRegression
+
+
+<span class="token comment"># In[16]:</span>
+
+
+model <span class="token operator">=</span> LinearRegression<span class="token punctuation">(</span>fit_intercept<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+model
+
+
+<span class="token comment"># In[18]:</span>
+
+
+X <span class="token operator">=</span> x<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> np<span class="token punctuation">.</span>newaxis<span class="token punctuation">]</span>
+X<span class="token punctuation">.</span>shape
+
+
+<span class="token comment"># In[19]:</span>
+
+
+model<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X<span class="token punctuation">,</span> y<span class="token punctuation">)</span>
+
+
+<span class="token comment"># In[20]:</span>
+
+
+model<span class="token punctuation">.</span>coef_
+
+
+<span class="token comment"># In[21]:</span>
+
+
+model<span class="token punctuation">.</span>intercept_
+
+
+<span class="token comment"># In[22]:</span>
+
+
+xfit <span class="token operator">=</span> np<span class="token punctuation">.</span>linspace<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">11</span><span class="token punctuation">)</span>
+Xfit <span class="token operator">=</span> xfit<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> np<span class="token punctuation">.</span>newaxis<span class="token punctuation">]</span>
+yfit <span class="token operator">=</span> model<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>Xfit<span class="token punctuation">)</span>
+
+
+<span class="token comment"># In[23]:</span>
+
+
+plt<span class="token punctuation">.</span>scatter<span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>xfit<span class="token punctuation">,</span> yfit<span class="token punctuation">)</span>
+</code></pre>
+<hr>
+<h3><a id="_152"></a>一些细节的学习</h3>
+<p>1-<code>np.random.RandomState(42)</code>是什么<br>
+<a href="https://blog.csdn.net/baoyan2015/article/details/71703035" rel="nofollow">参考</a><br>
+是和<code>np.random.seed(42)</code>类似的可以设置随机种子的类.<br>
+<code>rng.rand(10)</code>可生成10个[0, 1)之间的实数</p>
+<p>2-<code>plt.scatter(x, y)</code>是画散点图的函数</p>
+<p>3-<code>X = x[:, np.newaxis]</code>可以将一维行向量变为一维列向量</p>
+<pre><code class="prism language-py">x <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>randint<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> size<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+X <span class="token operator">=</span> x<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> np<span class="token punctuation">.</span>newaxis<span class="token punctuation">]</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>X<span class="token punctuation">)</span>
+</code></pre>
+<p>4-<code>model.coef_</code>与<code>model.intercept_</code><br>
+截距的英文单词为<code>intercept</code><br>
+<code>coef</code>为<code>coefficient</code>的缩写, 在此为系数.</p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,52 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/89764433				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>这是一个用python+html+php+css做的非常简单地小项目，可以上传一张规格化图片，然后识别出这个数字是什么。由于我用的是非常裸的KNN算法，训练数据集也不是很大，所以对图片的要求非常高。</p>
+<p>图片是32*32像素的，要求和训练集非常相似的写法才能有较高的识别正确率。</p>
+<p>项目地址：<a href="https://github.com/JameyWoo/digits-web" rel="nofollow">https://github.com/JameyWoo/digits-web</a></p>
+<p>网址：<a href="http://jamey.fiveplus.top" rel="nofollow">jamey.fiveplus.top</a><br>
+(服务器和域名可能失效（穷~），今天是2019/5/3)</p>
+<p>效果如图：<br>
+<img src="https://img-blog.csdnimg.cn/20190503175424238.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/20190503175502355.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<hr>
+<p>下面是一些记录。</p>
+<p>参考 <a href="https://www.runoob.com/php/php-file-upload.html" rel="nofollow">https://www.runoob.com/php/php-file-upload.html</a> 。非常感谢</p>
+<p>php上传文件一切正常，但是文件目录里没有出现上传的文件。<br>
+原因是文件夹的权限问题<br>
+把站点的根目录或者上传文件的目录权限改成777就好了<br>
+<code>chmod -R 777 /data/www</code></p>
+<p>上传文件后，用python处理</p>
+<p>安装python，此教程有效，感谢。<a href="https://www.cnblogs.com/ESHLkangi/p/8545979.html" rel="nofollow">https://www.cnblogs.com/ESHLkangi/p/8545979.html</a></p>
+<p>安装gcc：<a href="https://www.linuxidc.com/Linux/2018-10/155041.htm" rel="nofollow">https://www.linuxidc.com/Linux/2018-10/155041.htm</a></p>
+<p>刚安装python3，会导致依赖于python2的yum程序出错，所以需要设置它的默认解释器为python。将第一行"#!/usr/bin/python" 改为 "#!/usr/bin/python2.7"即可<br>
+参考：<br>
+<a href="https://blog.csdn.net/sunye0715/article/details/77948673" rel="nofollow">https://blog.csdn.net/sunye0715/article/details/77948673</a></p>
+<p>安装pip<br>
+找了好多的教程，发现都无法安装pip，而且他们的内容都差不多<br>
+最后参考https://www.centos.bz/2018/03/centos-7%E5%AE%89%E8%A3%85pip3/，成功安装了pip3 。期间同样那样出现了一个脚本默认使用python解释的，改成python2就好了。</p>
+<p>然后它提示我更新pip到19.1<br>
+<code>pip3 install --upgrade pip</code>我就直接更新了，然后pip3就消失了，变成了pip。</p>
+<p>又出现一个问题，安装好了numpy，结果python2能用python3不能用。<br>
+不过好像折腾了这么久，似乎python3早就在系统里有了？因为我安装了python3.6.4，然后出现了上面那个问题。结果我运行python3，发现版本是3.6.6，显然不是我的python3版本。然后import numpy，发现居然成功了。所以最大可能是，python3本来就是在系统里面的。</p>
+<p>PIL似乎只支持Python2<br>
+但是可以用<code>pip install Pillow</code> 在python3中安装PIL</p>
+<p>php要小心打“；”号，就是因为一句没有写“：”，一直运行错误。。。</p>
+<p>php中可以嵌入html代码，使用变量。单独写了一个css文件，引入更方便了。</p>
+<p>搞定二级域名问题，可以用显示url或者隐式url重定向。真是太perfect了。</p>
+<p>网站logo：<a href="https://www.cnblogs.com/wlingling2017/p/6433594.html" rel="nofollow">https://www.cnblogs.com/wlingling2017/p/6433594.html</a></p>
+<hr>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

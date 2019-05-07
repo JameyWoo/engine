@@ -1,0 +1,55 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/87897008				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p></p><div class="toc"><h3>文章目录</h3><ul><ul><li><a href="#diff_1" rel="nofollow">一、diff</a></li><li><a href="#log_10" rel="nofollow">二、log</a></li><li><a href="#rm_28" rel="nofollow">三、rm</a></li><li><a href="#mv_43" rel="nofollow">四、mv</a></li><li><a href="#_49" rel="nofollow">五、一键保存‘增删改’</a></li></ul></ul></div><p></p>
+<h2><a id="diff_1"></a>一、diff</h2>
+<p>1、 <code>git diff</code> 文件的差异，使用+，- 来表示</p>
+<p><img src="https://img-blog.csdnimg.cn/20190223203331115.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+2、<code>git diff --color-words</code> 使用颜色表示，红色为减，绿色为增加<br>
+<img src="https://img-blog.csdnimg.cn/20190223203142462.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+3、<code>git diff --word-diff</code>文字的增加或减少<br>
+<img src="https://img-blog.csdnimg.cn/20190223203454568.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2><a id="log_10"></a>二、log</h2>
+<p>1、<code>git log</code> 查看日志<br>
+<img src="https://img-blog.csdnimg.cn/20190223203822468.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>2、<code>git log --oneline</code> 查看一个概要信息<br>
+<img src="https://img-blog.csdnimg.cn/2019022320400324.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>3、<code>git log --stat</code> 查看更加具体的东西，文件的改动<br>
+<img src="https://img-blog.csdnimg.cn/20190223204215305.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+4、<code>git log --patch</code> 更加具体的文件改动<br>
+<img src="https://img-blog.csdnimg.cn/2019022320453066.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>5、<code>git log --graph</code><br>
+<img src="https://img-blog.csdnimg.cn/2019022320513919.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>6、<code>git log --graph --all --decorate --oneline</code><br>
+<img src="https://img-blog.csdnimg.cn/20190223205228311.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2><a id="rm_28"></a>三、rm</h2>
+<p>1、<code>git rm filename</code><br>
+<img src="https://img-blog.csdnimg.cn/20190223211143358.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+如果只是<code>rm filename</code>，那么他虽然会在本地删除文件，但是和git无关，所以当push的时候，服务器端的仓库文件不会将其删除。</p>
+<p>即使已经<code>rm filename</code>之后，也可以使用<code>git rm filename</code>在仓库暂存中将其删除。</p>
+<p>2、使用<code>git add -u .</code>删除文件</p>
+<p>在windows资源管理器中删除一系列文件（命令行中一个一个删除很麻烦）之后，可以使用<code>git add -u .</code>命令获取修改内容，使用<code>git status</code>查看状态后会发现删除的一系列文件都被保存到了暂存区，提交然后push即可。</p>
+<p>经过测试发现，这个命令可以大量提交文件的修改和删除，但是新建的文件无法一并提交。新建文件还需要使用其它的方法。<br>
+<img src="https://img-blog.csdnimg.cn/20190223213322805.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+3、使用<code>git rm --cached filename</code>命令，在仓库暂存区删除而实际上文件没有删除，即不追踪文件。</p>
+<h2><a id="mv_43"></a>四、mv</h2>
+<p>1、<code>git mv filename newpath</code>， 注意空文件夹无法再github上显示<br>
+<img src="https://img-blog.csdnimg.cn/20190223215612313.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>2、<code>git add -A .</code> 参数-A，自动递归找到所有移动的文件并添加进暂存区</p>
+<h2><a id="_49"></a>五、一键保存‘增删改’</h2>
+<p><code>git add .</code> 命令能够将增删改全部保存。然后commit，push即可。<br>
+<img src="https://img-blog.csdnimg.cn/20190223222516125.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,226 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79534446				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>完全二叉树的逻辑结构是树结构, 但由于其特殊性, 数据结构中常用数组来存储.</p>
+
+<p>访问父节点, 左子结点, 右子节点都很方便</p>
+
+<blockquote>
+  <p>数组存储以1为起点 <br>
+  假设有某一结点u <br>
+  A[u/2]为其父节点, 当且仅当u&gt;1 <br>
+  A[u* 2]为其左子结点, 当且仅当u*2 &lt;= n <br>
+  A[u* 2 +1]为其右子节点, 当且仅当u*2+1 &lt;= n</p>
+</blockquote>
+
+<pre class="prettyprint"><code class=" hljs perl"><span class="hljs-comment">#include &lt;iostream&gt;</span>
+using namespace std;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n;
+    cin &gt;&gt; n;
+    <span class="hljs-keyword">int</span> <span class="hljs-variable">*q</span> = new <span class="hljs-keyword">int</span> [n+<span class="hljs-number">1</span>];
+    <span class="hljs-string">q[0]</span> = -<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        cin &gt;&gt; <span class="hljs-string">q[i]</span>;
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        cout &lt;&lt; <span class="hljs-string">"node "</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">':'</span> &lt;&lt; <span class="hljs-string">"key:"</span> &lt;&lt; <span class="hljs-string">q[i]</span> &lt;&lt; <span class="hljs-string">'\n'</span>;
+        cout &lt;&lt; <span class="hljs-string">"parent:"</span> &lt;&lt; <span class="hljs-string">q[i/2]</span> &lt;&lt; <span class="hljs-string">' '</span>;
+        <span class="hljs-keyword">if</span>(<span class="hljs-number">2</span><span class="hljs-variable">*i</span> &lt;= n) cout &lt;&lt; <span class="hljs-string">"left son:"</span> &lt;&lt; <span class="hljs-string">q[i<span class="hljs-variable">*2</span>]</span> &lt;&lt; <span class="hljs-string">' '</span>;
+        <span class="hljs-keyword">if</span>(<span class="hljs-number">2</span><span class="hljs-variable">*i</span>+<span class="hljs-number">1</span> &lt;= n) cout &lt;&lt; <span class="hljs-string">"right son:"</span> &lt;&lt; <span class="hljs-string">q[i<span class="hljs-variable">*2</span>+1]</span>;
+        cout &lt;&lt; endl &lt;&lt; endl;
+    }
+}
+/*
+<span class="hljs-number">5</span>
+<span class="hljs-number">7</span> <span class="hljs-number">8</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>
+<span class="hljs-variable">*/</span></code></pre>
+
+<p>二叉堆以完全二叉树的结构表示</p>
+
+<blockquote>
+  <p>最大堆性质: 结点的键值小于等于其父节点的键值 <br>
+  最小堆性质: 结点的键值大于等于其父节点的键值</p>
+</blockquote>
+
+<p>满足最大堆性质的二叉堆称为<strong>最大堆</strong> <br>
+同理<strong>最小堆</strong></p>
+
+<p>下面代码将一个普通数组按最大堆性质更新</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-comment">/*
+建立一个最大堆
+ */</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-preprocessor">#define MAX 1&lt;&lt;30</span>
+<span class="hljs-keyword">int</span> n;
+
+<span class="hljs-keyword">void</span> getChange(<span class="hljs-keyword">int</span> *dui, <span class="hljs-keyword">int</span> i)
+{
+    <span class="hljs-keyword">int</span> l = <span class="hljs-number">2</span>*i, r = l+<span class="hljs-number">1</span>, large = i;
+    <span class="hljs-keyword">if</span>(l &lt;= n &amp;&amp; dui[l] &gt; dui[large]) large = l;
+    <span class="hljs-keyword">if</span>(r &lt;= n &amp;&amp; dui[r] &gt; dui[large]) large = r;
+    <span class="hljs-keyword">if</span>(large != i) {
+        swap(dui[i], dui[large]);
+        getChange(dui, large);
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">int</span> *dui = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span> [n+<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        <span class="hljs-built_in">cin</span> &gt;&gt; dui[i];        <span class="hljs-comment">//输入一个混乱的堆</span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = n/<span class="hljs-number">2</span>; i &gt;= <span class="hljs-number">1</span>; --i)
+        getChange(dui,i);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; dui[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+}
+<span class="hljs-comment">/*
+5
+7 8 1 2 3
+*/</span></code></pre>
+
+<p>以下代码建立一个具有最小堆性质的优先级队列</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-comment">/*
+建立一个最小堆, 获得以小为优先级的优先级队列
+ */</span>
+
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">int</span> n;
+
+<span class="hljs-keyword">void</span> getChange(<span class="hljs-keyword">int</span> *p, <span class="hljs-keyword">int</span> i)
+{
+    <span class="hljs-keyword">int</span> l = i*<span class="hljs-number">2</span>, r = i*<span class="hljs-number">2</span>+<span class="hljs-number">1</span>, mm = i;
+    <span class="hljs-keyword">if</span>(l &lt;= n &amp;&amp; p[l] &lt; p[mm]) mm = l;
+    <span class="hljs-keyword">if</span>(r &lt;= n &amp;&amp; p[r] &lt; p[mm]) mm = r;
+    <span class="hljs-keyword">if</span>(mm != i) {
+        swap(p[mm], p[i]);
+        getChange(p, mm);
+    }
+}
+
+<span class="hljs-keyword">int</span> pop(<span class="hljs-keyword">int</span> *p) 
+{
+    <span class="hljs-keyword">int</span> m = p[<span class="hljs-number">1</span>];
+    p[<span class="hljs-number">1</span>] = p[n--];
+    getChange(p, <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> m;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">int</span> *priQueue = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span> [n+<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        <span class="hljs-built_in">cin</span> &gt;&gt; priQueue[i];
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = n/<span class="hljs-number">2</span>; i &gt;= <span class="hljs-number">1</span>; --i)
+        getChange(priQueue, i);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; priQueue[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = n; i &gt;= <span class="hljs-number">1</span>; --i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\n已弹出!\n"</span>;
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"弹出值为:"</span> &lt;&lt; pop(priQueue) &lt;&lt; <span class="hljs-string">'\n'</span> &lt;&lt; <span class="hljs-string">'\n'</span>;
+    } 
+}
+<span class="hljs-comment">/*
+5
+7 8 1 2 3
+*/</span></code></pre>
+
+<p>下面代码是从无到有建立一个优先级队列, 由插入操作, 弹出优先级最大操作</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-comment">/*
+从无到有地建立最大堆优先队列
+ */</span>
+
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-preprocessor">#define MAX (1&lt;&lt;16) </span>
+
+<span class="hljs-keyword">int</span> n = <span class="hljs-number">0</span>, que[MAX+<span class="hljs-number">1</span>];
+
+<span class="hljs-keyword">void</span> Change(<span class="hljs-keyword">int</span> u)
+{
+    <span class="hljs-keyword">int</span> l = u*<span class="hljs-number">2</span>, r = u*<span class="hljs-number">2</span>+<span class="hljs-number">1</span>, large = u;
+    <span class="hljs-keyword">if</span>(l &lt;= n &amp;&amp; que[large] &lt; que[l]) large = l;
+    <span class="hljs-keyword">if</span>(r &lt;= n &amp;&amp; que[large] &lt; que[r]) large = r;
+    <span class="hljs-keyword">if</span>(large != u) {
+        swap(que[large], que[u]);
+        Change(large);
+    }
+}
+
+<span class="hljs-keyword">int</span> pop()
+{
+    <span class="hljs-keyword">int</span> m = que[<span class="hljs-number">1</span>];
+    que[<span class="hljs-number">1</span>] = que[n--];
+    Change(<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> m;
+}
+
+<span class="hljs-keyword">void</span> insert(<span class="hljs-keyword">int</span> x)
+{
+    que[++n] = x;
+    <span class="hljs-keyword">int</span> u = n;
+    <span class="hljs-keyword">while</span>(u &gt; <span class="hljs-number">1</span> &amp;&amp; que[u/<span class="hljs-number">2</span>] &lt; que[u]) {  <span class="hljs-comment">//向上调整</span>
+        swap(que[u], que[u/<span class="hljs-number">2</span>]);
+        u /= <span class="hljs-number">2</span>;
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> x;
+    <span class="hljs-built_in">string</span> str;
+    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; str;
+        <span class="hljs-keyword">if</span>(str == <span class="hljs-string">"end"</span>) <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">if</span>(str == <span class="hljs-string">"insert"</span>) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; x;
+            insert(x);
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(str == <span class="hljs-string">"extract"</span>) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"弹出:"</span> &lt;&lt; pop() &lt;&lt; endl &lt;&lt; endl;
+        }
+    }
+}
+<span class="hljs-comment">/*
+insert 8
+insert 2
+extract
+insert 10
+extract
+insert 11
+extract
+extract
+end
+*/</span> </code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

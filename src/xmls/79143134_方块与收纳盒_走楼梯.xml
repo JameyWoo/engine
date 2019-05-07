@@ -1,0 +1,112 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79143134				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<blockquote>
+  <p>题目描述</p>
+  
+  <p>现在有一个大小n*1的收纳盒，我们手里有无数个大小为1*1和2*1的小方块，我们需要用这些方块填满收纳盒，请问我们有多少种不同的方法填满这个收纳盒 <br>
+    输入描述:</p>
+  
+  <p>第一行是样例数T 第2到2+T-1行每行有一个整数n（n&lt;=80），描述每个样例中的n。   输出描述:</p>
+  
+  <p>对于每个样例输出对应的方法数。   示例1 输入</p>
+  
+  <p>3 1 2 4   输出</p>
+  
+  <p>1 2 5   说明</p>
+  
+  <p>n=4，有五种方法 1:1 1 1 1  <br>
+  3:1 2 1  <br>
+  4:1 1 2  <br>
+  5:2 2</p>
+
+<pre><code>1
+2
+3
+4
+5
+6
+</code></pre>
+  
+  <p>备注:</p>
+  
+  <p>对于100%的数据， 0 &lt; T &lt; 80; 0 &lt; n &lt;= 80。</p>
+</blockquote>
+
+<p>这道题和走n阶楼梯是一样的, 使用递推的方法. 答案就是斐波那契数列.</p>
+
+<p>如何理解?</p>
+
+<p>当走第n阶楼梯时, 我们可以知道从上一步到这一步有两种可能, 一是从n-1阶楼梯跨了一步来的, 另一种可能是从n-2阶楼梯跨了2步来的. 所以方法为Fn-1 + Fn-2. 知道1, 2阶楼梯的方法即可递推得到.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main( )
+{
+    <span class="hljs-keyword">int</span> t, n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; t;
+    <span class="hljs-keyword">while</span>( t-- ) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; n;
+        <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> a[<span class="hljs-number">3</span>] = {<span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>};
+        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">4</span>; i &lt;= n; ++i ) 
+        {
+            a[i%<span class="hljs-number">3</span>] = a[(i-<span class="hljs-number">1</span>)%<span class="hljs-number">3</span>] + a[(i-<span class="hljs-number">2</span>)%<span class="hljs-number">3</span>];
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; a[n%<span class="hljs-number">3</span>] &lt;&lt; endl;
+    }
+}</code></pre>
+
+<p><strong>总结: 要善于观察和推导. 我在思考的过程中想了用递归的方法, 每次走一步或两步, 结果空间太大了. 其实其中的思想就是递推.</strong></p>
+
+<p>还想了用数学里面的组合方法, 枚举所有可能的1步或两步情况, 再计算每一种情况的情况.</p>
+
+<p>垃圾代码如下:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main( )
+{
+    <span class="hljs-keyword">int</span> t, n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; t;
+    <span class="hljs-keyword">while</span>( t-- ) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; n;
+        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> ans = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;=n; ++i) {
+            <span class="hljs-keyword">if</span>(n%<span class="hljs-number">2</span>==<span class="hljs-number">0</span> &amp;&amp; i%<span class="hljs-number">2</span>==<span class="hljs-number">1</span>) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">if</span>(n%<span class="hljs-number">2</span>==<span class="hljs-number">1</span> &amp;&amp; i%<span class="hljs-number">2</span>==<span class="hljs-number">0</span>) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> all = i + (n-i)/<span class="hljs-number">2</span>;
+            <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> tmp = <span class="hljs-number">1</span>, temp = <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">int</span> k = min((<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span>)i, all-i);
+            <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> j = all; j&gt;=all-k+<span class="hljs-number">1</span>; --j ) {
+                tmp *= j;
+            }
+            <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j&lt;=k; ++j) {
+                temp *= j;
+            }
+            ans += tmp/temp;
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; ans &lt;&lt; endl;
+    } 
+}</code></pre>
+
+<p>通过了50%的样例.  <br>
+大概是因为这种方法得到的中间量可能超范围.</p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,143 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79151257				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><a href="http://bailian.openjudge.cn/practice/1979/" rel="nofollow">POJ 1979 red and black</a></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs livecodeserver">Description
+
+There is <span class="hljs-operator">a</span> rectangular room, covered <span class="hljs-operator">with</span> square tiles. Each tile is colored either red <span class="hljs-operator">or</span> <span class="hljs-keyword">black</span>. A man is standing <span class="hljs-command"><span class="hljs-keyword">on</span> <span class="hljs-title">a</span> <span class="hljs-title">black</span> <span class="hljs-title">tile</span>. <span class="hljs-title">From</span> <span class="hljs-title">a</span> <span class="hljs-title">tile</span>, <span class="hljs-title">he</span> <span class="hljs-title">can</span> <span class="hljs-title">move</span> <span class="hljs-title">to</span> <span class="hljs-title">one</span> <span class="hljs-title">of</span> <span class="hljs-title">four</span> <span class="hljs-title">adjacent</span> <span class="hljs-title">tiles</span>. <span class="hljs-title">But</span> <span class="hljs-title">he</span> <span class="hljs-title">can</span>’<span class="hljs-title">t</span> <span class="hljs-title">move</span> <span class="hljs-title">on</span> <span class="hljs-title">red</span> <span class="hljs-title">tiles</span>, <span class="hljs-title">he</span> <span class="hljs-title">can</span> <span class="hljs-title">move</span> <span class="hljs-title">only</span> <span class="hljs-title">on</span> <span class="hljs-title">black</span> <span class="hljs-title">tiles</span>.</span>
+
+Write <span class="hljs-operator">a</span> program <span class="hljs-built_in">to</span> count <span class="hljs-operator">the</span> <span class="hljs-built_in">number</span> <span class="hljs-operator">of</span> <span class="hljs-keyword">black</span> tiles which he can reach <span class="hljs-keyword">by</span> repeating <span class="hljs-operator">the</span> moves described above.
+
+Input
+
+The input consists <span class="hljs-operator">of</span> multiple data sets. A data <span class="hljs-built_in">set</span> starts <span class="hljs-operator">with</span> <span class="hljs-operator">a</span> <span class="hljs-built_in">line</span> containing <span class="hljs-constant">two</span> positive integers W <span class="hljs-operator">and</span> H; W <span class="hljs-operator">and</span> H are <span class="hljs-operator">the</span> numbers <span class="hljs-operator">of</span> tiles <span class="hljs-operator">in</span> <span class="hljs-operator">the</span> x- <span class="hljs-operator">and</span> y- directions, respectively. W <span class="hljs-operator">and</span> H are <span class="hljs-operator">not</span> more than <span class="hljs-number">20.</span>
+
+There are H more <span class="hljs-keyword">lines</span> <span class="hljs-operator">in</span> <span class="hljs-operator">the</span> data <span class="hljs-built_in">set</span>, <span class="hljs-keyword">each</span> <span class="hljs-operator">of</span> which includes W <span class="hljs-keyword">characters</span>. Each <span class="hljs-keyword">character</span> represents <span class="hljs-operator">the</span> color <span class="hljs-operator">of</span> <span class="hljs-operator">a</span> tile <span class="hljs-keyword">as</span> follows.
+
+<span class="hljs-string">'.'</span> - <span class="hljs-operator">a</span> <span class="hljs-keyword">black</span> tile 
+<span class="hljs-string">'#'</span> - <span class="hljs-operator">a</span> red tile 
+<span class="hljs-string">'@'</span> - <span class="hljs-operator">a</span> man <span class="hljs-command"><span class="hljs-keyword">on</span> <span class="hljs-title">a</span> <span class="hljs-title">black</span> <span class="hljs-title">tile</span>(<span class="hljs-title">appears</span> <span class="hljs-title">exactly</span> <span class="hljs-title">once</span> <span class="hljs-title">in</span> <span class="hljs-title">a</span> <span class="hljs-title">data</span> <span class="hljs-title">set</span>) </span>
+
+    <span class="hljs-number">1</span>
+    <span class="hljs-number">2</span>
+    <span class="hljs-number">3</span>
+
+The <span class="hljs-function"><span class="hljs-keyword">end</span> <span class="hljs-title">of</span> <span class="hljs-title">the</span> <span class="hljs-title">input</span> <span class="hljs-title">is</span> <span class="hljs-title">indicated</span> <span class="hljs-title">by</span> <span class="hljs-title">a</span> <span class="hljs-title">line</span> <span class="hljs-title">consisting</span> <span class="hljs-title">of</span> <span class="hljs-title">two</span> <span class="hljs-title">zeros</span>.</span>
+
+Output
+
+For <span class="hljs-keyword">each</span> data <span class="hljs-built_in">set</span>, your program should output <span class="hljs-operator">a</span> <span class="hljs-built_in">line</span> which <span class="hljs-operator">contains</span> <span class="hljs-operator">the</span> <span class="hljs-built_in">number</span> <span class="hljs-operator">of</span> tiles he can reach <span class="hljs-built_in">from</span> <span class="hljs-operator">the</span> initial tile (including itself).
+
+Sample Input
+
+<span class="hljs-number">6</span> <span class="hljs-number">9</span>
+....<span class="hljs-comment">#.</span>
+.....<span class="hljs-comment">#</span>
+......
+......
+......
+......
+......
+<span class="hljs-comment">#@...#</span>
+.<span class="hljs-comment">#..#.</span>
+<span class="hljs-number">11</span> <span class="hljs-number">9</span>
+.<span class="hljs-comment">#.........</span>
+.<span class="hljs-comment">#.#######.</span>
+.<span class="hljs-comment">#.#.....#.</span>
+.<span class="hljs-comment">#.#.###.#.</span>
+.<span class="hljs-comment">#.#..@#.#.</span>
+.<span class="hljs-comment">#.#####.#.</span>
+.<span class="hljs-comment">#.......#.</span>
+.<span class="hljs-comment">#########.</span>
+...........
+<span class="hljs-number">11</span> <span class="hljs-number">6</span>
+..<span class="hljs-comment">#..#..#..</span>
+..<span class="hljs-comment">#..#..#..</span>
+..<span class="hljs-comment">#..#..###</span>
+..<span class="hljs-comment">#..#..#@.</span>
+..<span class="hljs-comment">#..#..#..</span>
+..<span class="hljs-comment">#..#..#..</span>
+<span class="hljs-number">7</span> <span class="hljs-number">7</span>
+..<span class="hljs-comment">#.#..</span>
+..<span class="hljs-comment">#.#..</span>
+<span class="hljs-comment">###.###</span>
+...@...
+<span class="hljs-comment">###.###</span>
+..<span class="hljs-comment">#.#..</span>
+..<span class="hljs-comment">#.#..</span>
+<span class="hljs-number">0</span> <span class="hljs-number">0</span>
+Sample Output
+
+<span class="hljs-number">45</span>
+<span class="hljs-number">59</span>
+<span class="hljs-number">6</span>
+<span class="hljs-number">13</span></code></pre>
+
+<p>出现过一个令我费解的错误, 程序运行过程中总是出错误 <br>
+调试之后发现, 因为没有给走过的点特判一下, 导致走来走去结束不了</p>
+
+<p>题目原文因为markdown 原题出现的 # 会把后面的字作为标题, 所以不得不用代码块来引用</p>
+
+<p>AC代码:</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">void</span> search(<span class="hljs-keyword">char</span> <span class="hljs-built_in">map</span>[][<span class="hljs-number">21</span>], <span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y, <span class="hljs-keyword">int</span> m, <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">bool</span> ma[][<span class="hljs-number">21</span>])
+{
+    <span class="hljs-keyword">if</span>(x == <span class="hljs-number">0</span> || y == <span class="hljs-number">0</span> || x &gt; m || y &gt; n || <span class="hljs-built_in">map</span>[x][y] == <span class="hljs-string">'#'</span> || ma[x][y]) {
+        <span class="hljs-keyword">return</span>;
+    } <span class="hljs-keyword">else</span> {
+        ma[x][y] = <span class="hljs-number">1</span>;
+        search(<span class="hljs-built_in">map</span>, x-<span class="hljs-number">1</span>, y, m, n, ma);
+        search(<span class="hljs-built_in">map</span>, x+<span class="hljs-number">1</span>, y, m, n, ma);
+        search(<span class="hljs-built_in">map</span>, x, y-<span class="hljs-number">1</span>, m, n, ma);
+        search(<span class="hljs-built_in">map</span>, x, y+<span class="hljs-number">1</span>, m, n, ma);
+    }
+}
+
+<span class="hljs-keyword">void</span> loop(<span class="hljs-keyword">int</span> m, <span class="hljs-keyword">int</span> n) {
+    <span class="hljs-keyword">char</span> <span class="hljs-built_in">map</span>[<span class="hljs-number">21</span>][<span class="hljs-number">21</span>] = {};
+    <span class="hljs-keyword">bool</span> ma[<span class="hljs-number">21</span>][<span class="hljs-number">21</span>] = {};
+    <span class="hljs-keyword">int</span> x = <span class="hljs-number">0</span>, y = <span class="hljs-number">0</span>, ans = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= m; ++i ) {
+        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j ) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; <span class="hljs-built_in">map</span>[i][j];
+            <span class="hljs-keyword">if</span>(<span class="hljs-built_in">map</span>[i][j] == <span class="hljs-string">'@'</span>) {
+                x = i;
+                y = j;
+            }
+        }
+    }
+    search(<span class="hljs-built_in">map</span>, x, y, m, n, ma);
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt;= <span class="hljs-number">20</span>; ++i ) {
+        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt;= <span class="hljs-number">20</span>; ++j ) {
+            <span class="hljs-keyword">if</span>( ma[i][j] ) ans++;
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans &lt;&lt; endl;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> m, n;
+    <span class="hljs-keyword">while</span>( <span class="hljs-built_in">cin</span> &gt;&gt; m &gt;&gt; n &amp;&amp; m ) {
+        loop(n, m);
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

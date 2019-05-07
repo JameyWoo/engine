@@ -1,0 +1,184 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/82721097				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h3 id="usaco09nov找工就业job-hunt-图论spfa最长路"><a href="https://www.luogu.org/problemnew/show/P1938" rel="nofollow">[USACO09NOV]找工就业Job Hunt</a> [图论，spfa，最长路]</h3>
+
+<p><strong>attentions:对我而言非常好的一道题！最长路！</strong></p>
+
+<p>有几个点 <br>
+1、这道题转化成最长路来求解，方法和最短路类似 <br>
+2、但这道题是点有正权且只有负权边，且路径为单向！那么精妙之处在于，可以将点权转化为边权！！！ <br>
+3、由于题目中可能出现正环（和最短路相反！），所以需要使用SPFA（判环和最短路类似）！</p>
+
+
+
+<h3 id="p2658-汽车拉力比赛-并查集二分搜索"><a href="https://www.luogu.org/problemnew/show/P2658" rel="nofollow">P2658 汽车拉力比赛</a> [并查集，二分搜索]</h3>
+
+<p>此题有两种方法： <br>
+1.二分搜索。结果一定为在海拔高度的区间内，而且结果是单调的，也就是说是有分界线的，而我们的目的就是找到这个分界线。所以用二分搜索不断进行判断。 <br>
+2.建图、并查集。把所有点的差值作为边权，这样就建立起了一个图，然后给边排序，利用并查集找到第一个可以使所有路标联通的边，即为结果。</p>
+
+
+
+<h3 id="p3958-奶酪-并查集搜索"><a href="https://www.luogu.org/problemnew/show/P3958" rel="nofollow">P3958 奶酪</a> 【并查集，搜索】</h3>
+
+<p>两种方法： <br>
+1、搜索（DFS（更快）或BFS） <br>
+2、并查集（又是并查集！）。利用并查集找到图中所有可以联通的联通块，然后遍历记录的可达顶部和底部的点的联通块编号，判断他们是否属于同一个联通块。 <br>
+两种遍历方法 <br>
+1）一种O(n^2)，直接两个循环 <br>
+2）先排序，然后同时查询，复杂度为O(nlogn)</p>
+
+
+
+<h3 id="p1902-刺杀大使httpswwwluoguorgproblemnewshowp1902-二分搜索">P1902 刺杀大使(<a href="https://www.luogu.org/problemnew/show/P1902" rel="nofollow">https://www.luogu.org/problemnew/show/P1902</a>) 【二分搜索】</h3>
+
+<p>二分搜索，只要有一条从第1层到第n层的通路即可。</p>
+
+
+
+<h3 id="p1576-最小花费-乘法权值最短路"><a href="https://www.luogu.org/problemnew/show/P1576" rel="nofollow">P1576 最小花费</a> 【乘法权值最短路】</h3>
+
+<p>最短路问题，不过边权的含义不同。是用乘法的。</p>
+
+
+
+<h3 id="p1828-香甜的黄油-sweet-butter-n次spfa优化floyd"><a href="https://www.luogu.org/problemnew/show/P1828" rel="nofollow">P1828 香甜的黄油 Sweet Butter</a> 【n次spfa，优化floyd】</h3>
+
+<p>最短路问题，但是居然要求n次！因为是稀疏图，所以用SPFA可以很快（O（km））。 <br>
+据说优化的floyd也可以过，因为数据较小。</p>
+
+
+
+<h3 id="p1137-旅行计划-dp拓扑排序"><a href="https://www.luogu.org/problemnew/show/P1137" rel="nofollow">P1137 旅行计划</a>  【dp，拓扑排序】</h3>
+
+<p>洛谷题解里面有好多用到先拓扑排序后dp的，可是这道题需要先拓扑排序吗？直接dp就好了吧，边权为1的DAG最长路？</p>
+
+
+
+<h3 id="p1550-usaco08oct打井watering-hole-最小生成树加点"><a href="https://www.luogu.org/problemnew/show/P1550" rel="nofollow">P1550 [USACO08OCT]打井Watering Hole</a> 【最小生成树，加点】</h3>
+
+<p>两种方法： <br>
+1、把建立每个源点的代价转化成一条和0结点相连的边，和那道“找工就业Job Hunt”有异曲同工之妙！！！ <br>
+然后按照模板的Prim或Kruskal就OK了。 <br>
+PS.和那道题的相同点是：而且边有权值，而且点也有权值。 <br>
+2、Kruskal稍改版。看是把边连起来还是新建一个源点更省钱，不过不管哪个，都要合并并查集（因为在意义上他们是连通的）。 <br>
+PS.似乎这又有启发？连通/生成树/并查集的另类含义？</p>
+
+
+
+<h3 id="p3916-图的遍历反向dfstarjan"><a href="https://www.luogu.org/problemnew/show/P3916" rel="nofollow">P3916 图的遍历</a>【反向dfs，tarjan】</h3>
+
+<p>1、这道题可以用tarjan算法缩点，变成DAG，然后从出度为0的点开始遍历起，反向拓扑排序 <br>
+2、但其实根本不用这么麻烦，只需要反向dfs即可，从编号最大的点开始遍历起直到遍历完所有的点。如果点权不是编号，那么需要进行一次排序。</p>
+
+
+
+<h3 id="p2835-刻录光盘tarjan并查集"><a href="https://www.luogu.org/problemnew/show/P2835" rel="nofollow">P2835 刻录光盘</a>【tarjan，并查集】</h3>
+
+<p>1、可以用tarjan缩点，然后统计新的图的入度为0的点的个数 <br>
+2、但其实这道题不用缩点那么麻烦，用并查集统计独立块的个数（即使是有向边），对每个独立块，如果有入度为0的点，那么这些点都需要ans++，如果没有入度为0的点，说明里面有联通块，ans++，而且那个联通块可以作为起点。</p>
+
+<p>所以：虽然题目看上去是需要tarjan缩点的（转DAG模型），但我们只要探寻他的本质，我们只是要找起点而已，入度为0就是起点，如果一个块没有入度为0点，在缩点后的模型里，该点就是联通块。</p>
+
+
+
+<h3 id="p1038-神经网络-拓扑排序神经网络"><a href="https://www.luogu.org/problemnew/show/P1038" rel="nofollow">P1038 神经网络</a> 【拓扑排序，神经网络】</h3>
+
+<p>1、模型很简单，就是把神经网络模型转化为拓扑排序即可（本来就是） <br>
+2、但有需要注意：某节点值为负或0则不传递。</p>
+
+
+
+<h3 id="p1395-会议树形dp图论"><a href="https://www.luogu.org/problemnew/show/P1395" rel="nofollow">P1395 会议</a>【树形DP，图论】</h3>
+
+<p>非常不错的一道题，<a href="http://www.cnblogs.com/YoungNeal/p/8629717.html" rel="nofollow">这篇题解讲得非常好</a></p>
+
+<p>暴力解法是dfs出每一个结点到其他结点的距离，但是这道题有特殊性：它是一棵树，且边权值都为1。这样的话就可以用dp来写啦，因为一个结点的结果可以从它的父亲结点那里推过来！以任一结点为根，dfs出它的值，以及每个结点作为子树根的结点个数（包括它自己），那么自己和父节点的边就可以作为分界了， 依据这个状态转移方程 <br>
+<code>d[x]=d[y]+(n-size[x])-size[x]=d[y]+n-2*size[x]d[x]=d[y]+(n−size[x])−size[x]=d[y]+n−2∗size[x]</code>。</p>
+
+
+
+<h3 id="p1271-聚会的快乐树形dp记忆化搜索字符串"><a href="https://www.luogu.org/problemnew/show/P1271" rel="nofollow">P1271 聚会的快乐</a>【树形DP，记忆化搜索，字符串】</h3>
+
+<p>这道题是树形dp题目（二维），我们考虑当一个点被选入时，它的子结点都不能被选入，而如果它没有被选入，那么它的子结点可以选可以不选（看哪个幽默值更大），因此状态转移方程就是 <br>
+<code>dp[i][0] = sum(max(dp[j][0], dp[j][1])) {j: 0-&gt;edge[i].size()}</code> <br>
+<code>dp[i][1] = sum(dp[j][0]) {j: 0-&gt;edge[i].size()} + val[i]</code></p>
+
+<p>但是实现的方法有两种： <br>
+一种自底向上，以拓扑序的顺序去进行dp，因为要得到一个点的dp值，只要得到其子结点的dp值 <br>
+第二种是自顶向下，用dfs+记忆话搜索</p>
+
+<p>因为题目给出的是这些人的名字，而不是结点编号，所以需要进行字符串转化，但是，题目数据似乎有重名的人，那么如果出现有歧义的描述怎么办？比如</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs ">2
+Bob 1 Tim
+Bob 2 Bob</code></pre>
+
+
+
+<h3 id="p1922-女仆咖啡厅桌游吧树形dp树形结构"><a href="https://www.luogu.org/problemnew/show/P1922" rel="nofollow">P1922 女仆咖啡厅桌游吧</a>【树形dp，树形结构】</h3>
+
+<p>题目思路是尽量使得结点占满女仆咖啡厅和桌游吧，且他们是成对的，那么对于一个结点，它可以建立的建筑物是偶数的空位，且是最大偶数，因为其他的都可以建筑。那么如何获取一个结点的信息呢？考虑两个数据，子树的空位，子树已建立女仆咖啡厅的数量（答案），对于叶子结点，它的子树空位只有1，女仆咖啡厅的数量为0，那么往上递推，对于一个结点，他可以新建的女仆咖啡厅数量为空位/2，如果空位为偶，那么往上留的空位为0，否则为1，那么自顶向下的dfs就很好写了。</p>
+
+
+
+<h3 id="p1661-扩散-二分搜索曼哈顿距离并查集"><a href="https://www.luogu.org/problemnew/show/P1661" rel="nofollow">P1661 扩散</a> 【二分搜索，曼哈顿距离，并查集】</h3>
+
+<p><a href="https://zh.wikipedia.org/wiki/%E6%9B%BC%E5%93%88%E9%A0%93%E8%B7%9D%E9%9B%A2" rel="nofollow">曼哈顿图形维基百科</a></p>
+
+<p>这道题的扩散图形是一个旋转了45°的正方形（曼哈顿图形里面就有关于这个“正方形圆”的描述），那么两个图形的扩散距离其实就是曼哈顿距离。那么就可以根据这些数据建立一个最小生成树（并查集），能不能建立一条边就看我们二分的边的长度了，最后二分出来的答案就是最小时间了。</p>
+
+<p>PS:由于是同时扩散，所以是曼哈顿距离和时间乘以2比较</p>
+
+
+
+<h3 id="p1928-外星密码模拟分治自里向外"><a href="https://www.luogu.org/problemnew/show/P1928" rel="nofollow">P1928 外星密码</a>【模拟，分治，自里向外】</h3>
+
+<p>这道压缩字符串模拟题，有两种方法可以求解，但其实都是自里向外的思想，只是形式不同。</p>
+
+<p>1、用函数递归，分治的思想，对于字符串解压时遇到的每一个左括号，找到它在右边对应的右括号 <br>
+2、统计左括号位置，然后从最右边的左括号开始解压起。因为从右边起（它是最里）的解压不会影响到左边。解压后将原字符串替换即可。使用<code>string的erase(), insert()</code>即可，参数为下标范围，左闭右开。</p>
+
+
+
+<h3 id="p2690-接苹果-dp记忆化搜索"><a href="https://www.luogu.org/problemnew/show/P2690" rel="nofollow">P2690 接苹果</a> 【dp，记忆化搜索】</h3>
+
+<p>哎呀，即使是普及-的dp题目，也会这么难，真是让人伤脑筋。</p>
+
+<p>总之就是建立模型的时候，有两个维度，一个是时间i，另一个是转换了多少次j，已知j可以求出奶牛当前的位置。状态转移方程为： <br>
+<code>dp[i][j] = max(dp[i - 1][j - 1], dp[i - 1][j]</code> <br>
+<code>if j%2 + 1 == down[i] then dp[i][j]++</code> <br>
+注意每次预处理<code>dp[i][0]</code></p>
+
+<p>理解这个状态转移方程要从实际含义出发，对于一个状态<code>dp[i][j]</code>它一定是从i-1层转移过来的，而i-1层的哪些状态可能转移？这个状态要么会到另一棵树上去(dp[i-1][j-1]),要么在原树上面等待(dp[i-1][j]),只有这两种状态。而我们可以理解，<code>if j%2 + 1 == down[i] then dp[i][j]++</code>只跟奶牛在哪棵树下（即j的值有关），所以它在这个状态上要得到最大值，就要选择那两种状态的最大值转移过来。</p>
+
+
+
+<h3 id="p1825-usaco11open玉米田迷宫corn-mazespfabfs"><a href="https://www.luogu.org/problemnew/show/P1825" rel="nofollow">P1825 [USACO11OPEN]玉米田迷宫Corn Maze</a>【spfa，bfs】</h3>
+
+<p>此题几乎就是BFS模板题了，多了一个会传送的而已，还是非常好处理的，但是如果用SPFA来写呢？如何将这张图转化为适合SPFA的图？ <br>
+首先分析可不可以转（数据范围），<code>300*300</code>，嗯，比较小，而且每个点只能和上下左右四个点连成一条边，那么用spfa没毛病了。也就是给每个点编号，然后上下左右建边（如果可以），对于传送装置的处理，应该和另一个传送点建边。</p>
+
+
+
+<h3 id="p2746-usaco53校园网network-of-schoolstarjan缩点"><a href="https://www.luogu.org/problemnew/show/P2746" rel="nofollow">P2746 [USACO5.3]校园网Network of Schools</a>【tarjan，缩点】</h3>
+
+<p>比较简单的缩点模板题，有几个需要注意的地方： <br>
+1、tarjan缩点时，对出度入度的处理，很多情况只要统计一个点是否有出度/入度，所以用bool值就可以。 <br>
+2、注意考虑单个点的情况，满分的关键。 <br>
+3、缩点后，当出点和入点相同时，务必跳过。</p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,98 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81605715				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>CCF 201412-3 集合竞价 <a href="http://118.190.20.162/view.page?gpid=T19" rel="nofollow">传送门</a></p>
+
+<p>2018-9-7日更新。谢谢一位同学的提示，已将所有<code>int</code>改为<code>long long</code>, 得了100分。</p>
+
+<p><del>只得了80分, 硬是找不出bug在哪里.</del></p>
+
+<p>思路是:  <br>
+1. <strong>对命令进行处理, 改取消的取消, 可以<code>stringstream</code>方便读取字符串中的<code>string double int</code>.</strong> <br>
+2. <strong>将两种命令(sell和buy)分别按价格排序.</strong> <br>
+3.  <strong>同时向右查询, 以buy为循环外围, 对每个可更新答案的情况进行更新. 答案一定是buy的某个价格, 对每一个价格, 找它的尽可能成交量多的情况.</strong></p>
+
+<p>我估计我是步骤三有个bug</p>
+
+<p>80分Code</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;sstream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">double</span> money;
+    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> num;
+    Node (<span class="hljs-keyword">double</span> m, <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> n): money(m), num(n) {}
+};
+
+<span class="hljs-keyword">bool</span> cmp(Node x, Node y)
+{
+    <span class="hljs-keyword">return</span> x.money &lt; y.money;
+}
+
+<span class="hljs-built_in">string</span> str[<span class="hljs-number">5005</span>];
+<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> sum_buy[<span class="hljs-number">5005</span>], sum_sell[<span class="hljs-number">5005</span>];
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> t = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (getline(<span class="hljs-built_in">cin</span>, str[++t])) {
+        <span class="hljs-keyword">if</span> (str[t][<span class="hljs-number">0</span>] == <span class="hljs-string">'c'</span>) {
+            <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> in = <span class="hljs-number">7</span>, line = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> i = in; i &lt; str[t].size(); ++i) {
+                line = line*<span class="hljs-number">10</span> + <span class="hljs-keyword">int</span>(str[t][i] - <span class="hljs-string">'0'</span>);
+            }
+            str[line] = <span class="hljs-string">""</span>;
+            str[t] = <span class="hljs-string">""</span>;
+        }
+    }
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Node&gt;</span> sell, buy;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> i = <span class="hljs-number">1</span>; i &lt;= t; ++i) {
+        <span class="hljs-built_in">stringstream</span> <span class="hljs-built_in">sin</span>(str[i]);
+        <span class="hljs-built_in">string</span> tmp;
+        <span class="hljs-keyword">double</span> money;
+        <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> num;
+        <span class="hljs-built_in">sin</span> &gt;&gt; tmp &gt;&gt; money &gt;&gt; num;
+        <span class="hljs-keyword">if</span> (str[i][<span class="hljs-number">0</span>] == <span class="hljs-string">'s'</span>) sell.push_back(Node(money, num));
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (str[i][<span class="hljs-number">0</span>] == <span class="hljs-string">'b'</span>) buy.push_back(Node(money, num));
+    }
+    sort(buy.begin(), buy.end(), cmp);
+    sort(sell.begin(), sell.end(), cmp);
+    sum_buy[buy.size()] = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> i = buy.size() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; --i)
+        sum_buy[i] = sum_buy[i + <span class="hljs-number">1</span>] + buy[i].num;
+    sum_sell[<span class="hljs-number">0</span>] = sell[<span class="hljs-number">0</span>].num;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> i = <span class="hljs-number">1</span>; i &lt; sell.size(); ++i)
+        sum_sell[i] = sum_sell[i - <span class="hljs-number">1</span>] + sell[i].num;
+    <span class="hljs-keyword">double</span> ans_mny = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> ans_cnt = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> i = <span class="hljs-number">0</span>, j = <span class="hljs-number">0</span>; i &lt; buy.size(); ++i) {
+        <span class="hljs-keyword">double</span> bmo = buy[i].money;
+        <span class="hljs-keyword">while</span> (sell[j].money &lt;= bmo) {
+            <span class="hljs-keyword">if</span> (j == sell.size() - <span class="hljs-number">1</span> || sell[j+<span class="hljs-number">1</span>].money &gt; bmo) {
+                <span class="hljs-keyword">if</span> (ans_cnt &lt;= min(sum_buy[i], sum_sell[j])) {
+                    ans_cnt = min(sum_buy[i], sum_sell[j]);
+                    ans_mny = bmo;
+                }
+                <span class="hljs-keyword">break</span>;
+            }
+            j++;
+        }
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%.2lf %lld"</span>, ans_mny, ans_cnt);
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

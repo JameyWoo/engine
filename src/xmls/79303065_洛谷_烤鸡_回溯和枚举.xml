@@ -1,0 +1,138 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79303065				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>这是<a href="https://www.luogu.org/problemnew/solution/P2089" rel="nofollow">洛谷试炼场上<strong>新手村</strong>的一道Boss题</a>, 让我头疼了好久</p>
+
+<p><a href="https://www.luogu.org/problemnew/solution/P2089" rel="nofollow">洛谷各种题解</a></p>
+
+<p>感觉是不难的, 枚举或搜索也许都可以, 但是就是没明确思路, 想要写的时候, 不知从何下手</p>
+
+<p>看了不少题解之后, 写了回溯和枚举两种方法. 也看出了自己的一些问题.</p>
+
+<p>看书做了八皇后问题之后本以为掌握了回溯, 结果还只是停留在表面和片面的层次, 其他的回溯问题因为没有见过这样的模型就只有模糊概念而无精确的过程设计.</p>
+
+<p>所以, 还是应该多看多练多思多总结.</p>
+
+<p>下面是十重枚举的代码, 很暴力…</p>
+
+<pre class="prettyprint"><code class=" hljs perl"><span class="hljs-comment">#include &lt;iostream&gt;</span>
+<span class="hljs-comment">#include &lt;cstdio&gt;</span>
+
+using namespace std;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, ans = <span class="hljs-number">0</span>;
+    cin &gt;&gt; n;
+
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> a=<span class="hljs-number">1</span>; a&lt;=<span class="hljs-number">3</span>; ++a) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> b=<span class="hljs-number">1</span>; b&lt;=<span class="hljs-number">3</span>;++b){
+            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> c=<span class="hljs-number">1</span>;c&lt;=<span class="hljs-number">3</span>;c++){
+                <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> d=<span class="hljs-number">1</span>;d&lt;=<span class="hljs-number">3</span>;++d){
+                    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> e=<span class="hljs-number">1</span>;e&lt;=<span class="hljs-number">3</span>;++e){
+                        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> f=<span class="hljs-number">1</span>;f&lt;=<span class="hljs-number">3</span>;++f){
+                            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> g=<span class="hljs-number">1</span>;g&lt;=<span class="hljs-number">3</span>;++g){
+                                <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> h=<span class="hljs-number">1</span>;h&lt;=<span class="hljs-number">3</span>;++h){
+                                    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">1</span>;i&lt;=<span class="hljs-number">3</span>;++i){
+                                        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j=<span class="hljs-number">1</span>;j&lt;=<span class="hljs-number">3</span>;++j){
+                                            <span class="hljs-keyword">if</span>(a+b+c+d+e+f+g+h+i+j == n){
+                                                ans++;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    cout &lt;&lt; ans &lt;&lt; endl;
+
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> a=<span class="hljs-number">1</span>; a&lt;=<span class="hljs-number">3</span>; ++a) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> b=<span class="hljs-number">1</span>; b&lt;=<span class="hljs-number">3</span>;++b){
+            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> c=<span class="hljs-number">1</span>;c&lt;=<span class="hljs-number">3</span>;c++){
+                <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> d=<span class="hljs-number">1</span>;d&lt;=<span class="hljs-number">3</span>;++d){
+                    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> e=<span class="hljs-number">1</span>;e&lt;=<span class="hljs-number">3</span>;++e){
+                        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> f=<span class="hljs-number">1</span>;f&lt;=<span class="hljs-number">3</span>;++f){
+                            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> g=<span class="hljs-number">1</span>;g&lt;=<span class="hljs-number">3</span>;++g){
+                                <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> h=<span class="hljs-number">1</span>;h&lt;=<span class="hljs-number">3</span>;++h){
+                                    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">1</span>;i&lt;=<span class="hljs-number">3</span>;++i){
+                                        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j=<span class="hljs-number">1</span>;j&lt;=<span class="hljs-number">3</span>;++j){
+                                            <span class="hljs-keyword">if</span>(a+b+c+d+e+f+g+h+i+j == n){
+                                                <span class="hljs-keyword">printf</span>(<span class="hljs-string">"<span class="hljs-variable">%d</span> <span class="hljs-variable">%d</span> <span class="hljs-variable">%d</span> <span class="hljs-variable">%d</span> <span class="hljs-variable">%d</span> <span class="hljs-variable">%d</span> <span class="hljs-variable">%d</span> <span class="hljs-variable">%d</span> <span class="hljs-variable">%d</span> <span class="hljs-variable">%d</span>\n"</span>, a, b, c, d, e, f, g, h, i, j);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}</code></pre>
+
+<p>回溯搜索的方法看上去很美妙.</p>
+
+<p>不过…</p>
+
+<p>其实还是常规的回溯题…</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> n, cnt = <span class="hljs-number">0</span>, ans[<span class="hljs-number">110000</span>][<span class="hljs-number">11</span>], tmp[<span class="hljs-number">11</span>];
+
+<span class="hljs-keyword">void</span> search(<span class="hljs-keyword">int</span> c, <span class="hljs-keyword">int</span> mw)
+{
+    <span class="hljs-keyword">if</span>(c &gt; <span class="hljs-number">10</span>) {
+        <span class="hljs-keyword">if</span>(mw == n) {
+            cnt++;
+            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">10</span>; ++i) {
+                ans[cnt][i] = tmp[i];
+            }
+        }
+    } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">3</span>; ++i) {
+            tmp[c] = i;
+            search(c+<span class="hljs-number">1</span>, mw+i);
+            tmp[c] = <span class="hljs-number">0</span>;
+        }
+    }
+ } 
+
+<span class="hljs-keyword">void</span> show()
+{
+    <span class="hljs-built_in">cout</span> &lt;&lt; cnt &lt;&lt; endl;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= cnt; ++i) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= <span class="hljs-number">10</span>; ++j) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; ans[i][j] &lt;&lt; <span class="hljs-string">' '</span>;
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    search(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>);  <span class="hljs-comment">//第一个是菜,第二个是美味 </span>
+    show();
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

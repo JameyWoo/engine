@@ -1,0 +1,115 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/80544023				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><div class="toc"><div class="toc">
+<ul>
+<li><a href="#两种组合数问题" rel="nofollow">两种组合数问题</a><ul>
+<li><a href="#一-求组合数cn-m" rel="nofollow">一: 求组合数C(n, m)</a><ul>
+<li><a href="#方法一" rel="nofollow">方法一</a></li>
+<li><a href="#方法二" rel="nofollow">方法二</a></li>
+<li><a href="#方法三" rel="nofollow">方法三</a></li>
+</ul>
+</li>
+<li><a href="#求cn-m-p" rel="nofollow">求C(n, m) % p</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</p>
+
+<h1 id="两种组合数问题">两种组合数问题</h1>
+
+<p>今天学了一点组合数学, 一个求组合数的算法, 一个是求组合数对p取模</p>
+
+<h2 id="一-求组合数cn-m">一: 求组合数C(n, m)</h2>
+
+<h3 id="方法一"><strong>方法一</strong></h3>
+
+<p>此方法是最粗暴的方法, 按照组合数的定义直接模拟, 不过这种方法的弊端是, 即使组合数不算大, 在它的中间过程中可是有可能溢出的. 即使是long long, 也有很大风险.</p>
+
+<p>思路较为简单, 代码不展示</p>
+
+
+
+<h3 id="方法二"><strong>方法二</strong></h3>
+
+<p>此方法利用组合数的<strong>递推公式</strong> <br>
+排列组合里面有很多递推公式, 巧妙地应用会有意想不到的妙处.</p>
+
+<p>这里我们用 <br>
+<strong>C(n, m) = C(n - 1, m) + C(n - 1, m - 1)</strong></p>
+
+<p>可以用递归实现这个过程</p>
+
+<p><strong>最需要注意的是递归的边界</strong>, 大家知道组合数组成一个图形地话其实是一个杨辉三角, 所以我们这里递归地边界也就是三角的两条边, 即<strong>m == n || m = 0</strong>时</p>
+
+<p>递归的过程中用到<strong>记忆化搜索</strong>, 把之前求过的组合数存储起来.</p>
+
+<p>也可以用递推实现, 和递归本质上时一样的.</p>
+
+<p>代码</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> exi[<span class="hljs-number">100</span>][<span class="hljs-number">100</span>] = {<span class="hljs-number">0</span>};
+
+<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> zh(<span class="hljs-keyword">int</span> n, <span class="hljs-keyword">int</span> m)
+{
+    <span class="hljs-keyword">if</span> (m == <span class="hljs-number">0</span> || m == n) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (exi[n][m]) <span class="hljs-keyword">return</span> exi[n][m];
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> exi[n][m] = zh(n - <span class="hljs-number">1</span>, m) + zh(n - <span class="hljs-number">1</span>, m - <span class="hljs-number">1</span>);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, m;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-built_in">cout</span> &lt;&lt; zh(n, m) &lt;&lt; endl;
+}</code></pre>
+
+<p><strong>尤其要注意递归的边界</strong></p>
+
+<p>时间复杂度不超过O(n^2)</p>
+
+
+
+<h3 id="方法三"><strong>方法三</strong></h3>
+
+<p>这种方法甚是巧妙, <strong>较好地规避了数据溢出的情况</strong>, 虽然和方法二相比还是有些不足, 但作为一种启发, 还是非常有营养的.</p>
+
+<p>书上把它叫做<strong>通过定义式的变形来计算</strong></p>
+
+<p>方法的表述有点复杂, 符号什么的不好写, 只放代码咯.</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, m;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> ans = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= m; ++i) {
+        ans = ans * (n - m + i) / i;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+}</code></pre>
+
+<p><strong>似乎这几种方法中这种是最简洁的.</strong> 时间复杂度为<strong>O(m)</strong></p>
+
+<p>以上三种方法, 方法一最粗暴, 方法二可以存储中间值, 方法三代码简单, 防溢出效果稍差. 各有利弊吧.</p>
+
+<h2 id="求cn-m-p">求C(n, m) % p</h2>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

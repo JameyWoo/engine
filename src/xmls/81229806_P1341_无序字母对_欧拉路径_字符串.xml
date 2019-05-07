@@ -1,0 +1,274 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81229806				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><a href="https://www.luogu.org/problemnew/show/P1341" rel="nofollow">传送门</a></p>
+
+<blockquote>
+  <p>题目描述 <br>
+  给定n个各不相同的无序字母对（区分大小写，无序即字母对中的两个字母可以位置颠倒）。请构造一个有n+1个字母的字符串使得每个字母对都在这个字符串中出现。</p>
+  
+  <p>输入输出格式 <br>
+  输入格式： <br>
+  第一行输入一个正整数n。</p>
+  
+  <p>以下n行每行两个字母，表示这两个字母需要相邻。</p>
+  
+  <p>输出格式： <br>
+  输出满足要求的字符串。</p>
+  
+  <p>如果没有满足要求的字符串，请输出“No Solution”。</p>
+  
+  <p>如果有多种方案，请输出前面的字母的ASCII编码尽可能小的（字典序最小）的方案</p>
+  
+  <p>输入输出样例 <br>
+  输入样例#1：  <br>
+  4 <br>
+  aZ <br>
+  tZ <br>
+  Xt <br>
+  aX <br>
+  输出样例#1：  <br>
+  XaZtX</p>
+</blockquote>
+
+<p>P1341 无序字母对</p>
+
+<p>此题看描述可知是<strong>一道欧拉回路相关题.  </strong><del>(后面发现其实是欧拉路径)</del></p>
+
+<p>通过所给的信息,找出一条欧拉回路,通过每一个顶点(字符)回到原点. 取字典序最小的输出.</p>
+
+<p>只不过是把结点由数字表示变成了字母,用字母存即可,似乎不难. 有下面三个需要思考的问题 </p>
+
+<blockquote>
+  <p>1.如何判断是否存在欧拉回路?  <br>
+  2.怎么找欧拉回路?  <br>
+  3.如何保证字典序最小?</p>
+</blockquote>
+
+<p>第一个问题: <strong>OK, 吸取之前的教训,这回不能忘掉图不一定联通.那么,如果图不连通,肯定不存在欧拉回路.而如果图联通,当且仅当所有节点的度数都为偶数时,欧拉回路才成立</strong> <br>
+第二个问题:<strong>确认存在欧拉回路后, 找欧拉回路就是一个图的遍历过程.遍历这张图的每个点得到的路径,就一定是欧拉回路 </strong> <br>
+第三个问题: <strong>这就是遍历的技巧了,从小到大遍历,找到第一条路径就跳出,就是此题的答案了. </strong></p>
+
+<p>思考好了,下面准备Code </p>
+
+<p>区分大小写, 只有字母, 那么我们只需存52个点. 数据较小.  <br>
+大写为0-25, 小写为26-51; </p>
+
+<p>我用邻接矩阵来存图.</p>
+
+<p>咦, 突然发现这样存图是不对的. 序号不是连续的. 那么可以吗?</p>
+
+<p><strong><em>似乎也是可以, 只要记录哪些点存在,不存在的点直接忽略即可. </em></strong></p>
+
+<p><strong>发现存图是可以优化的, 开个84大小的数组, 获取字符直接减’A’, 使得代码编辑较为简单</strong> <del> 似乎很水没啥用</del></p>
+
+<p>出现了顺序变反的问题. 开始不知道哪里错, 明明遍历的顺序是从小到大的,怎么会出错.</p>
+
+<p><strong>仔细检查之后,发现是push和递归的顺序反了.应该先push在递归dfs,不然就是里层的先push.它是一个堆栈的结构</strong></p>
+
+<p>然后提交了, 提交了, 可是只得了10分.呜呜呜.分数这么低看来就是样例过了,肯定是思路全错了.呜呜呜.</p>
+
+<p>还是先测试测试数据再说 </p>
+
+<blockquote>
+  <p>6 <br>
+  aZ <br>
+  aT <br>
+  ZT <br>
+  ET <br>
+  bE <br>
+  Tb</p>
+</blockquote>
+
+<p>测了这样一组数据, 发现我的答案错了,别人AC的代码是我心目中的对的, 那么我的代码有问题.</p>
+
+<p><strong>而且发现,欧拉回路好像就是把所有的边都经过一次,而点是可以经过多次的,好吧,点的问题是哈密顿回路. </strong></p>
+
+<p>Ok, 现在新增了一个Euler函数,用来找欧拉回路的.原来的dfs只是用来判断联通性.其实也可以合起来的. </p>
+
+<p>… 还是10分. 哪里出了问题. 崩溃了. </p>
+
+<p><strong>额, 看了别人的题解之后猛然发现, 其实是求欧拉路径而不是回路, 只要有路径就OK. </strong></p>
+
+<p>呵呵, 现在是20分了,<del>有了一倍的进步!  </del></p>
+
+<p>先贴20分代码, 然后从头再来.</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">84</span>;
+<span class="hljs-keyword">int</span> G[maxn][maxn] = {}, degree[maxn] = {};
+<span class="hljs-keyword">bool</span> vis[maxn] = {}, exist[maxn] = {};
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> node;
+
+<span class="hljs-keyword">void</span> dfs(<span class="hljs-keyword">int</span> u) <span class="hljs-comment">// 判断图是否联通 </span>
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i) {
+        <span class="hljs-keyword">if</span> (G[u][i] &amp;&amp; !vis[i] &amp;&amp; exist[i]) {
+            vis[i] = <span class="hljs-keyword">true</span>;
+            dfs(i);
+        }
+    }
+}
+
+<span class="hljs-keyword">void</span> Euler(<span class="hljs-keyword">int</span> u)
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i) {
+        <span class="hljs-keyword">if</span> (G[u][i]) {
+            G[u][i] = G[i][u] = <span class="hljs-number">0</span>;
+            node.push_back(i);
+            Euler(i);
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, cnt = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">char</span> ca, cb;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">int</span> a, b;
+        <span class="hljs-built_in">cin</span> &gt;&gt; ca &gt;&gt; cb;
+        a = ca - <span class="hljs-string">'A'</span>;
+        b = cb - <span class="hljs-string">'A'</span>;
+        G[a][b] = G[b][a] = <span class="hljs-number">1</span>;
+        degree[a]++, degree[b]++; 
+        exist[a] = exist[b] = <span class="hljs-keyword">true</span>;
+    }
+    <span class="hljs-keyword">int</span> _min = maxn;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">if</span> (degree[i] &amp; <span class="hljs-number">1</span>) {  <span class="hljs-comment">// 存在奇度点. </span>
+            cnt++; 
+            _min = min(i, _min);
+        }
+    }
+    <span class="hljs-keyword">if</span> (cnt &gt; <span class="hljs-number">2</span> || cnt == <span class="hljs-number">1</span>) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"No Solution"</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">int</span> param = -<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (cnt == <span class="hljs-number">2</span>) param = _min;
+    <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i) {
+            <span class="hljs-keyword">if</span> (exist[i]) {
+                param = i; <span class="hljs-comment">// 找到图中字典序最小的那个. </span>
+                <span class="hljs-keyword">break</span>;
+            }
+        }
+    }
+    vis[param] = <span class="hljs-keyword">true</span>;
+    dfs(param);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i) {
+        <span class="hljs-keyword">if</span> (exist[i] &amp;&amp; !vis[i]) { <span class="hljs-comment">// 图不连通 </span>
+            <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"No Solution"</span>;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        }
+    }
+    node.push_back(param);
+    Euler(param);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; node.size(); ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-keyword">char</span>(node[i] + <span class="hljs-string">'A'</span>);
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}
+<span class="hljs-comment">/*
+4
+aZ
+tZ
+Xt
+aX
+
+6
+aZ
+aT
+ZT
+ET
+bE
+Tb
+
+2
+ab
+bc
+*/</span></code></pre>
+
+<p>嗯, 按照一份题解的思路<del>(几乎跟我的一毛一样啊, 而且它还没有判断联通性!) , 我重写了一份代码, 结果得了50分, 对了一半.</del></p>
+
+<p>题解的思路似乎和我是一样的, 但是我仔细对比了一下差异, <strong>发现它的存储欧拉路径的方式(时间, 位置)和我略有不同. 我是每个结点访问时存进去, 而他是在每个Euler函数结束部分push进去. 事实证明他是对的我是错了.</strong></p>
+
+<p>这是为什么呢? 很抓狂, 不知道为什么是对的, 它就是对的; 不知道哪里错了, 它确实错了.</p>
+
+<p>总之记住了一点, <strong>找欧拉路径上的结点, 要在函数最后压进去, 然后倒叙输出</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">84</span>;
+<span class="hljs-keyword">int</span> G[maxn][maxn] = {};
+<span class="hljs-keyword">int</span> degree[maxn] = {};
+<span class="hljs-built_in">string</span> error = <span class="hljs-string">"No Solution"</span>; 
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> node;
+
+<span class="hljs-keyword">void</span> Euler(<span class="hljs-keyword">int</span> u)
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i) {
+        <span class="hljs-keyword">if</span> (G[u][i]) {
+            G[u][i] = G[i][u] = <span class="hljs-number">0</span>;
+            Euler(i);
+        }
+    }
+    node.push_back(u); <span class="hljs-comment">// 欧拉路径上的结点. </span>
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, cnt = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">char</span> a, b;
+        <span class="hljs-built_in">cin</span> &gt;&gt; a &gt;&gt; b;
+        <span class="hljs-keyword">int</span> c, d;
+        c = a - <span class="hljs-string">'A'</span>, d = b - <span class="hljs-string">'A'</span>;
+        G[c][d] = G[d][c] = <span class="hljs-number">1</span>;
+        degree[c]++, degree[d]++;
+    }
+    <span class="hljs-keyword">int</span> _min = maxn;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i) {
+        <span class="hljs-keyword">if</span> (degree[i] &amp; <span class="hljs-number">1</span>) {
+            cnt++;
+            _min = min(_min, i);
+        }
+    }
+    <span class="hljs-keyword">if</span> (cnt != <span class="hljs-number">2</span> &amp;&amp; cnt != <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; error;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    } 
+    <span class="hljs-keyword">if</span> (cnt == <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i) {
+            <span class="hljs-keyword">if</span> (degree[i]) {
+                _min = i;
+                <span class="hljs-keyword">break</span>;
+            }
+        }
+    }
+    Euler(_min);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = node.size() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; --i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-keyword">char</span>(node[i] + <span class="hljs-string">'A'</span>);
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

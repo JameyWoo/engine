@@ -1,0 +1,41 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/88323044				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h3><a id="python_0"></a>一、如何查看python某个包的版本？</h3>
+<p>1、<code>pip list</code>  // 全部，在里面找</p>
+<p>2、<code>pip freeze</code> // 全部</p>
+<p>3、<code>pip show numpy</code> // 单个</p>
+<p>4、<code>conda list numpy</code> // 单个</p>
+<h3><a id="outdated_10"></a>二、列出全部outdated（可更新）的包</h3>
+<p><code>pip list --outdated --format=legacy</code></p>
+<p><code>pip list --outdated --format=columns</code></p>
+<p>这两个命令的区别是列表的方式不一样。且他们的命令执行时间都非常的长。</p>
+<h3><a id="numpy_18"></a>三、更新单个包如numpy</h3>
+<p><code>pip install --upgrade numpy</code></p>
+<p>或者</p>
+<p><code>pip install -U numpy</code></p>
+<h3><a id="_26"></a>四、更新全部包</h3>
+<p>需要用到一个叫pip-review的执行程序</p>
+<p>首先通过pip下载<code>pip install pip-review</code></p>
+<p>然后执行以下命令：<code>pip-review --local --interactive</code></p>
+<p>或者执行下面python程序</p>
+<pre><code class="prism language-py"><span class="token keyword">from</span> pip<span class="token punctuation">.</span>_internal<span class="token punctuation">.</span>utils<span class="token punctuation">.</span>misc <span class="token keyword">import</span> get_installed_distributions
+<span class="token keyword">from</span> subprocess <span class="token keyword">import</span> call
+<span class="token keyword">for</span> dist <span class="token keyword">in</span> get_installed_distributions<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    call<span class="token punctuation">(</span><span class="token string">"pip install --upgrade "</span> <span class="token operator">+</span> dist<span class="token punctuation">.</span>project_name<span class="token punctuation">,</span> shell<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+</code></pre>
+<p>:（  不过更新全部包不是非常靠谱，毕竟更新一个包都经常出问题！何况是更新所有的。</p>
+<h3><a id="_43"></a>五、卸载包的方法</h3>
+<p>和安装的方法类似</p>
+<p><code>pip uninstall numpy</code></p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

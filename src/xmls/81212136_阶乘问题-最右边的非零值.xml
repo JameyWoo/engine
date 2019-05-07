@@ -1,0 +1,38 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81212136				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>问题是给出一个数n, 找出n的阶乘右边的第一个非零值.</p>
+
+<p>如15! = 1307674368000, 那么这个值就是8.</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> ans = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        ans *= i;
+        <span class="hljs-keyword">while</span> (ans % <span class="hljs-number">10</span> == <span class="hljs-number">0</span>) ans /= <span class="hljs-number">10</span>;
+        ans %= <span class="hljs-number">1000000000</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans % <span class="hljs-number">10</span>;
+}</code></pre>
+
+<p>为什么这样就是对的? 为什么模这么多就好了? </p>
+
+<p><strong>我们可以假设这种情况,当n = 1e8, i == n时,乘以ans,结果也不超出long long, 那么可以算出正确结果, 把结的0去掉,再取模缩小范围, 所以这样写是在”数据范围内”,得到答案又不失正确性.</strong></p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

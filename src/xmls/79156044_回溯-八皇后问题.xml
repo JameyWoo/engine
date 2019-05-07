@@ -1,0 +1,300 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79156044				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><a href="https://baike.baidu.com/item/%E5%85%AB%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98/11053477?fr=aladdin" rel="nofollow">八皇后问题</a>是经典的<strong>回溯</strong>问题 <br>
+常用的方法是递归, 也可以暴力枚举 <br>
+知乎上有用<a href="https://www.zhihu.com/question/28543312" rel="nofollow">一行代码</a>写的</p>
+
+<p>我刚接触算法时翻过紫书, 那时了解的知识太少了, 一次翻到八皇后问题, 觉得这好复杂, 怎么做得出来! <br>
+于是心里自我暗示地告诉自己这道题很难.</p>
+
+<p>直到今天在计蒜客上看视频时, 提到了八皇后问题, 鉴于视频上内容较基础, 我想是不是八皇后问题其实并不难?</p>
+
+<p>翻书之后, 以我现在的能力还是无法独立思考出, 故看书, 发现理解这个问题并不难, 就是一道常规的回溯问题. 不过对于蒟蒻的我来说, 回溯本身也不是那么简单的. </p>
+
+<p>POJ的八皇后问题:</p>
+
+<p>描述 <br>
+    在国际象棋棋盘上放置八个皇后，要求每两个皇后之间不能直接吃掉对方。 <br>
+输入 <br>
+    无输入。 <br>
+输出 <br>
+    按给定顺序和格式输出所有八皇后问题的解（见Sample Output）。 <br>
+样例输入</p>
+
+<p>样例输出</p>
+
+<pre><code>No. 1
+1 0 0 0 0 0 0 0 
+0 0 0 0 0 0 1 0 
+0 0 0 0 1 0 0 0 
+0 0 0 0 0 0 0 1 
+0 1 0 0 0 0 0 0 
+0 0 0 1 0 0 0 0 
+0 0 0 0 0 1 0 0 
+0 0 1 0 0 0 0 0 
+No. 2
+1 0 0 0 0 0 0 0 
+0 0 0 0 0 0 1 0 
+0 0 0 1 0 0 0 0 
+0 0 0 0 0 1 0 0 
+0 0 0 0 0 0 0 1 
+0 1 0 0 0 0 0 0 
+0 0 0 0 1 0 0 0 
+0 0 1 0 0 0 0 0 
+No. 3
+1 0 0 0 0 0 0 0 
+0 0 0 0 0 1 0 0 
+0 0 0 0 0 0 0 1 
+0 0 1 0 0 0 0 0 
+0 0 0 0 0 0 1 0 
+0 0 0 1 0 0 0 0 
+0 1 0 0 0 0 0 0 
+0 0 0 0 1 0 0 0 
+No. 4
+1 0 0 0 0 0 0 0 
+0 0 0 0 1 0 0 0 
+0 0 0 0 0 0 0 1 
+0 0 0 0 0 1 0 0 
+0 0 1 0 0 0 0 0 
+0 0 0 0 0 0 1 0 
+0 1 0 0 0 0 0 0 
+0 0 0 1 0 0 0 0 
+No. 5
+0 0 0 0 0 1 0 0 
+1 0 0 0 0 0 0 0 
+0 0 0 0 1 0 0 0 
+0 1 0 0 0 0 0 0 
+0 0 0 0 0 0 0 1 
+0 0 1 0 0 0 0 0 
+0 0 0 0 0 0 1 0 
+0 0 0 1 0 0 0 0 
+No. 6
+0 0 0 1 0 0 0 0 
+1 0 0 0 0 0 0 0 
+0 0 0 0 1 0 0 0 
+0 0 0 0 0 0 0 1 
+0 1 0 0 0 0 0 0 
+0 0 0 0 0 0 1 0 
+0 0 1 0 0 0 0 0 
+0 0 0 0 0 1 0 0 
+No. 7
+0 0 0 0 1 0 0 0 
+1 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 1 
+0 0 0 1 0 0 0 0 
+0 1 0 0 0 0 0 0 
+0 0 0 0 0 0 1 0 
+0 0 1 0 0 0 0 0 
+0 0 0 0 0 1 0 0 
+No. 8
+0 0 1 0 0 0 0 0 
+1 0 0 0 0 0 0 0 
+0 0 0 0 0 0 1 0 
+0 0 0 0 1 0 0 0 
+0 0 0 0 0 0 0 1 
+0 1 0 0 0 0 0 0 
+0 0 0 1 0 0 0 0 
+0 0 0 0 0 1 0 0 
+No. 9
+0 0 0 0 1 0 0 0 
+1 0 0 0 0 0 0 0 
+0 0 0 1 0 0 0 0 
+0 0 0 0 0 1 0 0 
+0 0 0 0 0 0 0 1 
+0 1 0 0 0 0 0 0 
+0 0 0 0 0 0 1 0 
+0 0 1 0 0 0 0 0 
+...以下省略
+</code></pre>
+
+<p>提示 <br>
+    此题可使用函数递归调用的方法求解。</p>
+
+<p>求解出92种放置情况并不难, 理解之后很轻松就可以写出答案, 这道题的坑点是, 做题者要观察输出规则. 对, 它并不是简单的按照回溯顺序输出的.</p>
+
+<p>尝试几种可能之后还是错误, 遂看提示, 才知道输出的结果是行和列转置之后的.</p>
+
+<p>遂修改代码, 把i, j互换, 成功AC.</p>
+
+<p>下面是代码:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#define N 8</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">bool</span> is[N][N] = {}, row[N] = {}, col[N] = {};
+<span class="hljs-keyword">bool</span> Left[<span class="hljs-number">2</span>*N - <span class="hljs-number">1</span>] = {}, Right[<span class="hljs-number">2</span>*N - <span class="hljs-number">1</span>] = {};
+<span class="hljs-keyword">int</span> Time = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">void</span> print()
+{
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"No. "</span> &lt;&lt; ++Time &lt;&lt; endl; 
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i ) {
+        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; N; ++j ) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; (is[j][i] ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>) &lt;&lt; <span class="hljs-string">' '</span>;
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+}
+
+<span class="hljs-keyword">void</span> search(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">if</span>( n == N ) {
+        print();
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i ) {
+            <span class="hljs-keyword">if</span>(row[n] || col[i] || Left[i + n] || Right[n - i + N - <span class="hljs-number">1</span>]) {
+                <span class="hljs-keyword">continue</span>;
+            }
+            row[n] = col[i] = Left[i + n] = Right[n - i + N -<span class="hljs-number">1</span>] = is[n][i] = <span class="hljs-number">1</span>;
+            search(n + <span class="hljs-number">1</span>);
+            row[n] = col[i] = Left[i + n] = Right[n - i + N -<span class="hljs-number">1</span>] = is[n][i] = <span class="hljs-number">0</span>;
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    search(<span class="hljs-number">0</span>);
+}</code></pre>
+
+<p>值得一提的是, 之前我的Left 和Right数组是left 和right, 这样在DEV上编译错误, 说是有二义性. 百度之后想起right 和 left在DEV中可能被包含在了iostream中, 作为控制格式用.</p>
+
+<p>提交之后, POJ上编译错误, 原因是time, 改为Time之后编译成功.</p>
+
+<p><strong>这道题带给我的是一种不正常的输出方式: 转置.</strong>  <br>
+没错, 如果出题人要这样玩我, 我想下次可以解决.</p>
+
+<p>下面是<a href="https://www.luogu.org/problemnew/show/P1219" rel="nofollow">洛谷网的一道八皇后题目</a>的代码:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs markdown"><span class="hljs-header">#include &lt;iostream&gt;</span>
+//#define N 6
+<span class="hljs-header">#define YES 1</span>
+<span class="hljs-header">#define NO 0</span>
+
+using namespace std;
+
+int N, ans = 0, time = 3;
+bool row[<span class="hljs-link_label">16</span>] = {}, col[<span class="hljs-link_label">16</span>] = {}, dpos[<span class="hljs-link_label">2*16 - 1</span>] = {}, dneg[<span class="hljs-link_label">2*16 - 1</span>] = {}, is[<span class="hljs-link_label">16</span>][<span class="hljs-link_reference">16</span>] = {};
+
+void print()
+{
+<span class="hljs-code">    if(time == 0) return;</span>
+<span class="hljs-code">    time--;</span>
+<span class="hljs-code">    for( int i = 0; i &lt; N; ++i ) {</span>
+<span class="hljs-code">        for( int j = 0; j &lt; N; ++j ) {</span>
+<span class="hljs-code">            if(is[i][j]) cout &lt;&lt; j + 1 &lt;&lt; ' ';</span>
+<span class="hljs-code">        }</span>
+<span class="hljs-code">    }</span>
+<span class="hljs-code">    cout &lt;&lt; endl;</span>
+}
+
+void search(int n)
+{
+<span class="hljs-code">    if( n == N ) {</span>
+<span class="hljs-code">        ans++;</span>
+<span class="hljs-code">        print();</span>
+<span class="hljs-code">        return;</span>
+<span class="hljs-code">    } else {</span>
+<span class="hljs-code">        for( int i = 0; i &lt; N; ++i ) {</span>
+<span class="hljs-code">            if(row[n] || col[i] || dpos[n + i] || dneg[n - i + N - 1]) {</span>
+<span class="hljs-code">                continue;</span>
+<span class="hljs-code">            }</span>
+<span class="hljs-code">            row[n] = col[i] = dpos[n + i] = dneg[n - i + N - 1] = 1;</span>
+<span class="hljs-code">            is[n][i] = 1;</span>
+<span class="hljs-code">            search(n + 1);</span>
+<span class="hljs-code">            is[n][i] = 0;</span>
+<span class="hljs-code">            row[n] = col[i] = dpos[n + i] = dneg[n - i + N - 1] = 0;</span>
+<span class="hljs-code">        }</span>
+<span class="hljs-code">    }</span>
+}
+
+int main()
+{
+<span class="hljs-code">    cin &gt;&gt; N;</span>
+<span class="hljs-code">    search(0);</span>
+<span class="hljs-code">    cout &lt;&lt; ans &lt;&lt; endl;</span>
+}</code></pre>
+
+<p>另一道<a href="http://bailian.openjudge.cn/practice/2754/" rel="nofollow">POJ-2754八皇后题目</a></p>
+
+<p>代码:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs vbscript">#include &lt;iostream&gt;
+#define N <span class="hljs-number">8</span>
+
+using namespace std;
+
+bool <span class="hljs-keyword">is</span>[N][N] = {}, row[N] = {}, col[N] = {};
+bool <span class="hljs-built_in">Left</span>[<span class="hljs-number">2</span>*N - <span class="hljs-number">1</span>] = {}, <span class="hljs-built_in">Right</span>[<span class="hljs-number">2</span>*N - <span class="hljs-number">1</span>] = {};
+<span class="hljs-built_in">int</span> <span class="hljs-built_in">Time</span> = <span class="hljs-number">0</span>;
+
+void print(<span class="hljs-built_in">int</span> k)
+{
+    ++<span class="hljs-built_in">Time</span>;
+    <span class="hljs-keyword">if</span>( <span class="hljs-built_in">Time</span> == k ) {
+        <span class="hljs-keyword">for</span>( <span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i ) {
+            <span class="hljs-keyword">for</span>( <span class="hljs-built_in">int</span> j = <span class="hljs-number">0</span>; j &lt; N; ++j ) {
+                <span class="hljs-keyword">if</span>(<span class="hljs-keyword">is</span>[i][j]) cout &lt;&lt; j + <span class="hljs-number">1</span>;
+            }
+        }
+        cout &lt;&lt; endl;
+    }
+}
+
+void search(<span class="hljs-built_in">int</span> n, <span class="hljs-built_in">int</span> k)
+{
+    <span class="hljs-keyword">if</span>( n == N ) {
+        print(k);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">for</span>( <span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i ) {
+            <span class="hljs-keyword">if</span>(row[n] || col[i] || <span class="hljs-built_in">Left</span>[i + n] || <span class="hljs-built_in">Right</span>[n - i + N - <span class="hljs-number">1</span>]) {
+                continue;
+            }
+            row[n] = col[i] = <span class="hljs-built_in">Left</span>[i + n] = <span class="hljs-built_in">Right</span>[n - i + N -<span class="hljs-number">1</span>] = <span class="hljs-keyword">is</span>[n][i] = <span class="hljs-number">1</span>;
+            search(n + <span class="hljs-number">1</span>, k);
+            row[n] = col[i] = <span class="hljs-built_in">Left</span>[i + n] = <span class="hljs-built_in">Right</span>[n - i + N -<span class="hljs-number">1</span>] = <span class="hljs-keyword">is</span>[n][i] = <span class="hljs-number">0</span>;
+        }
+    }
+}
+
+<span class="hljs-built_in">int</span> main()
+{
+    <span class="hljs-built_in">int</span> t, k;
+    cin &gt;&gt; t;
+    <span class="hljs-keyword">while</span>( t-- ) {
+        cin &gt;&gt; k;
+        search(<span class="hljs-number">0</span>, k);
+        <span class="hljs-built_in">Time</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">for</span>( <span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; N; ++ i ) {
+            <span class="hljs-keyword">for</span>( <span class="hljs-built_in">int</span> j = <span class="hljs-number">0</span>; j &lt; N; ++j ) {
+                <span class="hljs-keyword">is</span>[i][j] = <span class="hljs-number">0</span>;
+            }
+            row[i] = col[i] = <span class="hljs-number">0</span>;
+            <span class="hljs-built_in">Left</span>[<span class="hljs-number">2</span>*i] = <span class="hljs-number">0</span>;
+            <span class="hljs-built_in">Left</span>[<span class="hljs-number">2</span>*i + <span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+            <span class="hljs-built_in">Right</span>[<span class="hljs-number">2</span>*i] = <span class="hljs-number">0</span>;
+            <span class="hljs-built_in">Right</span>[<span class="hljs-number">2</span>*i + <span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+        }
+    } 
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

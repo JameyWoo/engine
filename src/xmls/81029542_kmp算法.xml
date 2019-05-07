@@ -1,0 +1,178 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81029542				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><div class="toc">
+<ul>
+<li><ul>
+<li><a href="#前言" rel="nofollow">前言</a></li>
+<li><a href="#1-next数组的求解" rel="nofollow">1. next数组的求解</a></li>
+<li><a href="#2最基本kmp算法的实现" rel="nofollow">2.最基本kmp算法的实现</a></li>
+<li><a href="#3计算匹配的次数" rel="nofollow">3.计算匹配的次数</a></li>
+<li><a href="#4next数组的优化-实现更快速的匹配" rel="nofollow">4.next数组的优化, 实现更快速的匹配</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</p>
+
+<h2 id="前言">前言</h2>
+
+<p>kmp算法全名叫做Knuth-Morris-Pratt算法, 是一种字符串匹配算法.</p>
+
+<p>给出两个字符串序列text和pattern.</p>
+
+<p>有以下循序渐进的四个问题</p>
+
+<p><strong>1. 对next数组的理解</strong> <br>
+<strong>2. 判断pattern串是否是text的子串</strong> <br>
+<strong>3.  判断pattern串在text中出现的次数</strong> <br>
+<strong>4.  next数组的优化, 从而实现更加快速的匹配</strong></p>
+
+<h2 id="1-next数组的求解">1. next数组的求解</h2>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-keyword">void</span> getNext(<span class="hljs-built_in">string</span> s)
+{
+    <span class="hljs-keyword">int</span> j = next[<span class="hljs-number">0</span>] = -<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">int</span> len = s.size();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; len; ++i) { <span class="hljs-comment">// 从1开始, 因为只有一个字符的时候无法匹配 </span>
+        <span class="hljs-keyword">while</span> (j != -<span class="hljs-number">1</span> &amp;&amp; s[i] != s[j + <span class="hljs-number">1</span>]) {
+            j = next[j];
+        }
+        <span class="hljs-keyword">if</span> (s[i] == s[j + <span class="hljs-number">1</span>]) j++;
+        next[i] = j;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; len; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; next[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}</code></pre>
+
+
+
+<h2 id="2最基本kmp算法的实现">2.最基本kmp算法的实现</h2>
+
+<pre class="prettyprint"><code class=" hljs mel">#include &lt;iostream&gt;
+using <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-keyword">int</span> next[<span class="hljs-number">1005</span>] = {-<span class="hljs-number">1</span>};
+
+void getNext(<span class="hljs-keyword">string</span> s)
+{
+    <span class="hljs-keyword">int</span> j = -<span class="hljs-number">1</span>, len = s.<span class="hljs-keyword">size</span>();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; len; ++i) {
+        <span class="hljs-keyword">while</span> (j != -<span class="hljs-number">1</span> &amp;&amp; s[i] != s[j + <span class="hljs-number">1</span>]) {
+            j = next[j];
+        }
+        <span class="hljs-keyword">if</span> (s[i] == s[j + <span class="hljs-number">1</span>]) j++;
+        next[j] = j;
+    }
+}
+
+bool kmp(<span class="hljs-keyword">string</span> <span class="hljs-keyword">text</span>, <span class="hljs-keyword">string</span> pattern)
+{
+    <span class="hljs-keyword">int</span> j = -<span class="hljs-number">1</span>, len = <span class="hljs-keyword">text</span>.<span class="hljs-keyword">size</span>(), len_p = pattern.<span class="hljs-keyword">size</span>();
+    getNext(pattern);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; len; ++i) {
+        <span class="hljs-keyword">while</span> (j != -<span class="hljs-number">1</span> &amp;&amp; <span class="hljs-keyword">text</span>[i] != pattern[j + <span class="hljs-number">1</span>]) {
+            j = next[j];
+        }
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">text</span>[i] == pattern[j + <span class="hljs-number">1</span>]) j++;
+        <span class="hljs-keyword">if</span> (j == len_p - <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> true;
+    }
+    <span class="hljs-keyword">return</span> false;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">string</span> pattern, <span class="hljs-keyword">text</span>;
+    cin &gt;&gt; <span class="hljs-keyword">text</span> &gt;&gt; pattern;
+    <span class="hljs-keyword">if</span> (kmp(<span class="hljs-keyword">text</span>, pattern)) {
+        cout &lt;&lt; pattern &lt;&lt; <span class="hljs-string">" 是 "</span> &lt;&lt; <span class="hljs-keyword">text</span> &lt;&lt; <span class="hljs-string">" 的一个子串\n"</span>; 
+    } <span class="hljs-keyword">else</span> cout &lt;&lt; pattern &lt;&lt; <span class="hljs-string">" 不是 "</span> &lt;&lt; <span class="hljs-keyword">text</span> &lt;&lt; <span class="hljs-string">" 的一个子串\n"</span>; 
+}
+<span class="hljs-comment">/*
+iamsorrybutithinkyoushouldthinkaboutyourselftoo
+but
+*/</span></code></pre>
+
+
+
+<h2 id="3计算匹配的次数">3.计算匹配的次数</h2>
+
+<p>只要稍微修改一下匹配到模式串时的程序就可. j 回退到 next[j].</p>
+
+<pre class="prettyprint"><code class=" hljs mel"><span class="hljs-comment">// 记录匹配模式串的次数 </span>
+#include &lt;iostream&gt;
+using <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-keyword">int</span> next[<span class="hljs-number">1005</span>] = {-<span class="hljs-number">1</span>}, ans = <span class="hljs-number">0</span>;
+
+void getNext(<span class="hljs-keyword">string</span> s)
+{
+    <span class="hljs-keyword">int</span> j = -<span class="hljs-number">1</span>, len = s.<span class="hljs-keyword">size</span>();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; len; ++i) {
+        <span class="hljs-keyword">while</span> (j != -<span class="hljs-number">1</span> &amp;&amp; s[i] != s[j + <span class="hljs-number">1</span>]) {
+            j = next[j];
+        }
+        <span class="hljs-keyword">if</span> (s[i] == s[j + <span class="hljs-number">1</span>]) j++;
+        next[j] = j;
+    }
+}
+
+void kmp(<span class="hljs-keyword">string</span> <span class="hljs-keyword">text</span>, <span class="hljs-keyword">string</span> pattern)
+{
+    <span class="hljs-keyword">int</span> j = -<span class="hljs-number">1</span>, len = <span class="hljs-keyword">text</span>.<span class="hljs-keyword">size</span>(), len_p = pattern.<span class="hljs-keyword">size</span>();
+    getNext(pattern);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; len; ++i) {
+        <span class="hljs-keyword">while</span> (j != -<span class="hljs-number">1</span> &amp;&amp; <span class="hljs-keyword">text</span>[i] != pattern[j + <span class="hljs-number">1</span>]) {
+            j = next[j];
+        }
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">text</span>[i] == pattern[j + <span class="hljs-number">1</span>]) j++;
+        <span class="hljs-keyword">if</span> (j == len_p - <span class="hljs-number">1</span>) {
+            ans++;
+            j = next[j];
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">string</span> pattern, <span class="hljs-keyword">text</span>;
+    cin &gt;&gt; <span class="hljs-keyword">text</span> &gt;&gt; pattern;
+    kmp(<span class="hljs-keyword">text</span>, pattern);
+    cout &lt;&lt; <span class="hljs-string">"模式串在文本串中出现了 "</span> &lt;&lt; ans &lt;&lt; <span class="hljs-string">" 次"</span> &lt;&lt; endl;
+}
+<span class="hljs-comment">/*
+iamsorrybutithinkyoushouldthinkaboutyourselftoo
+but
+*/</span></code></pre>
+
+
+
+<h2 id="4next数组的优化-实现更快速的匹配">4.next数组的优化, 实现更快速的匹配</h2>
+
+<pre class="prettyprint"><code class=" hljs cs"><span class="hljs-keyword">void</span> getNextval(<span class="hljs-keyword">string</span> s) <span class="hljs-comment">// 优化</span>
+{
+    <span class="hljs-keyword">int</span> j = -<span class="hljs-number">1</span>, len = s.size();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; len; ++i) {
+        <span class="hljs-keyword">while</span> (j != -<span class="hljs-number">1</span> &amp;&amp; s[i] != s[j + <span class="hljs-number">1</span>]) {
+            j = next[j];
+        }
+        <span class="hljs-keyword">if</span> (s[i] == s[j + <span class="hljs-number">1</span>]) j++;
+        <span class="hljs-keyword">if</span> (j == -<span class="hljs-number">1</span> || s[i] != s[j + <span class="hljs-number">1</span>]) { <span class="hljs-comment">// 之所以用条件而非循环是因为在处理这一步之前所有的都处理过了一次 </span>
+            next[i] = j;
+        } <span class="hljs-keyword">else</span> next[i] = next[j];
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

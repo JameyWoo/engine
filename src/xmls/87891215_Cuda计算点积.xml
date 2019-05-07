@@ -1,0 +1,105 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/87891215				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>调试代码的过程中，发现了这样一个问题</p>
+<pre><code class="prism language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;iostream&gt;</span></span>
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+	<span class="token keyword">int</span> test<span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+	cout <span class="token operator">&lt;&lt;</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>test<span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+	<span class="token keyword">float</span> <span class="token operator">*</span>a<span class="token punctuation">;</span>
+	<span class="token comment">//a = new float [10];</span>
+	cout <span class="token operator">&lt;&lt;</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+	<span class="token keyword">int</span> <span class="token operator">*</span>b<span class="token punctuation">;</span>
+	b <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	cout <span class="token operator">&lt;&lt;</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>本以为直接指定数组大小和先生成指针再指定空间大小的<code>sizeof()</code>会是一样大的，结果不是一样大。</p>
+<p>因为这个错误，在cuda c中调试了很久，最后终于发现是这里错了。</p>
+<hr>
+<p><strong>cuda c， 使用归约法求点积</strong></p>
+<p>有下面几个关键点：</p>
+<p>1、指定block和thread的数量，不宜过少也不宜过多。</p>
+<p>2、使用共享内存，一个线程块中每个线程都可以访问此共享内存</p>
+<p>3、使用归约法，一个线程块中对线程求和的部分复杂度节约到了logn，不过线程数量应该是2的k次方，k为整数。</p>
+<p>4、使用同步线程<code>__syncthreads()</code></p>
+<hr>
+<p>cuda c求一维数组点积源代码</p>
+<pre><code class="prism language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;iostream&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">define</span> imin(a, b) (a&lt;b?a:b)</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> sum_squares(x) (x*(x+1)*(2*x+1)/6) </span><span class="token comment">// 平方和</span>
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> <span class="token keyword">int</span> N <span class="token operator">=</span> <span class="token number">33</span> <span class="token operator">*</span> <span class="token number">1024</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token keyword">int</span> threadsPerBlocks <span class="token operator">=</span> <span class="token number">256</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token keyword">int</span> blocksPerGrid <span class="token operator">=</span> <span class="token function">imin</span><span class="token punctuation">(</span><span class="token number">32</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>N <span class="token operator">+</span> threadsPerBlocks <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">/</span> threadsPerBlocks<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 向上取整获取线程块的数量</span>
+
+__global__ <span class="token keyword">void</span> <span class="token function">dot</span><span class="token punctuation">(</span><span class="token keyword">float</span> <span class="token operator">*</span>a<span class="token punctuation">,</span> <span class="token keyword">float</span> <span class="token operator">*</span>b<span class="token punctuation">,</span> <span class="token keyword">float</span> <span class="token operator">*</span>c<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// 计算两个一维数组的点积</span>
+	<span class="token keyword">int</span> tid <span class="token operator">=</span> threadIdx<span class="token punctuation">.</span>x <span class="token operator">+</span> blockIdx<span class="token punctuation">.</span>x <span class="token operator">*</span> blockDim<span class="token punctuation">.</span>x<span class="token punctuation">;</span>
+	__shared__ <span class="token keyword">float</span> cache<span class="token punctuation">[</span>threadsPerBlocks<span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// 共享意味着在一个线程块里线程都可以访问这个数组</span>
+	<span class="token keyword">int</span> cacheIndex <span class="token operator">=</span> threadIdx<span class="token punctuation">.</span>x<span class="token punctuation">;</span>
+	<span class="token keyword">float</span> temp <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+	<span class="token keyword">while</span> <span class="token punctuation">(</span>tid <span class="token operator">&lt;</span> N<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		temp <span class="token operator">+</span><span class="token operator">=</span> a<span class="token punctuation">[</span>tid<span class="token punctuation">]</span> <span class="token operator">*</span> b<span class="token punctuation">[</span>tid<span class="token punctuation">]</span><span class="token punctuation">;</span>
+		tid <span class="token operator">+</span><span class="token operator">=</span> gridDim<span class="token punctuation">.</span>x <span class="token operator">*</span> blockDim<span class="token punctuation">.</span>x<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+	cache<span class="token punctuation">[</span>cacheIndex<span class="token punctuation">]</span> <span class="token operator">=</span> temp<span class="token punctuation">;</span> <span class="token comment">// 将所有的乘法结果聚集到一个grid（网格）里面</span>
+	<span class="token function">__syncthreads</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 直到上面的所有语句在所有线程里都执行结束才可以进行下面的语句，即为同步</span>
+
+	<span class="token keyword">int</span> i <span class="token operator">=</span> threadsPerBlocks <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span>
+	<span class="token keyword">while</span> <span class="token punctuation">(</span>i <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// 归约法，logn</span>
+		<span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">&gt;</span> cacheIndex<span class="token punctuation">)</span>
+			cache<span class="token punctuation">[</span>cacheIndex<span class="token punctuation">]</span> <span class="token operator">+</span><span class="token operator">=</span> cache<span class="token punctuation">[</span>cacheIndex <span class="token operator">+</span> i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+		<span class="token function">__syncthreads</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		i <span class="token operator">/</span><span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span>cacheIndex <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+		c<span class="token punctuation">[</span>blockIdx<span class="token punctuation">.</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> cache<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">float</span> <span class="token operator">*</span>a<span class="token punctuation">,</span> <span class="token operator">*</span>b<span class="token punctuation">,</span> <span class="token operator">*</span>partial_c<span class="token punctuation">,</span> c<span class="token punctuation">;</span>
+	<span class="token keyword">float</span> <span class="token operator">*</span>dev_a<span class="token punctuation">,</span> <span class="token operator">*</span>dev_b<span class="token punctuation">,</span> <span class="token operator">*</span>dev_partial_c<span class="token punctuation">;</span>
+	a <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">float</span><span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">;</span>
+	b <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">float</span><span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">;</span>
+	partial_c <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">float</span><span class="token punctuation">[</span>blocksPerGrid<span class="token punctuation">]</span><span class="token punctuation">;</span>
+	<span class="token function">cudaMalloc</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token operator">*</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>dev_a<span class="token punctuation">,</span> N <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">cudaMalloc</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token operator">*</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>dev_b<span class="token punctuation">,</span> N <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">cudaMalloc</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token operator">*</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>dev_partial_c<span class="token punctuation">,</span> blocksPerGrid <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	
+	<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> N<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> i<span class="token punctuation">;</span>
+		b<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> i<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+
+	<span class="token function">cudaMemcpy</span><span class="token punctuation">(</span>dev_a<span class="token punctuation">,</span> a<span class="token punctuation">,</span> N <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">,</span> cudaMemcpyHostToDevice<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token function">cudaMemcpy</span><span class="token punctuation">(</span>dev_b<span class="token punctuation">,</span> b<span class="token punctuation">,</span> N <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">,</span> cudaMemcpyHostToDevice<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	dot <span class="token operator">&lt;&lt;</span> <span class="token operator">&lt;</span>blocksPerGrid<span class="token punctuation">,</span> threadsPerBlocks <span class="token operator">&gt;&gt;</span> <span class="token operator">&gt;</span> <span class="token punctuation">(</span>dev_a<span class="token punctuation">,</span> dev_b<span class="token punctuation">,</span> dev_partial_c<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	
+	<span class="token function">cudaMemcpy</span><span class="token punctuation">(</span>partial_c<span class="token punctuation">,</span> dev_partial_c<span class="token punctuation">,</span> blocksPerGrid <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">,</span> cudaMemcpyDeviceToHost<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	c <span class="token operator">=</span> <span class="token number">0.0</span><span class="token punctuation">;</span>
+	<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> blocksPerGrid<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		c <span class="token operator">+</span><span class="token operator">=</span> partial_c<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+
+	cout <span class="token operator">&lt;&lt;</span> c <span class="token operator">&lt;&lt;</span> <span class="token string">"  =?  "</span> <span class="token operator">&lt;&lt;</span> <span class="token number">2</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token function">sum_squares</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">(</span>N <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

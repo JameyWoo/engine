@@ -1,0 +1,195 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79843339				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>生成真值表的代码</p>
+
+<p>输入一个真值表达式, 程序自动生成它的真值表.</p>
+
+<p>纯模拟思路</p>
+
+<blockquote>
+  <p>合取*  <br>
+  析取| <br>
+  单条件&gt;  <br>
+  双条件-  <br>
+  非!</p>
+</blockquote>
+
+
+
+<pre class="prettyprint"><code class=" hljs axapta"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;string&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cmath&gt;</span>
+using namespace std;
+<span class="hljs-keyword">int</span> cnt = <span class="hljs-number">0</span>, chval[<span class="hljs-number">26</span>] = {};
+
+<span class="hljs-keyword">void</span> getAlpha(string <span class="hljs-keyword">str</span>, <span class="hljs-keyword">char</span> *chs, <span class="hljs-keyword">int</span> &amp;cnt)  <span class="hljs-comment">//获取真值表中的字符 </span>
+{
+    <span class="hljs-keyword">int</span> ch[<span class="hljs-number">26</span>] = {};
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; (<span class="hljs-keyword">int</span>)<span class="hljs-keyword">str</span>.length(); ++i) {
+        <span class="hljs-keyword">if</span>(isalpha(<span class="hljs-keyword">str</span>[i])) ch[<span class="hljs-keyword">str</span>[i] - <span class="hljs-string">'a'</span>] ++;
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">26</span>; ++i) {
+        <span class="hljs-keyword">if</span>(ch[i]) {
+            chs[cnt++] = i+<span class="hljs-number">97</span>;
+        }
+    }
+}
+
+string shuzhitihuan(string <span class="hljs-keyword">str</span>, <span class="hljs-keyword">int</span> chval[<span class="hljs-number">26</span>])
+{
+    string st = <span class="hljs-string">""</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">str</span>.size(); ++i) {
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">str</span>[i] &lt;= <span class="hljs-string">'z'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i] &gt;= <span class="hljs-string">'a'</span>) {
+            st += chval[<span class="hljs-keyword">str</span>[i] - <span class="hljs-string">'a'</span>] ? <span class="hljs-string">"1"</span>:<span class="hljs-string">"0"</span>;
+        } <span class="hljs-keyword">else</span> st += <span class="hljs-keyword">str</span>[i];
+    }
+    <span class="hljs-keyword">return</span> st;
+}
+
+<span class="hljs-keyword">void</span> qvkuohao(string &amp; <span class="hljs-keyword">str</span>)  <span class="hljs-comment">//需要去除两种括号()(1)(0)</span>
+{
+    string st = <span class="hljs-string">""</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">str</span>.size(); ++i) {
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'('</span> &amp;&amp; i+<span class="hljs-number">2</span> &lt; <span class="hljs-keyword">str</span>.size() &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">')'</span>) {
+            st += <span class="hljs-keyword">str</span>[i+<span class="hljs-number">1</span>];
+            i += <span class="hljs-number">2</span>;
+        } <span class="hljs-keyword">else</span> st += <span class="hljs-keyword">str</span>[i];
+    }
+    <span class="hljs-keyword">str</span> = st;
+}
+
+<span class="hljs-keyword">void</span> qvfei(string &amp;<span class="hljs-keyword">str</span>) 
+{
+    string st = <span class="hljs-string">""</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">str</span>.size(); ++i) {
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'!'</span> &amp;&amp; i+<span class="hljs-number">1</span> &lt; <span class="hljs-keyword">str</span>.size() &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">1</span>] == <span class="hljs-string">'0'</span>) {
+            st += <span class="hljs-string">'1'</span>;
+            i++;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'!'</span> &amp;&amp; i + <span class="hljs-number">1</span> &lt; <span class="hljs-keyword">str</span>.size() &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">1</span>] == <span class="hljs-string">'1'</span>) {
+            st += <span class="hljs-string">'0'</span>;
+            i++;
+        } <span class="hljs-keyword">else</span> st += <span class="hljs-keyword">str</span>[i];
+    }
+    <span class="hljs-keyword">str</span> = st;
+} 
+
+<span class="hljs-keyword">void</span> qvheqv(string &amp;<span class="hljs-keyword">str</span>)
+{
+    string st = <span class="hljs-string">""</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">str</span>.size(); ++i) {
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'1'</span> &amp;&amp; i+<span class="hljs-number">2</span> &lt; <span class="hljs-keyword">str</span>.size() &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'1'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">1</span>] == <span class="hljs-string">'*'</span>) {
+            st += <span class="hljs-string">'1'</span>;
+            i += <span class="hljs-number">2</span>;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(i+<span class="hljs-number">2</span> &lt; <span class="hljs-keyword">str</span>.size() &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">1</span>] == <span class="hljs-string">'*'</span> &amp;&amp; ((<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'1'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'0'</span>)
+        || (<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'0'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'1'</span>) || (<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'0'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'0'</span>))) {
+            st += <span class="hljs-string">'0'</span>;
+            i += <span class="hljs-number">2</span>;
+        } <span class="hljs-keyword">else</span> st += <span class="hljs-keyword">str</span>[i];
+    }
+    <span class="hljs-keyword">str</span> = st;
+}
+
+<span class="hljs-keyword">void</span> qvxiqv(string &amp; <span class="hljs-keyword">str</span>)
+{
+    string st = <span class="hljs-string">""</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">str</span>.size(); ++i) {
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'0'</span> &amp;&amp; i+<span class="hljs-number">2</span> &lt; <span class="hljs-keyword">str</span>.size() &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'0'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">1</span>] == <span class="hljs-string">'|'</span>) {
+            st += <span class="hljs-string">'0'</span>;
+            i += <span class="hljs-number">2</span>;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (i+<span class="hljs-number">2</span> &lt; <span class="hljs-keyword">str</span>.size() &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">1</span>] == <span class="hljs-string">'|'</span> &amp;&amp; ((<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'1'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'0'</span>)
+        || (<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'0'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'1'</span>) || (<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'1'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'1'</span>))) {
+            st += <span class="hljs-string">'1'</span>;
+            i += <span class="hljs-number">2</span>;
+        } <span class="hljs-keyword">else</span> st += <span class="hljs-keyword">str</span>[i];
+    }
+    <span class="hljs-keyword">str</span> = st;
+}
+
+<span class="hljs-keyword">void</span> qvdantiaojian(string &amp;<span class="hljs-keyword">str</span>)
+{
+    string st = <span class="hljs-string">""</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">str</span>.size(); ++i) {
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">str</span>[i + <span class="hljs-number">1</span>] == <span class="hljs-string">'&gt;'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'1'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'0'</span>) {
+            st += <span class="hljs-string">'0'</span>;
+            i += <span class="hljs-number">2</span>;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(<span class="hljs-keyword">str</span>[i+<span class="hljs-number">1</span>] == <span class="hljs-string">'&gt;'</span> &amp;&amp; ((<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'1'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'1'</span>)
+        || <span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'0'</span> &amp;&amp;(<span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'1'</span> || <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'0'</span>))) {
+            st += <span class="hljs-string">'1'</span>;
+            i += <span class="hljs-number">2</span>;
+        } <span class="hljs-keyword">else</span> st += <span class="hljs-keyword">str</span>[i];
+    }
+    <span class="hljs-keyword">str</span> = st;
+}
+
+<span class="hljs-keyword">void</span> qvshuangtiaojian(string &amp;<span class="hljs-keyword">str</span>)
+{
+    string st = <span class="hljs-string">""</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">str</span>.size(); ++i) {
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">str</span>[i+<span class="hljs-number">1</span>] == <span class="hljs-string">'-'</span> &amp;&amp; ((<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'1'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'1'</span>) || (<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'0'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'0'</span>))) {
+            st += <span class="hljs-string">'1'</span>;
+            i += <span class="hljs-number">2</span>;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(<span class="hljs-keyword">str</span>[i+<span class="hljs-number">1</span>] == <span class="hljs-string">'-'</span> &amp;&amp; ((<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'1'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'0'</span>) || (<span class="hljs-keyword">str</span>[i] == <span class="hljs-string">'0'</span> &amp;&amp; <span class="hljs-keyword">str</span>[i+<span class="hljs-number">2</span>] == <span class="hljs-string">'1'</span>))) {
+            st += <span class="hljs-string">'0'</span>;
+            i += <span class="hljs-number">2</span>;
+        } <span class="hljs-keyword">else</span> st += <span class="hljs-keyword">str</span>[i]; 
+    }
+    <span class="hljs-keyword">str</span> = st;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    string <span class="hljs-keyword">str</span>, tmp;
+    <span class="hljs-keyword">char</span> chs[<span class="hljs-number">12</span>];
+    cin &gt;&gt; <span class="hljs-keyword">str</span>;
+    getAlpha(<span class="hljs-keyword">str</span>, chs, cnt);  <span class="hljs-comment">//只讨论小写字母</span>
+    tmp = <span class="hljs-keyword">str</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; cnt; ++j) {
+        cout &lt;&lt; chs[j] &lt;&lt; <span class="hljs-string">"  "</span>;
+    } 
+    cout &lt;&lt; tmp;
+    cout &lt;&lt; endl;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; pow(<span class="hljs-number">2</span>, cnt); ++i) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; cnt; ++j) { <span class="hljs-comment">//赋值过程 </span>
+            chval[chs[j] - <span class="hljs-string">'a'</span>] = (<span class="hljs-number">1</span> &amp; (i&gt;&gt;(cnt-<span class="hljs-number">1</span>-j)));
+        }   cout &lt;&lt; endl;
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; cnt; ++j) {
+            cout &lt;&lt; chval[chs[j] - <span class="hljs-string">'a'</span>] &lt;&lt; <span class="hljs-string">"  "</span>;
+        }
+        <span class="hljs-keyword">str</span> = shuzhitihuan(<span class="hljs-keyword">str</span>, chval);
+        <span class="hljs-keyword">while</span>(<span class="hljs-keyword">str</span>.size() != <span class="hljs-number">1</span>) {
+            qvkuohao(<span class="hljs-keyword">str</span>);
+            qvfei(<span class="hljs-keyword">str</span>);
+            qvheqv(<span class="hljs-keyword">str</span>);
+            qvxiqv(<span class="hljs-keyword">str</span>);
+            qvdantiaojian(<span class="hljs-keyword">str</span>);
+            qvshuangtiaojian(<span class="hljs-keyword">str</span>); 
+        }
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; tmp.size() / <span class="hljs-number">2</span>; ++i) cout &lt;&lt; <span class="hljs-string">' '</span>;
+        cout &lt;&lt;  <span class="hljs-keyword">str</span> &lt;&lt; endl;
+        <span class="hljs-keyword">str</span> = tmp;
+    }
+}
+
+<span class="hljs-comment">/*
+((p*q)*r) 
+(p*q)|(!p*!q)
+(!p|q)*(!q|p) 
+(p&gt;q)*(q&gt;p)
+!(p*q)&gt;(!p*!q)
+p-q 
+(!p|r)*(r&gt;q)|p*q
+p*q|r*b
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

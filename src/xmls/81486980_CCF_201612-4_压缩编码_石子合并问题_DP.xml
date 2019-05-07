@@ -1,0 +1,121 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81486980				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>201612-4 压缩编码 <a href="http://118.190.20.162/view.page?gpid=T49" rel="nofollow">传送门</a></p>
+<p>想了很久, 还是没有独立做出来.</p>
+<p>虽然从问题中抽象出来了是一个什么样的问题.</p>
+<dl>
+<dt>下面是自己想的思路</dt>
+<dd>如果这棵树一定要保持叶子节点字典序递增的话,前序遍历的顺序就是字典序.<br>
+那么一个结点(按顺序输入的),只能和相邻的结点合并.<br>
+合并n - 1次之后, 结果就是一棵维持字典序递增的树的长度.<br>
+但是这种合并有很多种情况,答案就是所有情况里面结果最小的.</dd>
+</dl>
+<p>但是怎么用多项式级别的算法我没有想出来, 用的暴力解法也只得了10分.</p>
+<p>搜索以下, <strong>原来这是相邻石子合并问题.</strong> 我抽象出来的问题是对的.</p>
+<p>我最开始以为的石子合并问题是<strong>任意选择两个堆</strong>, 而不是<strong>只能与相邻的堆合并</strong>. 事实上, 他们都是石子合并问题, 不过后面的是前面的进阶版. 还有一个更复杂的石子合并问题是这些<strong>石子堆是环形的</strong>, 那就更复杂了.</p>
+<p><strong>第一种情况就是基本算是哈夫曼编码的简化版, 是贪心算法.</strong></p>
+<p><strong>第二种情况贪心是行不通的, 而要用DP.</strong></p>
+<p>大事化小, 小事化了.</p>
+<p><strong>要求<code>1...n</code>这个线性堆, 只要求出以其中某个点为根节点的最优子树组合的最佳情况. 这样, <code>1...n</code>这个问题就编程<code>1...k</code> 和<code>k+1...n</code>这个子问题.</strong></p>
+<p>我们先求出1个堆组合的最佳情况, 然后据此推出两个堆组合, 然后通过两个堆推出三个堆的, 以此类推, 知道n个堆.</p>
+<p>给出状态转移方程</p>
+<p><img src="https://img-blog.csdn.net/20180807191934786?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p><strong>因为要先知道数量更小的堆的最优解, 所以最外层遍历是堆的数量. 由三重循环.</strong></p>
+<p><strong>话说, CCF第四题, 用20+行的代码就可以拿100分, 这样真的好吗?</strong></p>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;cstring&gt;
+using namespace std;
+
+const int maxn = 1005;
+int dp[maxn][maxn] = {};
+int sum[maxn] = {}, num[maxn];
+
+int main()
+{
+	memset(dp, 0x3f, sizeof(dp));
+	int n;
+	cin &gt;&gt; n;
+	for (int i = 1; i &lt;= n; ++i) {
+		cin &gt;&gt; num[i];
+		sum[i] = num[i] + sum[i - 1];
+		dp[i][i] = 0;
+	}
+	for (int k = 1; k &lt; n; ++k) {
+		for (int i = 1, j; i + k &lt;= n; ++i) {
+			int su = sum[j = i + k] - sum[i - 1];
+			for (int u = i; u &lt; j; ++u) 
+				dp[i][j] = min(dp[i][j], dp[i][u] + dp[u+1][j] + su);
+		}
+	}
+	cout &lt;&lt; dp[1][n];
+}
+</code></pre>
+<p>忍不住压了压行, 虽然有些不择手段, 但是还是蛮有层次的哦, 逻辑也清晰, 只有11行</p>
+<pre><code>#include &lt;iostream&gt;
+int dp[1005][1005] = {}, sum[1005] = {}, num[1005], n = 0;
+int main() {
+	for (int i = 0; i &lt;= n; ++i)
+		i == 0 ? std::cin &gt;&gt; n : std::cin &gt;&gt; num[i], sum[i] = num[i] + sum[i - 1];
+	for (int k = 1; k &lt; n; ++k)
+		for (int i = 1, j, su; i + k &lt;= n; ++i)
+			for (int u = i, su = sum[j = i + k] - sum[i - 1]; u &lt; j; ++u)
+				dp[i][j] = dp[i][j] == 0 ? dp[i][u] + dp[u+1][j] + su : std::min(dp[i][j], dp[i][u] + dp[u+1][j] + su);
+	std::cout &lt;&lt; dp[1][n];
+}
+</code></pre>
+<hr>
+<p>递归版本</p>
+<pre><code class="prism language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;iostream&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;cstring&gt;</span></span>
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token keyword">int</span> N <span class="token operator">=</span> <span class="token number">105</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> data<span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> dp<span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> sum<span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">get_sum</span><span class="token punctuation">(</span><span class="token keyword">int</span> l<span class="token punctuation">,</span> <span class="token keyword">int</span> r<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">return</span> sum<span class="token punctuation">[</span>r<span class="token punctuation">]</span> <span class="token operator">-</span> sum<span class="token punctuation">[</span>l<span class="token punctuation">]</span> <span class="token operator">+</span> data<span class="token punctuation">[</span>l<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">int</span> <span class="token function">solve</span><span class="token punctuation">(</span><span class="token keyword">int</span> l<span class="token punctuation">,</span> <span class="token keyword">int</span> r<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span>dp<span class="token punctuation">[</span>l<span class="token punctuation">]</span><span class="token punctuation">[</span>r<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">return</span> dp<span class="token punctuation">[</span>l<span class="token punctuation">]</span><span class="token punctuation">[</span>r<span class="token punctuation">]</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> tmp_ans <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> Ans <span class="token operator">=</span> <span class="token number">0x7fffffff</span><span class="token punctuation">;</span>
+	<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> l<span class="token punctuation">;</span> i <span class="token operator">&lt;</span> r<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		tmp_ans <span class="token operator">=</span> <span class="token function">solve</span><span class="token punctuation">(</span>l<span class="token punctuation">,</span> i<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token function">solve</span><span class="token punctuation">(</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> r<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token function">get_sum</span><span class="token punctuation">(</span>l<span class="token punctuation">,</span> r<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		Ans <span class="token operator">=</span> <span class="token function">min</span><span class="token punctuation">(</span>Ans<span class="token punctuation">,</span> tmp_ans<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">return</span> Ans<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+	<span class="token function">memset</span><span class="token punctuation">(</span>dp<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>dp<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> n<span class="token punctuation">;</span>
+	cin <span class="token operator">&gt;&gt;</span> n<span class="token punctuation">;</span>
+	<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		cin <span class="token operator">&gt;&gt;</span> data<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+		dp<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+		<span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+			sum<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> sum<span class="token punctuation">[</span>i <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">+</span> data<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+		<span class="token punctuation">}</span> <span class="token keyword">else</span> sum<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> data<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">int</span> ans <span class="token operator">=</span> <span class="token function">solve</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	cout <span class="token operator">&lt;&lt;</span> <span class="token string">"ans = "</span> <span class="token operator">&lt;&lt;</span> ans <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,72 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/89392634				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h2><a id="_0"></a>汇编简单验证过程</h2>
+<pre><code>.section .text
+.global _start
+_start:
+	movl $0x50f498cd, %eax
+	movl $0x0fcbd60b, %edx
+	movzbl %dh, %eax
+	
+	movl $1, %eax
+	movl $0, %ebx
+	int $0x80
+</code></pre>
+<p>然后使用命令<br>
+<code>gcc -g -c test2.s -o test2.o</code> 编译<br>
+使用命令<br>
+<code>ld test2.o -o test2</code> 链接<br>
+然后就可以调试了<br>
+<code>gdb test2</code><br>
+使用<br>
+<code>info reg</code> 输出寄存器的值。</p>
+<h2><a id="_22"></a>汇编</h2>
+<p>1、movb、movw、movl 的操作数固定，不能有不同</p>
+<p>2、MOVS做符号扩展，低位传到高位，有三种情况<br>
+movsbw、movsbl、movswl</p>
+<p>3、MOVZ做零扩展，低位传到高位，有三种情况<br>
+movzbw、movzbl、movzwl</p>
+<p>有一些容易混淆的情况<br>
+<code>mov (%eax), %dx</code></p>
+<p>push、pop只有pushl、popl</p>
+<p><code>movb $0xF, (%bl)</code> 错误，%bl是8位，不能用来做地址</p>
+<p><code>movw (%eax), 4(%esp)</code> 后缀啊什么的看着没毛病，但是不能同时出现两个存储器引用</p>
+<hr>
+<p>既然mov没有从高位转向低位的操作，那么又是如何进行强制类型转换的呢？</p>
+<p>我写了一个小程序来测试一下<br>
+c代码</p>
+<pre><code class="prism language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span></span>
+
+<span class="token keyword">char</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">97</span><span class="token punctuation">;</span>
+	<span class="token keyword">char</span> b<span class="token punctuation">;</span>
+	b <span class="token operator">=</span> a<span class="token punctuation">;</span>
+	<span class="token keyword">return</span> b<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+	<span class="token keyword">int</span> c <span class="token operator">=</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>得到的汇编源码是这样的：<br>
+<img src="https://img-blog.csdnimg.cn/20190419092809510.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+从这一步看<br>
+<img src="https://img-blog.csdnimg.cn/20190419092926383.png" alt="在这里插入图片描述"><br>
+可见a存到b时，数值全部mov到中间寄存器，然后在截取低8位到栈上，由此完成了强制类型转换。</p>
+<p>函数返回时，要把值存到%eax中，那么就做零扩展，存到寄存器中。</p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

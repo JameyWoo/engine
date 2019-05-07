@@ -1,0 +1,45 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/88073877				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><a href="http://man.linuxde.net/" rel="nofollow">一个查询Linux命令比较方便的网址http://man.linuxde.net/</a></p>
+<hr>
+<p>1、在ubuntu 12.04系统中，使用Ctrl+Alt+F1~6切换到shell，使用Ctrl+Alt+F7切换到图形界面</p>
+<p>2、使用touch新建一个文件</p>
+<p>3、在命令前使用sudo获取root权限</p>
+<p>4、使用nano进入nano编辑器，比用vi进入的vim编辑器使用更简便</p>
+<p>5、安装g++使用 sudo apt-get install g++</p>
+<p>6、查看gcc位置使用 which gcc</p>
+<p>7、使用rm删除文件</p>
+<p>8、使用mv移动文件，也可以移动目录</p>
+<p>9、g++编译文件时，-o参数给文件命名， g++ test.cpp -o program_name</p>
+<p>10、ls列出当前目录下的文件列表</p>
+<p>11、pwd输出当前工作区目录</p>
+<p>12、cd转到某一指定目录</p>
+<p>13、mkdir新建目录（文件夹）</p>
+<p>14、rmdir删除目录</p>
+<p>15、cp复制文件</p>
+<p>16、cat在终端上显示文本信息</p>
+<p>17、grep文本搜索工具</p>
+<p>18、tar文件压缩命令</p>
+<p>19、在终端，可以使用shift + PgUp/PgDn 进行翻页</p>
+<p>20、在终端，可以将输出的文本重定向到某一文件如see.txt，然后使用cat（或其他）查看，然后使用cat see.txt | more，或者cat see.txt | less. 一页一页查看</p>
+<p>21、exit，终止当前的终端会话</p>
+<p>22、who显示目前登录系统的用户信息</p>
+<p>23、ping测试网络</p>
+<p>24、ctrl + q 退出程序</p>
+<p>25、axel与aria2c据说比wget更快的多线程下载。</p>
+<p>26、<code>sudo dpkg -i 软件包名.deb</code> 安装deb文件</p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

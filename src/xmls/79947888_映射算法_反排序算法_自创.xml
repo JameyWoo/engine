@@ -1,0 +1,292 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79947888				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><strong>—————————2018-04-17更新————————</strong></p>
+
+
+
+<h4 id="最下面有更新">最下面有更新</h4>
+
+<p><strong>—————————以下原博客————————</strong></p>
+
+<p>今天做2018年3月份ccf认证第二题的时候, 有个过程是关于对位映射的问题. </p>
+
+<p>怎样的呢?</p>
+
+<p>比如这样两个序列:</p>
+
+<blockquote>
+  <p>14 7 8 <br>
+  5 57 32</p>
+</blockquote>
+
+<p>把他们排序之后分别是</p>
+
+<blockquote>
+  <p>7 8 14 <br>
+  5 32 57</p>
+</blockquote>
+
+<p>那么</p>
+
+<blockquote>
+  <p>14 映射 57 <br>
+  7 映射 5 <br>
+  8 映射 32</p>
+</blockquote>
+
+<p>目的是输出序列</p>
+
+<blockquote>
+  <p>57 5 32</p>
+</blockquote>
+
+<p><strong>怎么做呢? </strong></p>
+
+<p><strong>用最暴力的方法, 先备份第一个序列, 然后分别对两个序列排序, 然后 遍历之前备份的第一个序列的每一个元素, 对已排序的第一序列进行查找比较, 如果和备份元素相同, 则输出同下标的第二个序列元素, 由此可以得到备份序列.</strong></p>
+
+<p>这种方法实现起来简单, 也非常容易理解, 但是, <strong>时间复杂度为O(nlogn + n^2)</strong>, nlogn排序, n^2映射. 等价于n^2, 消耗的资源过大.</p>
+
+<p>以下代码</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">7</span>;
+
+<span class="hljs-keyword">void</span> Function(<span class="hljs-keyword">int</span> *a, <span class="hljs-keyword">int</span>*b)
+{
+    <span class="hljs-keyword">int</span> c[maxn]; <span class="hljs-comment">//备份 </span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i) {
+        c[i] = a[i]; 
+    }
+    sort(a, a + maxn);
+    sort(b, b + maxn);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; maxn; ++j) {
+            <span class="hljs-keyword">if</span>(c[i] == a[j]) <span class="hljs-built_in">cout</span> &lt;&lt; b[j] &lt;&lt; <span class="hljs-string">' '</span>;
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> a[maxn] = {<span class="hljs-number">4</span>, <span class="hljs-number">34</span>, <span class="hljs-number">7</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">23</span>, -<span class="hljs-number">3</span>};  <span class="hljs-comment">//无重复 </span>
+    <span class="hljs-keyword">int</span> b[maxn] = {<span class="hljs-number">334</span>, <span class="hljs-number">4</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">34</span>, -<span class="hljs-number">45</span>, <span class="hljs-number">456</span>, <span class="hljs-number">71</span>};
+
+    <span class="hljs-comment">//想得到一个34, 456, 71, 4, -1, 334, -45序列</span>
+    Function(a, b); 
+}</code></pre>
+
+<p>我经过仔细思考研究之后, <strong>找到一种在第一个序列全为整数, 或某些适合情况的小数, 总之范围不是非常大的算法.</strong> 特点和桶排序很相似.</p>
+
+<p>我从未见过关于这个问题的算法, 所以大言不惭地认为这个算法是我自创的. 也许将来会见到有人用这个方法, 但至少现在是我自己完全独立想出来的, 没有借鉴别人的.</p>
+
+<p><strong>思路比较复杂, 大致是找到数和排序的下标之间的关系, 得到一种映射, 这种映射的存储是离散化的, 就像桶排序的存储, 用数组可能会浪费大量空间. </strong></p>
+
+<p><strong>哦! 突然想到了一种空间上的方法. 把这两个序列的元素都当时字符串处理, 然后用树存储, 似乎可以节省不少空间. </strong></p>
+
+<p><strong>…</strong> <br>
+为什么我写着写着, 感觉STL里面map就是这样用这种类似的思路实现的啊, 有点方…</p>
+
+<p>我觉得看代码可能更好理解, <strong>里面有一点玄玄的东西.</strong></p>
+
+<p><strong>注意: 这个思路对数据要求可能比较高</strong></p>
+
+<p><strong>时间复杂度是O(nlongn + n), nlogn排序, n映射.</strong> 等价于nlogn</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">7</span>, MAX = <span class="hljs-number">1000</span>;
+<span class="hljs-keyword">int</span> a[maxn] = {<span class="hljs-number">4</span>, <span class="hljs-number">34</span>, <span class="hljs-number">7</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">23</span>, -<span class="hljs-number">3</span>};  <span class="hljs-comment">//无重复 </span>
+<span class="hljs-keyword">int</span> b[maxn] = {<span class="hljs-number">334</span>, <span class="hljs-number">4</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">34</span>, -<span class="hljs-number">45</span>, <span class="hljs-number">456</span>, <span class="hljs-number">71</span>};
+
+<span class="hljs-keyword">bool</span> cmp_a(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)
+{
+    <span class="hljs-keyword">return</span> a[x] &lt; a[y];
+}
+
+<span class="hljs-keyword">bool</span> cmp_b(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)
+{
+    <span class="hljs-keyword">return</span> b[x] &lt; b[y];
+}
+
+<span class="hljs-keyword">void</span> Function(<span class="hljs-keyword">int</span> *a, <span class="hljs-keyword">int</span> *b, <span class="hljs-keyword">int</span> *a_a, <span class="hljs-keyword">int</span> *b_b)
+{
+    <span class="hljs-keyword">int</span> a_map[MAX] = {};
+    sort(a_a, a_a + maxn, cmp_a);
+    sort(b_b, b_b + maxn, cmp_b);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i) {
+        a_map[a[a_a[i]]] = i;
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; b[b_b[a_map[a[i]]]] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> a_a[maxn], b_b[maxn];
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i) {
+        a_a[b_b[i] = i] = i;
+    }
+
+    <span class="hljs-comment">//想得到一个34, 456, 71, 4, -1, 334, -45序列</span>
+    Function(a, b, a_a, b_b); 
+}</code></pre>
+
+<p><strong>见笑</strong></p>
+
+<p><strong>大佬轻喷</strong> <strong>orz</strong></p>
+
+<p><strong>—————————以下2018-04-17更新————————</strong></p>
+
+<p><strong>再研究了以下, 发现这种思路有更好理解,  更加简单的实现方法.</strong></p>
+
+<p>用这种思路解决问题的本质是什么呢?</p>
+
+<p>就是获取a序列中每一个元素的的排名, 然后再b序列中找相同排名的数输出即可. 得到了一个排名, 找b序列中的相同排名元素非常简单, 只要给b排个序, 然后输出排名对应的角标元素即可. <strong>现在的问题就是, 如何找到每个元素(按原序列顺序)的排名?</strong></p>
+
+<p>我想到了两种方法, 我觉得每一种都很有启迪.</p>
+
+
+
+<h4 id="第一种">第一种</h4>
+
+<p><strong>要对a序列排序而不改变a的原有序列, 那么最好的方法就是给a的下标数组aa排序, a[aa[0…n-1]即为a排序后的序列, 而aa数组的值, 是一个[0, n)范围的值, 它们分别对应下标. 事实上, 它们也是有”大小”的. 它们的大小对应着原序列a的位置, 也就是说, 再对aa这个数组按照它的值排序, 就可以得到原来的序列. </strong></p>
+
+<p>从而又可以解决一类问题: <strong>给序列排序后还原序列, 获取原序列每一个元素的排名</strong>, 或者说叫做<strong>反排序</strong></p>
+
+<p>注意: 常规的排序是获取<strong>当前排名的数</strong>, 而此算法解决的问题是, 获取<strong>元素的排名</strong></p>
+
+<p>本博客的这个问题正是使用了这种方法的特性, <strong>两次下标排序</strong>, 得到了这两种序列的性质. </p>
+
+<p>那么, 之前的问题就迎刃而解了. <strong>思路比此前的思路更清晰, 也更简单简洁</strong></p>
+
+<p><strong>时间复杂度还是O(nlogn), 不过实现起来简单多了. 也没有了此前介绍的类似桶排序存储对数据类型有要求的限制, 进步还是非常大的</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> a[<span class="hljs-number">5</span>] = {<span class="hljs-number">12</span>, <span class="hljs-number">34</span>, <span class="hljs-number">4</span>, <span class="hljs-number">33</span>, <span class="hljs-number">7</span>};
+<span class="hljs-keyword">int</span> b[<span class="hljs-number">5</span>] = {<span class="hljs-number">3</span>, <span class="hljs-number">44</span>, <span class="hljs-number">90</span>, <span class="hljs-number">4</span>, <span class="hljs-number">38</span>};
+<span class="hljs-keyword">int</span> a_a[<span class="hljs-number">5</span>], aa[<span class="hljs-number">5</span>];
+
+<span class="hljs-keyword">bool</span> cmp(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)
+{
+    <span class="hljs-keyword">return</span> a[x] &lt; a[y];
+}
+
+<span class="hljs-keyword">bool</span> cmp_2(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)
+{
+    <span class="hljs-keyword">return</span> aa[x] &lt; aa[y];
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; ++i) {
+        a_a[aa[i] = i] = i;
+    }
+    sort(aa, aa + <span class="hljs-number">5</span>, cmp);
+    sort(b, b + <span class="hljs-number">5</span>);
+    sort(a_a, a_a + <span class="hljs-number">5</span>, cmp_2);
+
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"原来的a序列:\n"</span>; 
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"排序后的b序列:\n"</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; b[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl &lt;&lt; endl;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">" rank is "</span> &lt;&lt; a_a[i] &lt;&lt; endl;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">" 映射: "</span> &lt;&lt; b[a_a[i]] &lt;&lt; endl; 
+    }
+}</code></pre>
+
+
+
+<h4 id="第二种">第二种</h4>
+
+<p>这种算法的<strong>时间复杂度为O(R)</strong>, R为元素的取值范围.</p>
+
+<p><strong>思路是桶排序的思路, 如果数据个数(整数)非常接近R, 那么这种方法是比较合算的. 相对来说空间上不会有那么大浪费.</strong></p>
+
+<p>可是什么样的序列会出现这种情况呢? </p>
+
+<ol>
+<li>对0-n的所有数组成的乱序列进行排列, 这算是特殊情况了.</li>
+<li><strong>类似下标排序的, 下标的排序意味着顺序, 而非简单的大小, 或许从这种思路上出发, 可能会解决一些意想不到的问题. 但我还没有遇到过, 所以姑且做做猜想. </strong></li>
+</ol>
+
+<p>代码实现不算复杂</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> Range = <span class="hljs-number">0xfffff</span>;
+<span class="hljs-keyword">int</span> rank[Range] = {};
+<span class="hljs-keyword">int</span> rankb[Range] = {};
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> a[<span class="hljs-number">5</span>] = {<span class="hljs-number">12</span>, <span class="hljs-number">34</span>, <span class="hljs-number">4</span>, <span class="hljs-number">33</span>, <span class="hljs-number">7</span>};
+    <span class="hljs-keyword">int</span> b[<span class="hljs-number">5</span>] = {<span class="hljs-number">3</span>, <span class="hljs-number">44</span>, <span class="hljs-number">90</span>, <span class="hljs-number">4</span>, <span class="hljs-number">38</span>};
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; ++i) {
+        rank[a[i]] = <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">int</span> ran = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; Range; ++i) {
+        <span class="hljs-keyword">if</span>(rank[i]) rank[i] = ran++;
+    }
+    ran = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; ++i) {
+        rankb[b[i]] = <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; Range; ++i) {
+        <span class="hljs-keyword">if</span>(rankb[i]) b[ran++] = i; 
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"b排序后的序列:\n"</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; b[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\na的每个元素的排名\n"</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; rank[a[i]] &lt;&lt; endl;
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">" 映射 "</span> &lt;&lt; b[rank[a[i]]] &lt;&lt; <span class="hljs-string">'\n'</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}</code></pre>
+
+<p><strong>—————————以上————————</strong></p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

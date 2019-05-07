@@ -1,0 +1,74 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/82533086				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>矩阵链乘法是这样的问题：</p>
+
+<blockquote>
+  <p>给定n个矩阵：A1,A2,…,An，其中Ai与Ai+1是可乘的，i=1，2…，n-1。确定计算矩阵连乘积的计算次序，使得依此次序计算矩阵连乘积需要的数乘次数最少。输入数据为矩阵个数和每个矩阵规模，输出结果为计算矩阵连乘积的计算次序和最少数乘次数。</p>
+</blockquote>
+
+<p>我们称有如下性质的矩阵乘积链为<strong>完全括号化的</strong>(fully parenthesized)：<strong>它是单一矩阵，或者是两个完全括号化的矩阵乘积链的积，且已外加括号。</strong></p>
+
+<p>矩阵乘法是满足结合性的，因此它有许多种计算顺序，我们的目标就是确定计算代价最小的计算顺序。</p>
+
+<p>矩阵链乘法问题和合并石子问题非常相似，所不同的是，合并石子计算的是合并时消耗的体力和，而矩阵链乘法计算的是乘法的次数，因此要进行模型转换时，处理好他们的这点不同就好了。</p>
+
+<p>我的方法是：<strong>对于n个矩阵相乘的问题，记录每个矩阵的行数和列数，记录到一个<code>pair&lt;int, int&gt;</code>数组中，后续进行区间dp的时候，维护一个区间的<code>pair&lt;int,  int&gt;</code>， 也就是该区间进行矩阵乘法之后生成的矩阵的行数和列数。它的意义在于将一个计算好的区间作为一个矩阵。</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, dp[<span class="hljs-number">10</span>][<span class="hljs-number">10</span>], num[<span class="hljs-number">10</span>];
+    pair&lt;<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>&gt; mat[<span class="hljs-number">10</span>][<span class="hljs-number">10</span>];
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-built_in">memset</span>(dp, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span>(dp));
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n + <span class="hljs-number">1</span>; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; num[i];
+        <span class="hljs-keyword">if</span> (i != n + <span class="hljs-number">1</span>) dp[i][i] = <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        mat[i][i].first = num[i];
+        mat[i][i].second = num[i + <span class="hljs-number">1</span>];
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">2</span>; k &lt;= n; ++k) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i + k - <span class="hljs-number">1</span> &lt;= n; ++i) {
+            <span class="hljs-keyword">int</span> j = i + k - <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> l = i; l &lt; j; ++l) {
+                <span class="hljs-keyword">int</span> mul = mat[i][l].first * mat[i][l].second * mat[l + <span class="hljs-number">1</span>][j].second;
+                <span class="hljs-keyword">if</span> (dp[i][j] &gt; dp[i][l] + dp[l + <span class="hljs-number">1</span>][j] + mul) {
+                    dp[i][j] = dp[i][l] + dp[l + <span class="hljs-number">1</span>][j] + mul;
+                    mat[i][j].first = mat[i][l].first;
+                    mat[i][j].second = mat[l + <span class="hljs-number">1</span>][j].second;
+                }
+            }
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; dp[<span class="hljs-number">1</span>][n];
+}
+<span class="hljs-comment">/*
+2
+1 2 3
+
+3
+3 4 2 6
+
+6
+30 35 15 5 10 20 25  // 15125
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

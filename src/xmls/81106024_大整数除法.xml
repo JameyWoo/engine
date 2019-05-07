@@ -1,0 +1,189 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81106024				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>这个大整数除法指的是求出 a 除以 b 的整数位结果, 当然余数也可以求, 但不是求精确的小数结果.</p>
+
+<p>举个例子来说思路:</p>
+
+<p>a = 17693   b = 23 求 a / b</p>
+
+<p>len(a) = 5, len(b) = 2</p>
+
+<p>那么 <br>
+1. 17693 - 23000 &lt; 0, 跳过 <br>
+2.  17693 - 2300*7 = 1593 <br>
+3.  1593 - 230*6 = 213 <br>
+4.  213 - 23*9 = 6 <br>
+5.  6 - 23 &lt; 0, 跳过</p>
+
+<p>现在很清楚了, 17693 / 23 = 769 余 6</p>
+
+<p><strong>从上面的例子可以很清楚的知道, 其实做除法是一个做减法的过程. 那为什么不直接一次一次减23呢? 因为这样会耗费很多时间, 所以从23的10^len倍减起, 这样时间上会快很多. 当然代码写起来也麻烦不少.</strong></p>
+
+<hr>
+
+<p>整个代码也不过60+行</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> num1, num2;
+
+<span class="hljs-keyword">void</span> strToVector(<span class="hljs-built_in">string</span> s1, <span class="hljs-built_in">string</span> s2)
+{
+    <span class="hljs-keyword">int</span> len1 = s1.size(), len2 = s2.size();
+    <span class="hljs-keyword">if</span> (len1 &lt; len2) <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = len1 - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; --i) {
+        num1.push_back(s1[i] - <span class="hljs-string">'0'</span>);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = len2 - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; --i) {
+        num2.push_back(s2[i] - <span class="hljs-string">'0'</span>);
+    }
+    <span class="hljs-keyword">while</span> (num1.size() != num2.size()) num2.insert(num2.begin(), <span class="hljs-number">0</span>);
+}
+
+<span class="hljs-keyword">bool</span> isBigger(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> v1, <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> &amp;v2) <span class="hljs-comment">// 返回v1是否比v2更大 </span>
+{
+    <span class="hljs-keyword">int</span> l1 = v1.size(), l2 = v2.size();
+    <span class="hljs-keyword">if</span> (l1 != l2) <span class="hljs-keyword">return</span> l1 &gt; l2;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = l1 - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; --i) {
+        <span class="hljs-keyword">if</span> (v1[i] == v2[i]) <span class="hljs-keyword">continue</span>;
+        <span class="hljs-keyword">if</span> (v1[i] &lt; v2[i]) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+
+<span class="hljs-keyword">void</span> sub(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> &amp;v1, <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> v2) <span class="hljs-comment">// 记得去掉后缀0, .pop_back() </span>
+{
+    <span class="hljs-keyword">while</span> (v2.size() &lt; v1.size()) v2.push_back(<span class="hljs-number">0</span>);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; v1.size() + <span class="hljs-number">0</span>; ++i) {
+        <span class="hljs-keyword">if</span> (v1[i] &lt; v2[i]) {
+            v1[i] += <span class="hljs-number">10</span> - v2[i];
+            v1[i + <span class="hljs-number">1</span>] -= <span class="hljs-number">1</span>;
+        } <span class="hljs-keyword">else</span> v1[i] -= v2[i];
+    }
+    <span class="hljs-keyword">while</span> (v1.back() == <span class="hljs-number">0</span>) {
+        v1.pop_back();
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">string</span> sn1, sn2;
+    <span class="hljs-built_in">cin</span> &gt;&gt; sn1 &gt;&gt; sn2;
+    <span class="hljs-keyword">int</span> len1 = sn1.size(), len2 = sn2.size();
+    strToVector(sn1, sn2);
+    <span class="hljs-keyword">int</span> len = len1 - len2, ans = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt;= len; ++i) {
+        <span class="hljs-keyword">int</span> time = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">while</span> (isBigger(num1, num2)) {
+            sub(num1, num2); <span class="hljs-comment">// 做减法, num1是减后的数</span>
+            time++; 
+        }
+        <span class="hljs-keyword">if</span> (isBigger(num1, num2) == isBigger(num2, num1)) time = <span class="hljs-number">1</span>;
+        ans = ans * <span class="hljs-number">10</span> + time;
+        num2.erase(num2.begin()); <span class="hljs-comment">// 去掉一个零前缀0 </span>
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+}
+<span class="hljs-comment">/*
+17693 23
+*/</span> </code></pre>
+
+<hr>
+
+<p>精确到小数位的高精度除法, 不过似乎对能够整除的情况支持的不是很好. 思路和上面的整数除法是一样的.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">bool</span> isBigger(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> a, <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> b)
+{
+    <span class="hljs-keyword">if</span> (a.size() != b.size()) <span class="hljs-keyword">return</span> a.size() &gt; b.size();
+    <span class="hljs-keyword">int</span> len = a.size() - <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">while</span> (len &gt;= <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">if</span> (a[len] != b[len]) <span class="hljs-keyword">return</span> a[len] &gt; b[len];
+        len--;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>; <span class="hljs-comment">// 当相等时return true </span>
+}
+
+<span class="hljs-keyword">void</span> sub(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> &amp;v1, <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> v2) <span class="hljs-comment">// 记得去掉后缀0, .pop_back() </span>
+{
+    <span class="hljs-keyword">while</span> (v2.size() &lt; v1.size()) v2.push_back(<span class="hljs-number">0</span>);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; v1.size() + <span class="hljs-number">0</span>; ++i) {
+        <span class="hljs-keyword">if</span> (v1[i] &lt; v2[i]) {
+            v1[i] += <span class="hljs-number">10</span> - v2[i];
+            v1[i + <span class="hljs-number">1</span>] -= <span class="hljs-number">1</span>;
+        } <span class="hljs-keyword">else</span> v1[i] -= v2[i];
+    }
+    <span class="hljs-keyword">while</span> (v1.back() == <span class="hljs-number">0</span>) {
+        v1.pop_back();
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> a, b;
+    <span class="hljs-keyword">char</span> c;
+    <span class="hljs-built_in">string</span> ans = <span class="hljs-string">""</span>;
+    <span class="hljs-keyword">int</span> index = <span class="hljs-number">0</span>, n;
+
+    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) {
+        c = getchar();
+        <span class="hljs-keyword">if</span> (c == <span class="hljs-string">' '</span> || c == <span class="hljs-string">'\n'</span>) <span class="hljs-keyword">break</span>;
+        a.insert(a.begin(), c - <span class="hljs-string">'0'</span>);
+    }
+    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) {
+        c = getchar();
+        <span class="hljs-keyword">if</span> (c == <span class="hljs-string">' '</span> || c == <span class="hljs-string">'\n'</span>) <span class="hljs-keyword">break</span>;
+        b.insert(b.begin(), c - <span class="hljs-string">'0'</span>);
+    }
+    <span class="hljs-keyword">while</span> (isBigger(a, b)) {
+        b.insert(b.begin(), <span class="hljs-number">0</span>);
+        index++;
+    }
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">int</span> time = <span class="hljs-number">0</span>;
+        a.insert(a.begin(), <span class="hljs-number">0</span>);
+        <span class="hljs-keyword">while</span> (isBigger(a, b)) {
+            sub(a, b);
+            time++;
+        }
+        ans += <span class="hljs-string">'0'</span> + time;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; ans.size() - <span class="hljs-number">2</span>; ++i) {
+        <span class="hljs-keyword">if</span> (i == index) {
+            <span class="hljs-keyword">if</span> (index == <span class="hljs-number">0</span>) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"0"</span>;
+            <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">'.'</span>;
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; ans[i];
+    }
+    <span class="hljs-keyword">if</span> (ans[ans.size() - <span class="hljs-number">1</span>] &gt; <span class="hljs-string">'4'</span>) <span class="hljs-built_in">cout</span> &lt;&lt; (<span class="hljs-keyword">char</span>)(ans[ans.size() - <span class="hljs-number">2</span>] + <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; ans[ans.size() - <span class="hljs-number">1</span>];
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}
+<span class="hljs-comment">/*
+213 23
+9.2608695652173913043478260869565
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,71 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/87908046				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>KNN算法是一种简单的机器学习算法，从大致原理上来理解相对简单。</p>
+<p>主要思路就是计算要分类的测试特征向量与训练数据集的特征向量的距离，计算距离的方法可以有很多种（如欧氏距离，海明距离），选取与其距离最小的k个特征向量，然后分析这k个向量所属的类别，其中，数量最多的类别可是做测试数据的类别。因此KNN可用于简单分类。</p>
+<p>K值得选择会对K近邻算法的结果产生重大影响。</p>
+<p>k近邻法没有显式的学习过程。没有训练算法的过程。</p>
+<hr>
+<h5><a id="1_10"></a>1、优缺点分析</h5>
+<p><img src="https://img-blog.csdnimg.cn/20190224213116638.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5><a id="2_13"></a>2、一般流程</h5>
+<p><img src="https://img-blog.csdnimg.cn/20190224213137335.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5><a id="3_15"></a>3、伪代码过程</h5>
+<p><img src="https://img-blog.csdnimg.cn/20190224213306319.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5><a id="4_18"></a>4、《机器学习实战》源码分析</h5>
+<pre><code class="prism language-py"><span class="token keyword">from</span> numpy <span class="token keyword">import</span> <span class="token operator">*</span>
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+<span class="token keyword">import</span> operator
+
+
+<span class="token comment"># print("hello, world")</span>
+
+<span class="token keyword">def</span> <span class="token function">createDataSet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    group <span class="token operator">=</span> array<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1.0</span><span class="token punctuation">,</span> <span class="token number">1.1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">1.0</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0.1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token comment"># 特征向量</span>
+    labels <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'A'</span><span class="token punctuation">,</span> <span class="token string">'A'</span><span class="token punctuation">,</span> <span class="token string">'B'</span><span class="token punctuation">,</span> <span class="token string">'B'</span><span class="token punctuation">]</span> <span class="token comment"># 标签</span>
+    <span class="token keyword">return</span> group<span class="token punctuation">,</span> labels
+
+group<span class="token punctuation">,</span> labels <span class="token operator">=</span> createDataSet<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+
+<span class="token comment"># In[39]:</span>
+
+
+<span class="token keyword">def</span> <span class="token function">classify0</span><span class="token punctuation">(</span>inX<span class="token punctuation">,</span> dataSet<span class="token punctuation">,</span> labels<span class="token punctuation">,</span> k<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    dataSetSize <span class="token operator">=</span> dataSet<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token comment"># 特征向量的数量，4</span>
+    diffMat <span class="token operator">=</span> tile<span class="token punctuation">(</span>inX<span class="token punctuation">,</span> <span class="token punctuation">(</span>dataSetSize<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span> dataSet <span class="token comment"># tile方法可以将矩阵以指定的方式扩展，这里用来快速计算差值</span>
+    sqDiffMat <span class="token operator">=</span> diffMat <span class="token operator">**</span> <span class="token number">2</span> <span class="token comment"># 计算差值的平方</span>
+    sqDistances <span class="token operator">=</span> sqDiffMat<span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span>axis<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment"># 平方和的计算</span>
+    distances <span class="token operator">=</span> sqDistances <span class="token operator">**</span> <span class="token number">0.5</span> <span class="token comment"># 开平方，得到距离</span>
+    sortedDistIndicied <span class="token operator">=</span> distances<span class="token punctuation">.</span>argsort<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token comment"># 按数值的升序排列返回下标</span>
+    classCount <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>k<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        voteIlabel <span class="token operator">=</span> labels<span class="token punctuation">[</span>sortedDistIndicied<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span>
+        classCount<span class="token punctuation">[</span>voteIlabel<span class="token punctuation">]</span> <span class="token operator">=</span> classCount<span class="token punctuation">.</span>get<span class="token punctuation">(</span>voteIlabel<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span> <span class="token comment"># 字典的get方法，如果有这个key，则选择它的值，否则选择0，然后+1</span>
+    sortedClassCount <span class="token operator">=</span> <span class="token builtin">sorted</span><span class="token punctuation">(</span>classCount<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment"># 给字典排序</span>
+                              key<span class="token operator">=</span>operator<span class="token punctuation">.</span>itemgetter<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> reverse<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> sortedClassCount<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>classify0<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0.2</span><span class="token punctuation">,</span> <span class="token number">0.5</span><span class="token punctuation">]</span><span class="token punctuation">,</span> group<span class="token punctuation">,</span> labels<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<hr>
+<h5><a id="1numpytitl_56"></a>1、对numpy中的titl方法的分析</h5>
+<p><img src="https://img-blog.csdnimg.cn/20190224213418398.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5><a id="2_59"></a>2、两种轴的求和方式</h5>
+<p><img src="https://img-blog.csdnimg.cn/20190224213453564.png" alt="在这里插入图片描述"></p>
+<h5><a id="3_61"></a>3、给字典按值排序的方法</h5>
+<p><img src="https://img-blog.csdnimg.cn/20190224213516696.png" alt="在这里插入图片描述"></p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

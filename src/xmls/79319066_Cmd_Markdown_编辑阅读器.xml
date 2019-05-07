@@ -1,0 +1,257 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h1 id="欢迎使用-cmd-markdown-编辑阅读器">欢迎使用 Cmd Markdown 编辑阅读器</h1>
+
+<hr>
+
+<p>我们理解您需要更便捷更高效的工具记录思想，整理笔记、知识，并将其中承载的价值传播给他人，<strong>Cmd Markdown</strong> 是我们给出的答案 —— 我们为记录思想和分享知识提供更专业的工具。 您可以使用 Cmd Markdown：</p>
+
+<blockquote>
+  <ul>
+  <li>整理知识，学习笔记</li>
+  <li>发布日记，杂文，所见所想</li>
+  <li>撰写发布技术文稿（代码支持）</li>
+  <li>撰写发布学术论文（LaTeX 公式支持）</li>
+  </ul>
+</blockquote>
+
+<p><img src="https://www.zybuluo.com/static/img/logo.png" alt="cmd-markdown-logo" title=""></p>
+
+<p>除了您现在看到的这个 Cmd Markdown 在线版本，您还可以前往以下网址下载：</p>
+
+
+
+<h3 id="windowsmaclinux-全平台客户端"><a href="https://www.zybuluo.com/cmd/" rel="nofollow">Windows/Mac/Linux 全平台客户端</a></h3>
+
+<blockquote>
+  <p>请保留此份 Cmd Markdown 的欢迎稿兼使用说明，如需撰写新稿件，点击顶部工具栏右侧的 <i class="icon-file"></i> <strong>新文稿</strong> 或者使用快捷键 <code>Ctrl+Alt+N</code>。</p>
+</blockquote>
+
+<hr>
+
+
+
+<h2 id="什么是-markdown">什么是 Markdown</h2>
+
+<p>Markdown 是一种方便记忆、书写的纯文本标记语言，用户可以使用这些标记符号以最小的输入代价生成极富表现力的文档：譬如您正在阅读的这份文档。它使用简单的符号标记不同的标题，分割不同的段落，<strong>粗体</strong> 或者 <em>斜体</em> 某些文字，更棒的是，它还可以</p>
+
+
+
+<h3 id="1-制作一份待办事宜-todo-列表">1. 制作一份待办事宜 <a href="https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#13-待办事宜-todo-列表" rel="nofollow">Todo 列表</a></h3>
+
+<ul>
+<li>[ ] 支持以 PDF 格式导出文稿</li>
+<li>[ ] 改进 Cmd 渲染算法，使用局部渲染技术提高渲染效率</li>
+<li>[x] 新增 Todo 列表功能</li>
+<li>[x] 修复 LaTex 公式渲染问题</li>
+<li>[x] 新增 LaTex 公式编号功能</li>
+</ul>
+
+
+
+<h3 id="2-书写一个质能守恒公式1">2. 书写一个质能守恒公式<a href="#fn:latex" rel="nofollow" id="fnref:latex" title="See footnote" class="footnote">1</a></h3>
+
+<p><span class="MathJax_Preview" style="color: inherit; display: none;"></span><div class="MathJax_Display" style="text-align: center;"><span class="MathJax" id="MathJax-Element-3-Frame" tabindex="0" style="text-align: center; position: relative;" data-mathml="<math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot; display=&quot;block&quot;><mi>E</mi><mo>=</mo><mi>m</mi><msup><mi>c</mi><mn>2</mn></msup></math>" role="presentation"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-24" style="width: 4.853em; display: inline-block;"><span style="display: inline-block; position: relative; width: 3.85em; height: 0px; font-size: 125%;"><span style="position: absolute; clip: rect(1.366em, 1003.85em, 2.561em, -1000em); top: -2.4em; left: 0em;"><span class="mrow" id="MathJax-Span-25"><span class="mi" id="MathJax-Span-26" style="font-family: MathJax_Math; font-style: italic;">E<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.026em;"></span></span><span class="mo" id="MathJax-Span-27" style="font-family: MathJax_Main; padding-left: 0.278em;">=</span><span class="mi" id="MathJax-Span-28" style="font-family: MathJax_Math; font-style: italic; padding-left: 0.278em;">m</span><span class="msubsup" id="MathJax-Span-29"><span style="display: inline-block; position: relative; width: 0.862em; height: 0px;"><span style="position: absolute; clip: rect(3.408em, 1000.43em, 4.161em, -1000em); top: -4em; left: 0em;"><span class="mi" id="MathJax-Span-30" style="font-family: MathJax_Math; font-style: italic;">c</span><span style="display: inline-block; width: 0px; height: 4em;"></span></span><span style="position: absolute; top: -4.413em; left: 0.433em;"><span class="mn" id="MathJax-Span-31" style="font-size: 70.7%; font-family: MathJax_Main;">2</span><span style="display: inline-block; width: 0px; height: 4em;"></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.4em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.076em; border-left: 0px solid; width: 0px; height: 1.244em;"></span></span></nobr><span class="MJX_Assistive_MathML MJX_Assistive_MathML_Block" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>E</mi><mo>=</mo><mi>m</mi><msup><mi>c</mi><mn>2</mn></msup></math></span></span></div><script type="math/tex; mode=display" id="MathJax-Element-3">E=mc^2</script></p>
+
+
+
+<h3 id="3-高亮一段代码2">3. 高亮一段代码<a href="#fn:code" rel="nofollow" id="fnref:code" title="See footnote" class="footnote">2</a></h3>
+
+
+
+<pre class="prettyprint"><code class="language-python hljs "><span class="hljs-decorator">@requires_authorization</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SomeClass</span>:</span>
+    <span class="hljs-keyword">pass</span>
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    <span class="hljs-comment"># A comment</span>
+    <span class="hljs-keyword">print</span> <span class="hljs-string">'hello world'</span></code></pre>
+
+
+
+<h3 id="4-高效绘制-流程图">4. 高效绘制 <a href="https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#7-流程图" rel="nofollow">流程图</a></h3>
+
+
+
+<div class="flow-chart"><svg height="404.8750047683716" version="1.1" width="172.50000381469727" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="overflow: hidden; position: relative; left: -0.0833359px; top: -0.083374px;"><desc>Created with Raphaël 2.1.2</desc><defs><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block"></path><marker id="raphael-marker-endblock33-obj22" markerHeight="3" markerWidth="3" orient="auto" refX="1.5" refY="1.5"><use xlink:href="#raphael-marker-block" transform="rotate(180 1.5 1.5) scale(0.6,0.6)" stroke-width="1.6667" fill="black" stroke="none"></use></marker><marker id="raphael-marker-endblock33-obj23" markerHeight="3" markerWidth="3" orient="auto" refX="1.5" refY="1.5"><use xlink:href="#raphael-marker-block" transform="rotate(180 1.5 1.5) scale(0.6,0.6)" stroke-width="1.6667" fill="black" stroke="none"></use></marker><marker id="raphael-marker-endblock33-obj24" markerHeight="3" markerWidth="3" orient="auto" refX="1.5" refY="1.5"><use xlink:href="#raphael-marker-block" transform="rotate(180 1.5 1.5) scale(0.6,0.6)" stroke-width="1.6667" fill="black" stroke="none"></use></marker><marker id="raphael-marker-endblock33-obj26" markerHeight="3" markerWidth="3" orient="auto" refX="1.5" refY="1.5"><use xlink:href="#raphael-marker-block" transform="rotate(180 1.5 1.5) scale(0.6,0.6)" stroke-width="1.6667" fill="black" stroke="none"></use></marker></defs><rect x="0" y="0" width="51.266666412353516" height="40" rx="20" ry="20" fill="#ffffff" stroke="#000000" style="" stroke-width="2" class="flowchart" id="st" transform="matrix(1,0,0,1,49.1167,19.375)"></rect><text style="text-anchor: start; font-family: sans-serif; font-size: 14px; font-weight: normal;" x="10" y="20" text-anchor="start" font-family="sans-serif" font-size="14px" stroke="none" fill="#000000" id="stt" class="flowchartt" font-weight="normal" transform="matrix(1,0,0,1,49.1167,19.375)"><tspan dy="5.333333969116211">Start</tspan></text><rect x="0" y="0" width="115.03333282470703" height="40" rx="0" ry="0" fill="#ffffff" stroke="#000000" style="" stroke-width="2" class="flowchart" id="op" transform="matrix(1,0,0,1,17.2333,128.75)"></rect><text style="text-anchor: start; font-family: sans-serif; font-size: 14px; font-weight: normal;" x="10" y="20" text-anchor="start" font-family="sans-serif" font-size="14px" stroke="none" fill="#000000" id="opt" class="flowchartt" font-weight="normal" transform="matrix(1,0,0,1,17.2333,128.75)"><tspan dy="5.333333969116211">Your Operation</tspan></text><path style="font-family: sans-serif; font-weight: normal;" fill="#ffffff" stroke="#000000" d="M35.375000953674316,17.687500476837158L0,35.375000953674316L70.75000190734863,70.75000190734863L141.50000381469727,35.375000953674316L70.75000190734863,0L0,35.375000953674316" stroke-width="2" font-family="sans-serif" font-weight="normal" id="cond" class="flowchart" transform="matrix(1,0,0,1,4,222.75)"></path><text style="text-anchor: start; font-family: sans-serif; font-size: 14px; font-weight: normal;" x="40.375000953674316" y="35.375000953674316" text-anchor="start" font-family="sans-serif" font-size="14px" stroke="none" fill="#000000" id="condt" class="flowchartt" font-weight="normal" transform="matrix(1,0,0,1,4,222.75)"><tspan dy="5.333334922790527">Yes or No?</tspan></text><rect x="0" y="0" width="44.41666603088379" height="40" rx="20" ry="20" fill="#ffffff" stroke="#000000" style="" stroke-width="2" class="flowchart" id="e" transform="matrix(1,0,0,1,52.5417,362.875)"></rect><text style="text-anchor: start; font-family: sans-serif; font-size: 14px; font-weight: normal;" x="10" y="20" text-anchor="start" font-family="sans-serif" font-size="14px" stroke="none" fill="#000000" id="et" class="flowchartt" font-weight="normal" transform="matrix(1,0,0,1,52.5417,362.875)"><tspan dy="5.333333969116211">End</tspan></text><path style="font-family: sans-serif; font-weight: normal;" fill="none" stroke="#000000" d="M74.75000190734863,59.375000953674316C74.75000190734863,59.375000953674316,74.75000190734863,112.43097220279765,74.75000190734863,125.74677748700145" stroke-width="2" marker-end="url(#raphael-marker-endblock33-obj22)" font-family="sans-serif" font-weight="normal"></path><path style="font-family: sans-serif; font-weight: normal;" fill="none" stroke="#000000" d="M74.75000190734863,168.75000190734863C74.75000190734863,168.75000190734863,74.75000190734863,208.4041018486023,74.75000190734863,219.7504409919493" stroke-width="2" marker-end="url(#raphael-marker-endblock33-obj23)" font-family="sans-serif" font-weight="normal"></path><path style="font-family: sans-serif; font-weight: normal;" fill="none" stroke="#000000" d="M74.75000190734863,293.50000381469727C74.75000190734863,293.50000381469727,74.75000190734863,346.5559750638206,74.75000190734863,359.8717803480244" stroke-width="2" marker-end="url(#raphael-marker-endblock33-obj24)" font-family="sans-serif" font-weight="normal"></path><text style="text-anchor: start; font-family: sans-serif; font-size: 14px; font-weight: normal;" x="79.75000190734863" y="303.50000381469727" text-anchor="start" font-family="sans-serif" font-size="14px" stroke="none" fill="#000000" font-weight="normal"><tspan dy="5.333347320556641">yes</tspan></text><path style="font-family: sans-serif; font-weight: normal;" fill="none" stroke="#000000" d="M145.50000381469727,258.12500286102295C145.50000381469727,258.12500286102295,170.50000381469727,258.12500286102295,170.50000381469727,258.12500286102295C170.50000381469727,258.12500286102295,170.50000381469727,103.75000190734863,170.50000381469727,103.75000190734863C170.50000381469727,103.75000190734863,74.75000190734863,103.75000190734863,74.75000190734863,103.75000190734863C74.75000190734863,103.75000190734863,74.75000190734863,119.12344646453857,74.75000190734863,125.75924968160689" stroke-width="2" marker-end="url(#raphael-marker-endblock33-obj26)" font-family="sans-serif" font-weight="normal"></path><text style="text-anchor: start; font-family: sans-serif; font-size: 14px; font-weight: normal;" x="150.50000381469727" y="248.12500286102295" text-anchor="start" font-family="sans-serif" font-size="14px" stroke="none" fill="#000000" font-weight="normal"><tspan dy="5.333331108093262">no</tspan></text></svg></div>
+
+
+
+<h3 id="5-高效绘制-序列图">5. 高效绘制 <a href="https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#8-序列图" rel="nofollow">序列图</a></h3>
+
+
+
+<pre class="prettyprint"><code class="language-seq hljs haskell"><span class="hljs-type">Alice</span>-&gt;<span class="hljs-type">Bob</span>: <span class="hljs-type">Hello</span> <span class="hljs-type">Bob</span>, how are you?
+<span class="hljs-type">Note</span> right <span class="hljs-keyword">of</span> <span class="hljs-type">Bob</span>: <span class="hljs-type">Bob</span> thinks
+<span class="hljs-type">Bob</span><span class="hljs-comment">--&gt;Alice: I am good thanks!</span></code></pre>
+
+
+
+<h3 id="6-高效绘制-甘特图">6. 高效绘制 <a href="https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#9-甘特图" rel="nofollow">甘特图</a></h3>
+
+
+
+<pre class="prettyprint"><code class="language-gantt hljs css">    <span class="hljs-tag">title</span> 项目开发流程
+    <span class="hljs-tag">section</span> 项目确定
+        需求分析       <span class="hljs-pseudo">:a1</span>, 2016<span class="hljs-tag">-06-22</span>, 3<span class="hljs-tag">d</span>
+        可行性报告     <span class="hljs-pseudo">:after</span> <span class="hljs-tag">a1</span>, 5<span class="hljs-tag">d</span>
+        概念验证       : 5<span class="hljs-tag">d</span>
+    <span class="hljs-tag">section</span> 项目实施
+        概要设计      <span class="hljs-pseudo">:2016-07-05</span>  , 5<span class="hljs-tag">d</span>
+        详细设计      <span class="hljs-pseudo">:2016-07-08</span>, 10<span class="hljs-tag">d</span>
+        编码          <span class="hljs-pseudo">:2016-07-15</span>, 10<span class="hljs-tag">d</span>
+        测试          <span class="hljs-pseudo">:2016-07-22</span>, 5<span class="hljs-tag">d</span>
+    <span class="hljs-tag">section</span> 发布验收
+        发布: 2<span class="hljs-tag">d</span>
+        验收: 3<span class="hljs-tag">d</span></code></pre>
+
+
+
+<h3 id="7-绘制表格">7. 绘制表格</h3>
+
+<table>
+<thead>
+<tr>
+  <th>项目</th>
+  <th align="right">价格</th>
+  <th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+  <td>计算机</td>
+  <td align="right"><span>$</span>1600</td>
+  <td align="center">5</td>
+</tr>
+<tr>
+  <td>手机</td>
+  <td align="right"><span>$</span>12</td>
+  <td align="center">12</td>
+</tr>
+<tr>
+  <td>管线</td>
+  <td align="right"><span>$</span>1</td>
+  <td align="center">234</td>
+</tr>
+</tbody></table>
+
+
+
+
+<h3 id="8-更详细语法说明">8. 更详细语法说明</h3>
+
+<p>想要查看更详细的语法说明，可以参考我们准备的 <a href="https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown" rel="nofollow">Cmd Markdown 简明语法手册</a>，进阶用户可以参考 <a href="https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#cmd-markdown-高阶语法手册" rel="nofollow">Cmd Markdown 高阶语法手册</a> 了解更多高级功能。</p>
+
+<p>总而言之，不同于其它 <em>所见即所得</em> 的编辑器：你只需使用键盘专注于书写文本内容，就可以生成印刷级的排版格式，省却在键盘和工具栏之间来回切换，调整内容和格式的麻烦。<strong>Markdown 在流畅的书写和印刷级的阅读体验之间找到了平衡。</strong> 目前它已经成为世界上最大的技术分享网站 GitHub 和 技术问答网站 StackOverFlow 的御用书写格式。</p>
+
+<hr>
+
+
+
+<h2 id="什么是-cmd-markdown">什么是 Cmd Markdown</h2>
+
+<p>您可以使用很多工具书写 Markdown，但是 Cmd Markdown 是这个星球上我们已知的、最好的 Markdown 工具——没有之一 ：）因为深信文字的力量，所以我们和你一样，对流畅书写，分享思想和知识，以及阅读体验有极致的追求，我们把对于这些诉求的回应整合在 Cmd Markdown，并且一次，两次，三次，乃至无数次地提升这个工具的体验，最终将它演化成一个 <strong>编辑/发布/阅读</strong> Markdown 的在线平台——您可以在任何地方，任何系统/设备上管理这里的文字。</p>
+
+
+
+<h3 id="1-实时同步预览">1. 实时同步预览</h3>
+
+<p>我们将 Cmd Markdown 的主界面一分为二，左边为<strong>编辑区</strong>，右边为<strong>预览区</strong>，在编辑区的操作会实时地渲染到预览区方便查看最终的版面效果，并且如果你在其中一个区拖动滚动条，我们有一个巧妙的算法把另一个区的滚动条同步到等价的位置，超酷！</p>
+
+
+
+<h3 id="2-编辑工具栏">2. 编辑工具栏</h3>
+
+<p>也许您还是一个 Markdown 语法的新手，在您完全熟悉它之前，我们在 <strong>编辑区</strong> 的顶部放置了一个如下图所示的工具栏，您可以使用鼠标在工具栏上调整格式，不过我们仍旧鼓励你使用键盘标记格式，提高书写的流畅度。</p>
+
+<p><img src="https://www.zybuluo.com/static/img/toolbar-editor.png" alt="tool-editor" title=""></p>
+
+
+
+<h3 id="3-编辑模式">3. 编辑模式</h3>
+
+<p>完全心无旁骛的方式编辑文字：点击 <strong>编辑工具栏</strong> 最右侧的拉伸按钮或者按下 <code>Ctrl + M</code>，将 Cmd Markdown 切换到独立的编辑模式，这是一个极度简洁的写作环境，所有可能会引起分心的元素都已经被挪除，超清爽！</p>
+
+
+
+<h3 id="4-实时的云端文稿">4. 实时的云端文稿</h3>
+
+<p>为了保障数据安全，Cmd Markdown 会将您每一次击键的内容保存至云端，同时在 <strong>编辑工具栏</strong> 的最右侧提示 <code>已保存</code> 的字样。无需担心浏览器崩溃，机器掉电或者地震，海啸——在编辑的过程中随时关闭浏览器或者机器，下一次回到 Cmd Markdown 的时候继续写作。</p>
+
+
+
+<h3 id="5-离线模式">5. 离线模式</h3>
+
+<p>在网络环境不稳定的情况下记录文字一样很安全！在您写作的时候，如果电脑突然失去网络连接，Cmd Markdown 会智能切换至离线模式，将您后续键入的文字保存在本地，直到网络恢复再将他们传送至云端，即使在网络恢复前关闭浏览器或者电脑，一样没有问题，等到下次开启 Cmd Markdown 的时候，她会提醒您将离线保存的文字传送至云端。简而言之，我们尽最大的努力保障您文字的安全。</p>
+
+
+
+<h3 id="6-管理工具栏">6. 管理工具栏</h3>
+
+<p>为了便于管理您的文稿，在 <strong>预览区</strong> 的顶部放置了如下所示的 <strong>管理工具栏</strong>：</p>
+
+<p><img src="https://www.zybuluo.com/static/img/toolbar-manager.jpg" alt="tool-manager" title=""></p>
+
+<p>通过管理工具栏可以：</p>
+
+<p><i class="icon-share"></i> 发布：将当前的文稿生成固定链接，在网络上发布，分享 <br>
+<i class="icon-file"></i> 新建：开始撰写一篇新的文稿 <br>
+<i class="icon-trash"></i> 删除：删除当前的文稿 <br>
+<i class="icon-cloud"></i> 导出：将当前的文稿转化为 Markdown 文本或者 Html 格式，并导出到本地 <br>
+<i class="icon-reorder"></i> 列表：所有新增和过往的文稿都可以在这里查看、操作 <br>
+<i class="icon-pencil"></i> 模式：切换 普通/Vim/Emacs 编辑模式</p>
+
+
+
+<h3 id="7-阅读工具栏">7. 阅读工具栏</h3>
+
+<p><img src="https://www.zybuluo.com/static/img/toolbar-reader.jpg" alt="tool-manager" title=""></p>
+
+<p>通过 <strong>预览区</strong> 右上角的 <strong>阅读工具栏</strong>，可以查看当前文稿的目录并增强阅读体验。</p>
+
+<p>工具栏上的五个图标依次为：</p>
+
+<p><i class="icon-list"></i> 目录：快速导航当前文稿的目录结构以跳转到感兴趣的段落 <br>
+<i class="icon-chevron-sign-left"></i> 视图：互换左边编辑区和右边预览区的位置 <br>
+<i class="icon-adjust"></i> 主题：内置了黑白两种模式的主题，试试 <strong>黑色主题</strong>，超炫！ <br>
+<i class="icon-desktop"></i> 阅读：心无旁骛的阅读模式提供超一流的阅读体验 <br>
+<i class="icon-fullscreen"></i> 全屏：简洁，简洁，再简洁，一个完全沉浸式的写作和阅读环境</p>
+
+
+
+<h3 id="8-阅读模式">8. 阅读模式</h3>
+
+<p>在 <strong>阅读工具栏</strong> 点击 <i class="icon-desktop"></i> 或者按下 <code>Ctrl+Alt+M</code> 随即进入独立的阅读模式界面，我们在版面渲染上的每一个细节：字体，字号，行间距，前背景色都倾注了大量的时间，努力提升阅读的体验和品质。</p>
+
+
+
+<h3 id="9-标签分类和搜索">9. 标签、分类和搜索</h3>
+
+<p>在编辑区任意行首位置输入以下格式的文字可以标签当前文档：</p>
+
+<p>标签： 未分类</p>
+
+<p>标签以后的文稿在【文件列表】（Ctrl+Alt+F）里会按照标签分类，用户可以同时使用键盘或者鼠标浏览查看，或者在【文件列表】的搜索文本框内搜索标题关键字过滤文稿，如下图所示：</p>
+
+<p><img src="https://www.zybuluo.com/static/img/file-list.png" alt="file-list" title=""></p>
+
+
+
+<h3 id="10-文稿发布和分享">10. 文稿发布和分享</h3>
+
+<p>在您使用 Cmd Markdown 记录，创作，整理，阅读文稿的同时，我们不仅希望它是一个有力的工具，更希望您的思想和知识通过这个平台，连同优质的阅读体验，将他们分享给有相同志趣的人，进而鼓励更多的人来到这里记录分享他们的思想和知识，尝试点击 <i class="icon-share"></i> (Ctrl+Alt+P) 发布这份文档给好友吧！</p>
+
+<hr>
+
+<p>再一次感谢您花费时间阅读这份欢迎稿，点击 <i class="icon-file"></i> (Ctrl+Alt+N) 开始撰写新的文稿吧！祝您在这里记录、阅读、分享愉快！</p>
+
+<p>作者 <a href="http://weibo.com/ghosert" rel="nofollow">@ghosert</a> <br>
+2016 年 07月 07日    </p>
+
+<div class="footnotes"><hr><ol><li id="fn:latex">支持 <strong>LaTeX</strong> 编辑显示支持，例如：<span class="MathJax_Preview" style="color: inherit; display: none;"></span><span class="MathJax" id="MathJax-Element-4-Frame" tabindex="0" style="position: relative;" data-mathml="<math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;><munderover><mo>&amp;#x2211;</mo><mrow class=&quot;MJX-TeXAtom-ORD&quot;><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>a</mi><mi>i</mi></msub><mo>=</mo><mn>0</mn></math>" role="presentation"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-32" style="width: 6.46em; display: inline-block;"><span style="display: inline-block; position: relative; width: 5.143em; height: 0px; font-size: 125%;"><span style="position: absolute; clip: rect(1.439em, 1005.1em, 2.865em, -1000em); top: -2.4em; left: 0em;"><span class="mrow" id="MathJax-Span-33"><span class="munderover" id="MathJax-Span-34"><span style="display: inline-block; position: relative; width: 2.279em; height: 0px;"><span style="position: absolute; clip: rect(3.079em, 1001em, 4.421em, -1000em); top: -4em; left: 0em;"><span class="mo" id="MathJax-Span-35" style="font-family: MathJax_Size1; vertical-align: 0em;">∑</span><span style="display: inline-block; width: 0px; height: 4em;"></span></span><span style="position: absolute; clip: rect(3.516em, 1000.5em, 4.179em, -1000em); top: -4.477em; left: 1.056em;"><span class="mi" id="MathJax-Span-36" style="font-size: 70.7%; font-family: MathJax_Math; font-style: italic;">n</span><span style="display: inline-block; width: 0px; height: 4em;"></span></span><span style="position: absolute; clip: rect(3.358em, 1001.22em, 4.179em, -1000em); top: -3.715em; left: 1.056em;"><span class="texatom" id="MathJax-Span-37"><span class="mrow" id="MathJax-Span-38"><span class="mi" id="MathJax-Span-39" style="font-size: 70.7%; font-family: MathJax_Math; font-style: italic;">i</span><span class="mo" id="MathJax-Span-40" style="font-size: 70.7%; font-family: MathJax_Main;">=</span><span class="mn" id="MathJax-Span-41" style="font-size: 70.7%; font-family: MathJax_Main;">1</span></span></span><span style="display: inline-block; width: 0px; height: 4em;"></span></span></span></span><span class="msubsup" id="MathJax-Span-42" style="padding-left: 0.167em;"><span style="display: inline-block; position: relative; width: 0.848em; height: 0px;"><span style="position: absolute; clip: rect(3.388em, 1000.51em, 4.181em, -1000em); top: -4em; left: 0em;"><span class="mi" id="MathJax-Span-43" style="font-family: MathJax_Math; font-style: italic;">a</span><span style="display: inline-block; width: 0px; height: 4em;"></span></span><span style="position: absolute; top: -3.85em; left: 0.529em;"><span class="mi" id="MathJax-Span-44" style="font-size: 70.7%; font-family: MathJax_Math; font-style: italic;">i</span><span style="display: inline-block; width: 0px; height: 4em;"></span></span></span></span><span class="mo" id="MathJax-Span-45" style="font-family: MathJax_Main; padding-left: 0.278em;">=</span><span class="mn" id="MathJax-Span-46" style="font-family: MathJax_Main; padding-left: 0.278em;">0</span></span><span style="display: inline-block; width: 0px; height: 2.4em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.438em; border-left: 0px solid; width: 0px; height: 1.496em;"></span></span></nobr><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><munderover><mo>∑</mo><mrow class="MJX-TeXAtom-ORD"><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>a</mi><mi>i</mi></msub><mo>=</mo><mn>0</mn></math></span></span><script type="math/tex" id="MathJax-Element-4">\sum_{i=1}^n a_i=0</script>， 访问 <a href="http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference" rel="nofollow">MathJax</a> 参考更多使用方法。 <a href="#fnref:latex" rel="nofollow" title="Return to article" class="reversefootnote">↩</a></li><li id="fn:code">代码高亮功能支持包括 Java, Python, JavaScript 在内的，<strong>四十一</strong>种主流编程语言。 <a href="#fnref:code" rel="nofollow" title="Return to article" class="reversefootnote">↩</a></li></ol></div>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

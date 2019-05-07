@@ -1,0 +1,173 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/89810663				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>MySQL学习<br>
+我们也可以将数据存储在文件中，但是在文件中读写数据速度相对较慢。</p>
+<p>查询MySQL是否被安装 <code>rpm -qa | grep mysql</code><br>
+查询一个包是否被安装<br>
+<code>rpm -q &lt; rpm package name&gt;</code><br>
+列出所有被安装的rpm package<br>
+<code>rpm -qa</code></p>
+<p>管道配合grep查询命令可以查询到与mysql相关的包。</p>
+<p>使用<code>ps -ef | grep mysql</code>查询mysql服务是否运行<br>
+ps命令将某个进程显示出来</p>
+<p>执行<code>mysql -u root -p</code>登陆进入mysql</p>
+<p>执行<code>show databases</code>，提示<code>You must reset your password using ALTER USER statement before executing this statement.</code><br>
+执行<code>alter user user() identified by "123456";</code>改密码就可以进入了。</p>
+<p>用<code>show databases</code>;查看有哪些数据库。</p>
+<p>执行<code>show tables</code>;查看当前数据库的表。</p>
+<p>执行<code>create database “库名”</code>新建数据库。</p>
+<hr>
+<h2><a id="MySQL_31"></a>连接MySQL</h2>
+<p>根据菜鸟教程的方法，以下代码成功连接到mysql<br>
+<a href="https://www.runoob.com/mysql/mysql-connection.html" rel="nofollow">https://www.runoob.com/mysql/mysql-connection.html</a></p>
+<pre><code class="prism language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token variable">$dbhost</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'localhost:3306'</span><span class="token punctuation">;</span>  <span class="token comment">// mysql服务器主机地址</span>
+<span class="token variable">$dbuser</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'root'</span><span class="token punctuation">;</span>            <span class="token comment">// mysql用户名</span>
+<span class="token variable">$dbpass</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'123456'</span><span class="token punctuation">;</span>          <span class="token comment">// mysql用户名密码</span>
+<span class="token variable">$conn</span> <span class="token operator">=</span> <span class="token function">mysqli_connect</span><span class="token punctuation">(</span><span class="token variable">$dbhost</span><span class="token punctuation">,</span> <span class="token variable">$dbuser</span><span class="token punctuation">,</span> <span class="token variable">$dbpass</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span> <span class="token variable">$conn</span> <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'Could not connect: '</span> <span class="token punctuation">.</span> <span class="token function">mysqli_error</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">echo</span> <span class="token single-quoted-string string">'数据库连接成功！'</span><span class="token punctuation">;</span>
+<span class="token function">mysqli_close</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter important">?&gt;</span>
+</code></pre>
+<h2><a id="_50"></a>创建数据库</h2>
+<p>PHP 使用 mysqli_query 函数来创建或者删除 MySQL 数据库。</p>
+<p>该函数有两个参数，在执行成功时返回 TRUE，否则返回 FALSE。</p>
+<p>语法<br>
+<code>mysqli_query(connection,query,resultmode);</code><br>
+参考代码<br>
+<a href="https://www.runoob.com/mysql/mysql-create-database.html" rel="nofollow">https://www.runoob.com/mysql/mysql-create-database.html</a></p>
+<pre><code class="prism language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token variable">$dbhost</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'localhost:3306'</span><span class="token punctuation">;</span>  <span class="token comment">// mysql服务器主机地址</span>
+<span class="token variable">$dbuser</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'root'</span><span class="token punctuation">;</span>            <span class="token comment">// mysql用户名</span>
+<span class="token variable">$dbpass</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'123456'</span><span class="token punctuation">;</span>          <span class="token comment">// mysql用户名密码</span>
+<span class="token variable">$conn</span> <span class="token operator">=</span> <span class="token function">mysqli_connect</span><span class="token punctuation">(</span><span class="token variable">$dbhost</span><span class="token punctuation">,</span> <span class="token variable">$dbuser</span><span class="token punctuation">,</span> <span class="token variable">$dbpass</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span> <span class="token variable">$conn</span> <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'连接错误: '</span> <span class="token punctuation">.</span> <span class="token function">mysqli_error</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">echo</span> <span class="token single-quoted-string string">'连接成功&lt;br /&gt;'</span><span class="token punctuation">;</span>
+<span class="token variable">$sql</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'CREATE DATABASE RUNOOB'</span><span class="token punctuation">;</span>
+<span class="token variable">$retval</span> <span class="token operator">=</span> <span class="token function">mysqli_query</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">,</span><span class="token variable">$sql</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span> <span class="token variable">$retval</span> <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'创建数据库失败: '</span> <span class="token punctuation">.</span> <span class="token function">mysqli_error</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">echo</span> <span class="token double-quoted-string string">"数据库 RUNOOB 创建成功\n"</span><span class="token punctuation">;</span>
+<span class="token function">mysqli_close</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter important">?&gt;</span>
+</code></pre>
+<h2><a id="_81"></a>删除数据库</h2>
+<p>在mysql命令行下使用<code>drop database &lt;数据库名&gt;;</code></p>
+<p>在终端使用<code>mysqladmin -u root -p drop RUNOOB</code></p>
+<p>使用php<br>
+<a href="https://www.runoob.com/mysql/mysql-drop-database.html" rel="nofollow">https://www.runoob.com/mysql/mysql-drop-database.html</a></p>
+<pre><code class="prism language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token variable">$dbhost</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'localhost:3306'</span><span class="token punctuation">;</span>  <span class="token comment">// mysql服务器主机地址</span>
+<span class="token variable">$dbuser</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'root'</span><span class="token punctuation">;</span>            <span class="token comment">// mysql用户名</span>
+<span class="token variable">$dbpass</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'123456'</span><span class="token punctuation">;</span>          <span class="token comment">// mysql用户名密码</span>
+<span class="token variable">$conn</span> <span class="token operator">=</span> <span class="token function">mysqli_connect</span><span class="token punctuation">(</span><span class="token variable">$dbhost</span><span class="token punctuation">,</span> <span class="token variable">$dbuser</span><span class="token punctuation">,</span> <span class="token variable">$dbpass</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span> <span class="token variable">$conn</span> <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'连接失败: '</span> <span class="token punctuation">.</span> <span class="token function">mysqli_error</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">echo</span> <span class="token single-quoted-string string">'连接成功&lt;br /&gt;'</span><span class="token punctuation">;</span>
+<span class="token variable">$sql</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'DROP DATABASE RUNOOB'</span><span class="token punctuation">;</span>
+<span class="token variable">$retval</span> <span class="token operator">=</span> <span class="token function">mysqli_query</span><span class="token punctuation">(</span> <span class="token variable">$conn</span><span class="token punctuation">,</span> <span class="token variable">$sql</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span> <span class="token variable">$retval</span> <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'删除数据库失败: '</span> <span class="token punctuation">.</span> <span class="token function">mysqli_error</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">echo</span> <span class="token double-quoted-string string">"数据库 RUNOOB 删除成功\n"</span><span class="token punctuation">;</span>
+<span class="token function">mysqli_close</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter important">?&gt;</span>
+</code></pre>
+<h2><a id="_109"></a>选择数据库</h2>
+<p><a href="https://www.runoob.com/mysql/mysql-select-database.html" rel="nofollow">https://www.runoob.com/mysql/mysql-select-database.html</a></p>
+<p><code>mysqli_select_db(connection,dbname);</code></p>
+<pre><code class="prism language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token variable">$dbhost</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'localhost:3306'</span><span class="token punctuation">;</span>  <span class="token comment">// mysql服务器主机地址</span>
+<span class="token variable">$dbuser</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'root'</span><span class="token punctuation">;</span>            <span class="token comment">// mysql用户名</span>
+<span class="token variable">$dbpass</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'123456'</span><span class="token punctuation">;</span>          <span class="token comment">// mysql用户名密码</span>
+<span class="token variable">$conn</span> <span class="token operator">=</span> <span class="token function">mysqli_connect</span><span class="token punctuation">(</span><span class="token variable">$dbhost</span><span class="token punctuation">,</span> <span class="token variable">$dbuser</span><span class="token punctuation">,</span> <span class="token variable">$dbpass</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span> <span class="token variable">$conn</span> <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'连接失败: '</span> <span class="token punctuation">.</span> <span class="token function">mysqli_error</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">echo</span> <span class="token single-quoted-string string">'连接成功'</span><span class="token punctuation">;</span>
+<span class="token function">mysqli_select_db</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">,</span> <span class="token single-quoted-string string">'RUNOOB'</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">mysqli_close</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter important">?&gt;</span>
+</code></pre>
+<h2><a id="_129"></a>数据类型</h2>
+<p><a href="https://www.runoob.com/mysql/mysql-data-types.html" rel="nofollow">https://www.runoob.com/mysql/mysql-data-types.html</a></p>
+<p>不愧是数据库，数据类型这么多，调用起来很精确了。</p>
+<p>MySQL 5.0以上的版本：</p>
+<p>1.一个汉字占多少长度与编码有关：</p>
+<p>UTF－8：一个汉字＝3个字节</p>
+<p>GBK：一个汉字＝2个字节</p>
+<h2><a id="_142"></a>创建数据表</h2>
+<p><a href="https://www.runoob.com/mysql/mysql-create-tables.html" rel="nofollow">https://www.runoob.com/mysql/mysql-create-tables.html</a></p>
+<p><code>CREATE TABLE table_name (column_name column_type);</code></p>
+<pre><code class="prism language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token keyword">IF</span> <span class="token operator">NOT</span> <span class="token keyword">EXISTS</span> <span class="token punctuation">`</span>runoob_tbl<span class="token punctuation">`</span><span class="token punctuation">(</span>
+   <span class="token punctuation">`</span>runoob_id<span class="token punctuation">`</span> <span class="token keyword">INT</span> <span class="token keyword">UNSIGNED</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token punctuation">,</span>
+   <span class="token punctuation">`</span>runoob_title<span class="token punctuation">`</span> <span class="token keyword">VARCHAR</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+   <span class="token punctuation">`</span>runoob_author<span class="token punctuation">`</span> <span class="token keyword">VARCHAR</span><span class="token punctuation">(</span><span class="token number">40</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+   <span class="token punctuation">`</span>submission_date<span class="token punctuation">`</span> <span class="token keyword">DATE</span><span class="token punctuation">,</span>
+   <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span> <span class="token punctuation">`</span>runoob_id<span class="token punctuation">`</span> <span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">InnoDB</span> <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span><span class="token operator">=</span>utf8<span class="token punctuation">;</span>
+</code></pre>
+<p>实例解析：</p>
+<ul>
+<li>
+<p>如果你不想字段为 NULL 可以设置字段的属性为 NOT NULL， 在操作数据库时如果输入该字段的数据为NULL ，就会报错。</p>
+</li>
+<li>
+<p>AUTO_INCREMENT定义列为自增的属性，一般用于主键，数值会自动加1。</p>
+</li>
+<li>
+<p>PRIMARY KEY关键字用于定义列为主键。</p>
+</li>
+<li>
+<p>您可以使用多列来定义主键，列间以逗号分隔。 ENGINE 设置存储引擎，CHARSET 设置编码。</p>
+</li>
+</ul>
+<p>操作实例<br>
+<img src="https://img-blog.csdnimg.cn/20190504101319974.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2><a id="_167"></a>删除数据表</h2>
+<pre><code class="prism language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token variable">$dbhost</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'localhost:3306'</span><span class="token punctuation">;</span>  <span class="token comment">// mysql服务器主机地址</span>
+<span class="token variable">$dbuser</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'root'</span><span class="token punctuation">;</span>            <span class="token comment">// mysql用户名</span>
+<span class="token variable">$dbpass</span> <span class="token operator">=</span> <span class="token single-quoted-string string">'123456'</span><span class="token punctuation">;</span>          <span class="token comment">// mysql用户名密码</span>
+<span class="token variable">$conn</span> <span class="token operator">=</span> <span class="token function">mysqli_connect</span><span class="token punctuation">(</span><span class="token variable">$dbhost</span><span class="token punctuation">,</span> <span class="token variable">$dbuser</span><span class="token punctuation">,</span> <span class="token variable">$dbpass</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span> <span class="token variable">$conn</span> <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'连接失败: '</span> <span class="token punctuation">.</span> <span class="token function">mysqli_error</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">echo</span> <span class="token single-quoted-string string">'连接成功&lt;br /&gt;'</span><span class="token punctuation">;</span>
+<span class="token variable">$sql</span> <span class="token operator">=</span> <span class="token double-quoted-string string">"DROP TABLE runoob_tbl"</span><span class="token punctuation">;</span>
+<span class="token function">mysqli_select_db</span><span class="token punctuation">(</span> <span class="token variable">$conn</span><span class="token punctuation">,</span> <span class="token single-quoted-string string">'RUNOOB'</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$retval</span> <span class="token operator">=</span> <span class="token function">mysqli_query</span><span class="token punctuation">(</span> <span class="token variable">$conn</span><span class="token punctuation">,</span> <span class="token variable">$sql</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span> <span class="token variable">$retval</span> <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'数据表删除失败: '</span> <span class="token punctuation">.</span> <span class="token function">mysqli_error</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">echo</span> <span class="token double-quoted-string string">"数据表删除成功\n"</span><span class="token punctuation">;</span>
+<span class="token function">mysqli_close</span><span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter important">?&gt;</span>
+</code></pre>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

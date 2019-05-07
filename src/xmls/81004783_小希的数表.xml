@@ -1,0 +1,137 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81004783				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<blockquote>
+  <p>【问题描述】</p>
+  
+  <p>Gardon 昨天给小希布置了一道作业，即根据一张由不超过 5000 的 N(3&lt;=N&lt;=100)个正整数组成的数表两两相加得到 <br>
+  N*(N-1)/2 个和，然后再将它们排序。例如，如果数表里含有四个数 1，3，4，9，那么正确答案是 <br>
+  4，5，7，10，12，13。小希做完作业以后出去玩了一阵，可是下午回家时发现原来的那张数表不见了，好在她做出的答案还在，你能帮助她根据她的答案计算出原来的数表么？</p>
+  
+  <p>【输入形式】</p>
+  
+  <p>包含多组数据，每组数据以一个 N 开头，接下来的一行有按照大小顺序排列的 N*(N-1)/2 个数，是小希完成的答案。文件最后以一个 0 <br>
+  结束。 假设输入保证解的存在性和唯一性。</p>
+  
+  <p>【输出形式】</p>
+  
+  <p>对于每组数据，输出原来的数表。它们也应当是按照顺序排列的。</p>
+  
+  <p>【样例输入】</p>
+  
+  <p>4 4 5 7 10 12 13 4 5 6 7 8 9 10 0 【样例输出】</p>
+  
+  <p>1 3 4 9 2 3 4 6</p>
+</blockquote>
+
+<p>暑假变成训练里的一道题, 我觉得它是道很好的题, 所以写一篇博客. </p>
+
+<p>已知n个数两两之和, 如何逆推求出所有的n个数?</p>
+
+<p><strong>1. 观察一下可以发现, 如果a1 - an是递增的n个数, 那么他们的和s1, s2, s3…(也是递增), s1 = a1 + a2, s2 = a1 + a3, 那么只要找出a2 + a3, 就可以求出a1了</strong></p>
+
+<p><strong>2.  如何找出a2 + a3呢, 显然它不是s3. 但是我们可以遍历s3直到s(n*(n+1)/2), 假设这个s是a2 + a3, 从而求解出a1</strong></p>
+
+<p><strong>3.  OK, 那么假设我们已经求出了a1, 有什么用? 我们可以求出a2, 因为s1是a1和a2的和, 我们在所有和中剔除已知数两两之和(a1, a2), 剩下的最小s就是a1+a3, 那么可求出a3, 再利用a3将可以求出的s剔除掉, 剩下的s的最小就是a1+a4, 同理, 利用这个规则可以求解出所有的a</strong></p>
+
+<p>遇到了不可满足的情况, 就换一个a2+a3, 找到了第一个就可以退出了, 因为题目给出的数据是唯一的而且有解的</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs axapta"><span class="hljs-comment">// 这道题的错误就是vis数组没有在每个循环都初始化! 导致前面的数据残留影响结果, 思路是正确的 </span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+using namespace std;
+const <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">105</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-keyword">while</span> (cin &gt;&gt; n &amp;&amp; n) {
+        <span class="hljs-keyword">int</span> <span class="hljs-keyword">sum</span>[n * (n - <span class="hljs-number">1</span>) / <span class="hljs-number">2</span>], all = n * (n - <span class="hljs-number">1</span>) / <span class="hljs-number">2</span>;
+        <span class="hljs-comment">//cout &lt;&lt; n &lt;&lt; endl;</span>
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; all; ++i) {
+            cin &gt;&gt; <span class="hljs-keyword">sum</span>[i];
+            <span class="hljs-comment">//cout &lt;&lt; sum[i] &lt;&lt; ' ';</span>
+        }
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">2</span>; k &lt; all; ++k) { <span class="hljs-comment">// 从s2开始遍历, 找到一种可能的情况就结束 </span>
+            <span class="hljs-keyword">int</span> num[n + <span class="hljs-number">5</span>] = {};
+            bool vis[all] = {}; <span class="hljs-comment">// 草, 这个声明要在循环里面, 或者每次循环清空!!! </span>
+            <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">sum</span>[<span class="hljs-number">0</span>] + <span class="hljs-keyword">sum</span>[<span class="hljs-number">1</span>] - <span class="hljs-keyword">sum</span>[k]) % <span class="hljs-number">2</span> || (<span class="hljs-keyword">sum</span>[<span class="hljs-number">0</span>] + <span class="hljs-keyword">sum</span>[<span class="hljs-number">1</span>] - <span class="hljs-keyword">sum</span>[k] &lt;= <span class="hljs-number">0</span>)) 
+                <span class="hljs-keyword">continue</span>; <span class="hljs-comment">// 奇数当然不可能滴 </span>
+            num[<span class="hljs-number">0</span>] = (<span class="hljs-keyword">sum</span>[<span class="hljs-number">0</span>] + <span class="hljs-keyword">sum</span>[<span class="hljs-number">1</span>] - <span class="hljs-keyword">sum</span>[k]) / <span class="hljs-number">2</span>;
+            num[<span class="hljs-number">1</span>] = (<span class="hljs-keyword">sum</span>[<span class="hljs-number">0</span>] - num[<span class="hljs-number">0</span>]);
+            num[<span class="hljs-number">2</span>] = (<span class="hljs-keyword">sum</span>[<span class="hljs-number">1</span>] - num[<span class="hljs-number">0</span>]);
+            vis[<span class="hljs-number">0</span>] = vis[<span class="hljs-number">1</span>] = vis[k] = <span class="hljs-number">1</span>;
+            <span class="hljs-comment">//cout &lt;&lt; "a1 = " &lt;&lt; num[0] &lt;&lt; "  a2 = " &lt;&lt; num[1] &lt;&lt; "  a3 = " &lt;&lt; num[2] &lt;&lt; endl;</span>
+            <span class="hljs-keyword">int</span> know = <span class="hljs-number">2</span>;
+            bool flag = <span class="hljs-number">1</span>; 
+            <span class="hljs-keyword">while</span> (know != n - <span class="hljs-number">1</span>) { <span class="hljs-comment">// 直到所有的数都已知</span>
+                <span class="hljs-keyword">int</span> in = -<span class="hljs-number">1</span>;
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; all; ++i) {
+                    <span class="hljs-keyword">if</span> (vis[i] == <span class="hljs-number">0</span>) {
+                        in = <span class="hljs-keyword">sum</span>[i]; <span class="hljs-comment">// 找到剩下的和的最小值 </span>
+                        <span class="hljs-comment">//cout &lt;&lt; "in = " &lt;&lt; in &lt;&lt; endl;</span>
+                        vis[i] = <span class="hljs-number">1</span>;
+                        <span class="hljs-keyword">break</span>;
+                    }
+                }
+                num[++know] = in - num[<span class="hljs-number">0</span>];
+                <span class="hljs-comment">//cout &lt;&lt; "第" &lt;&lt; know &lt;&lt; "个是 " &lt;&lt; num[know] &lt;&lt; endl; </span>
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; know; ++i) {
+                    <span class="hljs-keyword">int</span> he = num[know] + num[i]; <span class="hljs-comment">// 可以组成的和, 接下来就是除去他们,如果找不到,就退出 </span>
+                    flag = <span class="hljs-number">0</span>;
+                    <span class="hljs-comment">//cout &lt;&lt; " he = " &lt;&lt; he &lt;&lt; "  num[know] = " &lt;&lt; num[know] &lt;&lt; endl;</span>
+                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; all; ++j) {
+                        <span class="hljs-keyword">if</span> (vis[j] == <span class="hljs-number">0</span> &amp;&amp; <span class="hljs-keyword">sum</span>[j] == he) {
+                            vis[j] = <span class="hljs-number">1</span>;
+                            flag = <span class="hljs-number">1</span>;
+                            <span class="hljs-keyword">break</span>;
+                        }
+                    }
+                    <span class="hljs-keyword">if</span> (flag == <span class="hljs-number">0</span>) <span class="hljs-keyword">break</span>;
+                }
+                <span class="hljs-keyword">if</span> (flag == <span class="hljs-number">0</span>) <span class="hljs-keyword">break</span>;
+            }
+            <span class="hljs-comment">//cout &lt;&lt; "know = " &lt;&lt; know &lt;&lt; endl;</span>
+            <span class="hljs-keyword">if</span> (know != n - <span class="hljs-number">1</span>) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+                cout &lt;&lt; num[i] &lt;&lt; <span class="hljs-string">' '</span>;
+            }
+            cout &lt;&lt; endl;
+            <span class="hljs-keyword">break</span>;
+        }
+    }
+}
+<span class="hljs-comment">/*
+【样例输入】
+
+4
+4 5 7 10 12 13
+4
+5 6 7 8 9 10
+0
+【样例输出】
+
+1 3 4 9
+2 3 4 6
+
+3
+4 6 8
+*/</span>
+</code></pre>
+
+<p>总之这道题挺有意思的, 一个看似无法解决的问题, 在计算机的高速计算性能下, 也是可以解决的. </p>
+
+<p>得出一个道理: <strong>有时候我们会觉得难以解决的问题, 可能不是思维上的问题(没有方法), 可能只是数据很大, 我们思维定势觉得我们无法解决这样的问题, 然而其实可以通过计算机, 利用这种计算思维, 将求解过程模拟出来. </strong></p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

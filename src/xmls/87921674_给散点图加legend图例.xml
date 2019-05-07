@@ -1,0 +1,77 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/87921674				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>首先从文件导入数据，并进行格式化为numpy矩阵</p>
+<pre><code class="prism language-py"><span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+
+<span class="token keyword">def</span> <span class="token function">file2array</span><span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token builtin">file</span> <span class="token operator">=</span> <span class="token builtin">open</span><span class="token punctuation">(</span>filename<span class="token punctuation">)</span>
+    file_lines <span class="token operator">=</span> <span class="token builtin">file</span><span class="token punctuation">.</span>readlines<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    numberOfLines <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>file_lines<span class="token punctuation">)</span>
+    dataArray <span class="token operator">=</span> np<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token punctuation">(</span>numberOfLines<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    labels <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    index <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">for</span> line <span class="token keyword">in</span> file_lines<span class="token punctuation">:</span>
+        line <span class="token operator">=</span> line<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment"># 参数为空时，默认删除开头、结尾处空白符（包括'\n', '\r',  '\t',  ' ')</span>
+        formLine <span class="token operator">=</span> line<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">'\t'</span><span class="token punctuation">)</span>
+        dataArray<span class="token punctuation">[</span>index<span class="token punctuation">,</span><span class="token punctuation">:</span><span class="token punctuation">]</span> <span class="token operator">=</span> formLine<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">3</span><span class="token punctuation">]</span>
+        labels<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>formLine<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        index <span class="token operator">+=</span> <span class="token number">1</span>
+    label_id <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    dic <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    index <span class="token operator">=</span> <span class="token number">1</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>labels<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        x <span class="token operator">=</span> dic<span class="token punctuation">.</span>get<span class="token punctuation">(</span>labels<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+        label_id<span class="token punctuation">.</span>append<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>label_id<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            label_id<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> index
+            dic<span class="token punctuation">[</span>labels<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> index
+            index <span class="token operator">+=</span> <span class="token number">1</span>
+    <span class="token keyword">return</span> dataArray<span class="token punctuation">,</span> label_id
+
+data<span class="token punctuation">,</span> labels <span class="token operator">=</span> file2array<span class="token punctuation">(</span><span class="token string">'datingTestSet.txt'</span><span class="token punctuation">)</span>
+
+</code></pre>
+<p>然后开始对数据进行分标签绘图，开始是这样的</p>
+<pre><code class="prism language-py"><span class="token operator">%</span>matplotlib inline
+<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+plt<span class="token punctuation">.</span>scatter<span class="token punctuation">(</span>data<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> data<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> c<span class="token operator">=</span><span class="token number">15</span><span class="token operator">*</span>np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>labels<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20190225180422132.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<hr>
+<p>然后给他添加legend<br>
+<strong>思路是把三种不同标签的图分开，分成三个子图，画在一张图里面</strong></p>
+<pre><code class="prism language-py"><span class="token keyword">def</span> <span class="token function">scatterLegend</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> labels<span class="token punctuation">,</span> x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    type1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    type2 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    type3 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>labels<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> labels<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+            type1<span class="token punctuation">.</span>append<span class="token punctuation">(</span>np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>data<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">elif</span> labels<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">2</span><span class="token punctuation">:</span>
+            type2<span class="token punctuation">.</span>append<span class="token punctuation">(</span>np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>data<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            type3<span class="token punctuation">.</span>append<span class="token punctuation">(</span>np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>data<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    type1 <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>type1<span class="token punctuation">)</span>
+    type2 <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>type2<span class="token punctuation">)</span>
+    type3 <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>type3<span class="token punctuation">)</span>
+    g1 <span class="token operator">=</span> plt<span class="token punctuation">.</span>scatter<span class="token punctuation">(</span>type1<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> x<span class="token punctuation">]</span><span class="token punctuation">,</span> type1<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> y<span class="token punctuation">]</span><span class="token punctuation">,</span> c<span class="token operator">=</span><span class="token string">'red'</span><span class="token punctuation">)</span>
+    g2 <span class="token operator">=</span> plt<span class="token punctuation">.</span>scatter<span class="token punctuation">(</span>type2<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> x<span class="token punctuation">]</span><span class="token punctuation">,</span> type2<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> y<span class="token punctuation">]</span><span class="token punctuation">,</span> c<span class="token operator">=</span><span class="token string">'yellow'</span><span class="token punctuation">)</span>
+    g3 <span class="token operator">=</span> plt<span class="token punctuation">.</span>scatter<span class="token punctuation">(</span>type3<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> x<span class="token punctuation">]</span><span class="token punctuation">,</span> type3<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> y<span class="token punctuation">]</span><span class="token punctuation">,</span> c<span class="token operator">=</span><span class="token string">'blue'</span><span class="token punctuation">)</span>
+    plt<span class="token punctuation">.</span>legend<span class="token punctuation">(</span>handles<span class="token operator">=</span><span class="token punctuation">[</span>g1<span class="token punctuation">,</span> g2<span class="token punctuation">,</span> g3<span class="token punctuation">]</span><span class="token punctuation">,</span> labels<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'not at all'</span><span class="token punctuation">,</span> <span class="token string">'a small doses'</span><span class="token punctuation">,</span> <span class="token string">'a large doses'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+scatterLegend<span class="token punctuation">(</span>data<span class="token punctuation">,</span> labels<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+</code></pre>
+<p>结果变成了这样<br>
+<img src="https://img-blog.csdnimg.cn/20190225180548953.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

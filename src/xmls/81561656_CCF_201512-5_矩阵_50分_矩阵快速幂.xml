@@ -1,0 +1,125 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81561656				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>CCF 201512-5 矩阵 <a href="http://118.190.20.162/view.page?gpid=T33" rel="nofollow">传送门</a></p>
+
+<p><strong>这道题看上去好像可以用变形的矩阵快速幂求解, 但是最大数据范围<code>m = 1000，n = 100，k ≤ 1e9</code>,  常规的算法复杂度<em>*</em></strong><code>O(m^3*n*logk)</code><strong>*肯定是不可以了, 高达1e12级数. 但是较小的数据还是可以过掉的.</strong></p>
+
+<p>我得了50分, 过掉了较小的数据, 在百度上没有找到有谁发出100分的代码, 自己也暂时想不出正解.</p>
+
+<p><strong>这里的变形, 是矩阵元素的加法变成了<code>xor</code>, 乘法变成了<code>&amp;</code>. 而我想, 正解一定和这两个变化脱不了干系.</strong></p>
+
+<p><strong>我们来分析下复杂度, 对于每次查询, 次数有<code>1e9</code>之高, 效率最高的是<code>logK</code>, 那么不可省去的复杂度是<code>n logK</code>,  大约<code>3000</code>, 时限是<code>1s</code>,所以另一个复杂度不超过<code>mlogm</code>. 普通的矩阵进行一次乘法是<code>O(n^3)</code>, 但这里每个元素位是<code>0 或 1</code>, 而且又定义了<code>xor</code>为加法,<code>&amp;</code>为乘法,所以一定是把一行当作一个数来处理的, 因为两个整数的位运算是位与位之间的运算, 而这一步, 就压缩了一个线性的复杂度. 不过至于具体的算法或者说技巧, 我并不知道.</strong></p>
+
+<p><strong>当然, 我的思路是基于类矩阵快速幂方法的, 但是可能所谓正解, 其实是一条决然不同的路.</strong></p>
+
+<p>要拿50分很简单, 做出正解, 才是真正的大佬.</p>
+
+<pre class="prettyprint"><code class=" hljs markdown"><span class="hljs-header">#include &lt;algorithm&gt;</span>
+<span class="hljs-header">#include &lt;iostream&gt;</span>
+<span class="hljs-header">#include &lt;cstring&gt;</span>
+<span class="hljs-header">#include &lt;vector&gt;</span>
+using namespace std;
+
+int matrix[<span class="hljs-link_label">1005</span>][<span class="hljs-link_reference">1005</span>], b[1005], n, m;
+int E[<span class="hljs-link_label">1005</span>][<span class="hljs-link_reference">1005</span>], matr[<span class="hljs-link_label">1005</span>][<span class="hljs-link_reference">1005</span>], ans[1005];
+int ano[<span class="hljs-link_label">1005</span>][<span class="hljs-link_reference">1005</span>];
+char ch_matrix[1005];
+
+void multi(int E[<span class="hljs-link_label">1005</span>][<span class="hljs-link_reference">1005</span>], int ano[<span class="hljs-link_label">1005</span>][<span class="hljs-link_reference">1005</span>], int matr[<span class="hljs-link_label">1005</span>][<span class="hljs-link_reference">1005</span>])
+{
+<span class="hljs-code">    for (int i = 1; i &lt;= n; ++i) {</span>
+<span class="hljs-code">        for (int j = 1; j &lt;= n; ++j) {</span>
+<span class="hljs-code">            E[i][j] = (ano[i][1] &amp; matr[1][j]);</span>
+<span class="hljs-code">            for (int k = 2; k &lt;= n; ++k) {</span>
+<span class="hljs-code">                E[i][j] ^= (ano[i][k] &amp; matr[k][j]);</span>
+<span class="hljs-code">            }</span>
+<span class="hljs-code">        }</span>
+<span class="hljs-code">    }</span>
+}
+
+void mul(int E[<span class="hljs-link_label">1005</span>][<span class="hljs-link_reference">1005</span>], int b[1005], int ans[1005])
+{
+<span class="hljs-code">    memset(ans, 0, sizeof(ans));</span>
+<span class="hljs-code">    for (int i = 1; i &lt;= n; ++i) {</span>
+<span class="hljs-code">        ans[i] = E[i][1] &amp; b[1];</span>
+<span class="hljs-code">        //cout &lt;&lt; ans[i] &lt;&lt; ' ';</span>
+<span class="hljs-code">        for (int j = 2; j &lt;= n; ++j) {</span>
+<span class="hljs-code">            ans[i] ^= E[i][j] &amp; b[j];</span>
+<span class="hljs-code">        //  cout &lt;&lt; ans[i] &lt;&lt; ' ';</span>
+<span class="hljs-code">        }</span>
+<span class="hljs-code">        //cout &lt;&lt; endl;</span>
+<span class="hljs-code">        //cout &lt;&lt; "ans[" &lt;&lt; i &lt;&lt; "] = " &lt;&lt; ans[i] &lt;&lt; endl;</span>
+<span class="hljs-code">    }</span>
+}
+
+int main()
+{
+<span class="hljs-code">    cin &gt;&gt; n;</span>
+<span class="hljs-code">    for (int i = 1; i &lt;= n; ++i) {</span>
+<span class="hljs-code">        for (int j = 1; j &lt;= n; ++j) {</span>
+<span class="hljs-code">            cin &gt;&gt; ch_matrix[j];</span>
+<span class="hljs-code">            matrix[i][j] = ch_matrix[j] - '0';</span>
+<span class="hljs-code">        }</span>
+<span class="hljs-code">    }</span>
+<span class="hljs-code">    for (int i = 1; i &lt;= n; ++i) {</span>
+<span class="hljs-code">        cin &gt;&gt; ch_matrix[i];</span>
+<span class="hljs-code">        b[i] = ch_matrix[i] - '0';</span>
+<span class="hljs-code">    }</span>
+<span class="hljs-code">    cin &gt;&gt; m;</span>
+<span class="hljs-code">    for (int i = 0; i &lt; m; ++i) {</span>
+<span class="hljs-code">        int k;</span>
+<span class="hljs-code">        cin &gt;&gt; k;</span>
+<span class="hljs-code">        for (int i  = 1; i &lt;= n; ++i) {</span>
+<span class="hljs-code">            for (int j = 1; j &lt;= n; ++j) {</span>
+<span class="hljs-code">                matr[i][j] = matrix[i][j]; // 原矩阵</span>
+<span class="hljs-code">            }</span>
+<span class="hljs-code">        }</span>
+<span class="hljs-code">        memset(E, 0, sizeof(E));</span>
+<span class="hljs-code">        for (int j = 1; j &lt;= n; ++j) {</span>
+<span class="hljs-code">            E[j][j] = 1; // 单位矩阵</span>
+<span class="hljs-code">        }</span>
+<span class="hljs-code">        while (k) {</span>
+<span class="hljs-code">            if (k &amp; 1) {</span>
+<span class="hljs-code">                for (int i = 1; i &lt;= n; ++i) {</span>
+<span class="hljs-code">                    for (int j = 1; j &lt;= n; ++j) {</span>
+<span class="hljs-code">                        ano[i][j] = E[i][j];</span>
+<span class="hljs-code">                    }</span>
+<span class="hljs-code">                }</span>
+<span class="hljs-code">                multi(E, ano, matr);</span>
+<span class="hljs-code">            }</span>
+<span class="hljs-code">            for (int i = 1; i &lt;= n; ++i) {</span>
+<span class="hljs-code">                for (int j = 1; j &lt;= n; ++j) {</span>
+<span class="hljs-code">                    ano[i][j] = matr[i][j];</span>
+<span class="hljs-code">                }</span>
+<span class="hljs-code">            }</span>
+<span class="hljs-code">            multi(matr, ano, ano);</span>
+<span class="hljs-code">            k &gt;&gt;= 1;</span>
+<span class="hljs-code">        }</span>
+<span class="hljs-code">        mul(E, b, ans);</span>
+<span class="hljs-code">        /*cout &lt;&lt; "---------matrix---------" &lt;&lt; endl;</span>
+<span class="hljs-code">        for (int i = 1; i &lt;= n; ++i) {</span>
+<span class="hljs-code">            for (int j = 1; j &lt;= n; ++j) {</span>
+<span class="hljs-code">                cout &lt;&lt; E[i][j];</span>
+<span class="hljs-code">            }</span>
+<span class="hljs-code">            cout &lt;&lt; endl;</span>
+<span class="hljs-code">        }</span>
+<span class="hljs-code">        cout &lt;&lt; "ans:  ";*/</span>
+<span class="hljs-code">        for (int i = 1; i &lt;= n; ++i) {</span>
+<span class="hljs-code">            cout &lt;&lt; ans[i];</span>
+<span class="hljs-code">        }</span>
+<span class="hljs-code">        cout &lt;&lt; endl;</span>
+<span class="hljs-code">    }</span>
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

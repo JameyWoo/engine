@@ -1,0 +1,87 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81257254				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<dl>
+<dt>P1582 倒水， <a href="https://www.luogu.org/problemnew/show/P1582" rel="nofollow">传送门</a></dt>
+<dt>题目描述</dt>
+<dd>一天，CC买了N个容量可以认为是无限大的瓶子，开始时每个瓶子里有1升水。接着~~CC发现瓶子实在太多了，于是他决定保留不超过K个瓶子。每次他选择两个当前含水量相同的瓶子，把一个瓶子的水全部倒进另一个里，然后把空瓶丢弃。(不能丢弃有水的瓶子)</dd>
+
+<dd>
+<p>显然在某些情况下CC无法达到目标，比如N=3,K=1。此时CC会重新买一些新的瓶子(新瓶子容量无限，开始时有1升水)，以到达目标。</p>
+</dd>
+
+<dd>
+<p>现在CC想知道，最少需要买多少新瓶子才能达到目标呢？</p>
+</dd>
+
+<dt>输入输出格式</dt>
+<dt>输入格式：</dt>
+<dd>一行两个正整数， N,K( 1\le N\le 2\times 10^9,K\le 10001≤N≤2×10  <br>
+9,K≤1000 )。</dd>
+
+<dt>输出格式：</dt>
+<dd>一个非负整数，表示最少需要买多少新瓶子。</dd>
+
+<dt>输入输出样例</dt>
+<dt>输入样例#1：</dt>
+<dd>3 1</dd>
+
+<dt>输出样例#1：</dt>
+<dd>1</dd>
+
+<dt>输入样例#2：</dt>
+<dd>13 2</dd>
+
+<dt>输出样例#2：</dt>
+<dd>3</dd>
+
+<dt>输入样例#3：</dt>
+<dd>1000000 5</dd>
+
+<dt>输出样例#3：</dt>
+<dd>15808</dd>
+</dl>
+
+<p>这道题目不得不说是非常巧妙的，不了解二进制的人大概会写的很复杂而且还不一定写的出来，而使用二进制，就变得十分简单了。<strong>不得不说二进制是非常神奇的东西</strong></p>
+
+<p>分析题意，是要求至少需要多少个1升的瓶子才能两两合起来最后瓶子数不超过k。如果暴力求解的话，恐怕枚举方式很复杂。</p>
+
+<p>但是我们可以想象，对于一直数量的瓶子，比如13，它的二进制数是8+4+1，即<code>1101</code>，那么它加一个瓶子就是<code>1110</code>，至少瓶子数不会增多，那么对于现在的14，<code>1110</code>，需要加几个瓶子，会使得合起来之后的瓶子数会减少或不增多呢？很容易知道是2，合起来就是<strong><code>10000</code></strong>，如果只加一个，那就变成<code>1111</code>了，还多了一个。我们可以观察发现，<strong>它的瓶子数要变少，就需要至少加从右边数直到第一个1停止的那个数的数量。而学习过树状数组的同学（或者其他lowbit（）函数相关算法），应该就明白了。</strong></p>
+
+<p><strong><em>没错，上面一段的关键，就是引出lowbit函数。 <code>n &amp; -n</code>.</em></strong></p>
+
+<p><strong>对一个数的二进制表示上，有几位是1，就代表了有几个瓶子。</strong>所以我们可以while循环，直到该数的1的位数&lt;=k，不然就一直加n &amp; -n, 调整它的位数, 直到满足退出循环的条件。</p>
+
+<p>所以代码也是非常非常简洁的。</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> getOne(<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> n)
+{
+    <span class="hljs-keyword">int</span> cnt = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">62</span>; ++i) {
+        <span class="hljs-keyword">if</span> (n &amp; (<span class="hljs-number">1L</span>L &lt;&lt; i)) cnt++;
+    }
+    <span class="hljs-keyword">return</span> cnt;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> n, k, ans = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; k;
+    <span class="hljs-keyword">while</span> (getOne(n) &gt; k) ans += n &amp; -n, n += n &amp; -n;
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

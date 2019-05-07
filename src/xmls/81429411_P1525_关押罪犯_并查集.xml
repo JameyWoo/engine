@@ -1,0 +1,79 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81429411				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>P1525 关押罪犯 <a href="https://www.luogu.org/problemnew/show/P1525" rel="nofollow">传送门</a></p>
+
+<p>这道题是用并查集来写的, 但普通的并查集是做不出的. 所以需要用到一些巧妙地思维.</p>
+
+<p><strong>首先给边排序, 权值更大的在前面. 用贪心的思想(类似Kruskal算法)遍历边, 直到某一条边的两个顶点必须在同一个集合里面(一共只有两个集合).</strong></p>
+
+<p>这题的难点就是如何判断两个顶点一定在同一个集合. 所谓<strong><em>敌人的敌人就是朋友</em></strong>, <strong>也就是说对于一个点, 如果它此前没有敌人, 那么遇到的第一个敌人就设为它的敌人, 此后, 再次遇见该点, 那么现在的敌人和以前的敌人就应该是同一阵营了(朋友)</strong>, <strong>通过这种规则进行合并, 从而实现两种阵营的划分. </strong></p>
+
+<p>那么, 得到答案的情况就是遍历到一条边时, 它的两个结点已经是同一阵营的了, 那么这条边的权值就是<strong>最小的最大冲突事件影响力</strong>.</p>
+
+<p>需要注意的一种特殊情况是当可以做到没有冲突时, 应该输出0.</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Edge {
+    <span class="hljs-keyword">int</span> from, to, w;
+};
+
+<span class="hljs-keyword">bool</span> cmp(Edge x, Edge y)
+{
+    <span class="hljs-keyword">return</span> x.w &gt; y.w;
+}
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">100000</span> + <span class="hljs-number">5</span>;
+<span class="hljs-keyword">int</span> n, m, parent[maxn], enemy[maxn] = {};
+Edge edge[maxn];
+
+<span class="hljs-keyword">int</span> find(<span class="hljs-keyword">int</span> x)
+{
+    <span class="hljs-keyword">return</span> x == parent[x] ? x : parent[x] = find(parent[x]);
+}
+
+<span class="hljs-keyword">void</span> add(<span class="hljs-keyword">int</span> u, <span class="hljs-keyword">int</span> v)
+{
+    u = find(u);
+    v = find(v);
+    <span class="hljs-keyword">if</span> (u != v) parent[u] = v;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) parent[i] = i;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; edge[i].from &gt;&gt; edge[i].to &gt;&gt; edge[i].w;
+    }
+    sort(edge, edge + m, cmp);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>, u, v; i &lt; m; ++i) {
+        u = edge[i].from, v = edge[i].to;
+        <span class="hljs-keyword">if</span> (find(u) == find(v)) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; edge[i].w;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">if</span> (enemy[u]) add(enemy[u], v);
+            <span class="hljs-keyword">else</span> enemy[u] = v;
+            <span class="hljs-keyword">if</span> (enemy[v]) add(enemy[v], u);
+            <span class="hljs-keyword">else</span> enemy[v] = u;
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-number">0</span>;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

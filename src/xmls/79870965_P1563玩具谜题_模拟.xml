@@ -1,0 +1,56 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79870965				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<blockquote>
+  <p>输入的第一行包含两个正整数 n,m, 表示玩具小人的个数和指令的条数。</p>
+  
+  <p>接下来 n行, 每行包含一个整数和一个字符串, 以逆时针为顺序给出每个玩具小人的朝向和职业。其中0表示朝向圈内, <br>
+  1表示朝向圈外。保证不会出现其他的数。字符串长度不超过10且仅由小写字母构成, 字符串不为空, 并且字符串两两不同。 <br>
+  整数和字符串之问用一个空格隔开。</p>
+  
+  <p>接下来 m行,其中第 z行包含两个整数 a,,s,,表示第 z条指令。若 a,= 0,表示向左数 s,个人;若a,= 1 ,表示向右数 <br>
+  s,个人。保证a,不会出现其他的数, 1≤ s,</p></blockquote>
+
+<pre class="prettyprint"><code class=" hljs perl"><span class="hljs-comment">#include &lt;iostream&gt;</span>
+using namespace std;
+<span class="hljs-keyword">int</span> const MAX = <span class="hljs-number">1000005</span>;
+
+struct Man{
+    <span class="hljs-keyword">int</span> cx;
+    string job;
+}men[MAX];
+
+struct mmm{
+    <span class="hljs-keyword">int</span> cx, <span class="hljs-keyword">time</span>;
+}cmd[MAX];
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, <span class="hljs-keyword">m</span>;
+    cin &gt;&gt; n &gt;&gt; <span class="hljs-keyword">m</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        cin &gt;&gt; men[i].cx &gt;&gt; men[i].job;
+    }
+    <span class="hljs-keyword">int</span> <span class="hljs-keyword">index</span> = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-keyword">m</span>; ++i) {
+        cin &gt;&gt; cmd[i].cx &gt;&gt; cmd[i].<span class="hljs-keyword">time</span>;
+        <span class="hljs-keyword">if</span>(cmd[i].cx <span class="hljs-keyword">xor</span> men[<span class="hljs-keyword">index</span>].cx) {
+            <span class="hljs-keyword">index</span> += cmd[i].<span class="hljs-keyword">time</span>;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">index</span> -= cmd[i].<span class="hljs-keyword">time</span>;
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">index</span> &gt; n) <span class="hljs-keyword">index</span> -= n;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(<span class="hljs-keyword">index</span> &lt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">index</span> += n;
+    }
+    cout &lt;&lt; men[<span class="hljs-keyword">index</span>].job;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

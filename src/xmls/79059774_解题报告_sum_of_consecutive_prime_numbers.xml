@@ -1,0 +1,147 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79059774				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><a href="http://poj.org/problem?id=2739" rel="nofollow">POJ题目地址</a></p>
+
+<blockquote>
+  <p>Sum of Consecutive Prime Numbers <br>
+  Time Limit: 1000MS      Memory Limit: 65536K <br>
+  Total Submissions: 26954        Accepted: 14544</p>
+  
+  <p>Description Some positive integers can be represented by a sum of one <br>
+  or more consecutive prime numbers. How many such representations does <br>
+  a given positive integer have? For example, the integer 53 has two <br>
+  representations 5 + 7 + 11 + 13 + 17 and 53. The integer 41 has three <br>
+  representations 2+3+5+7+11+13, 11+13+17, and 41. The integer 3 has <br>
+  only one representation, which is 3. The integer 20 has no such <br>
+  representations. Note that summands must be consecutive prime numbers, <br>
+  so neither 7 + 13 nor 3 + 5 + 5 + 7 is a valid representation for the <br>
+  integer 20. Your mission is to write a program that reports the number <br>
+  of representations for the given positive integer.</p>
+  
+  <p>Input The input is a sequence of positive integers each in a separate <br>
+  line. The integers are between 2 and 10 000, inclusive. The end of the <br>
+  input is indicated by a zero.</p>
+  
+  <p>Output The output should be composed of lines each corresponding to an <br>
+  input line except the last zero. An output line includes the number of <br>
+  representations for the input integer as the sum of one or more <br>
+  consecutive prime numbers. No other characters should be inserted in <br>
+  the output.</p>
+  
+  <p>Sample Input</p>
+  
+  <p>2 3 17 41 20 666 12 53 0</p>
+  
+  <p>Sample Output</p>
+  
+  <p>1 1 2 3 0 0 1 2</p>
+  
+  <p>Source Japan 2005</p>
+</blockquote>
+
+<p>这道题数据较小, 所以判断素数用了很朴素的方法, 追求效率可以用筛法. <br>
+求解的过程直接套上两个循环, 数据较小, 时间复杂度完全OK</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cmath&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">bool</span> isPrime(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">int</span> i=<span class="hljs-number">2</span>; i&lt;=<span class="hljs-built_in">sqrt</span>(n); ++i ) {
+        <span class="hljs-keyword">if</span>( n%i ==<span class="hljs-number">0</span> ) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    } 
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+}
+
+<span class="hljs-keyword">int</span> main( )
+{
+    <span class="hljs-keyword">int</span> prime[<span class="hljs-number">1250</span>] = {<span class="hljs-number">2</span>}, cnt = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">int</span> i = <span class="hljs-number">3</span>; i&lt;= <span class="hljs-number">10000</span>; ++i ) {
+        <span class="hljs-keyword">if</span>( isPrime(i) ) prime[++cnt] = i;
+    }
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-keyword">while</span>( <span class="hljs-built_in">cin</span> &gt;&gt; n &amp;&amp; n ) {
+        <span class="hljs-keyword">int</span> k = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">bool</span> flag = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">while</span>( prime[k++] &lt;= n ) {
+            <span class="hljs-keyword">int</span> sum = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = k-<span class="hljs-number">1</span>; sum &lt; n; ++i ) {
+                sum += prime[i];
+                <span class="hljs-keyword">if</span>( sum == n ) {
+                    flag = <span class="hljs-number">0</span>;
+                    <span class="hljs-built_in">cout</span> &lt;&lt; n &lt;&lt; <span class="hljs-string">" = "</span> &lt;&lt; prime[k-<span class="hljs-number">1</span>];
+                    <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">int</span> j = k; j&lt;=i; ++j ) {
+                        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">" + "</span> &lt;&lt; prime[j];
+                    }
+                    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+                }
+            }
+        }
+        <span class="hljs-keyword">if</span>( flag ) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"no!"</span> &lt;&lt; endl;
+    }
+}</code></pre>
+
+<p>写出这个代码之前纠结了时间复杂度问题, 觉得这样判定会很慢(事实证明当时我错了), 所以奇思妙想了一个打出所有可能是连续素数和的数, 可是这种方法是能判定是不是, 而不能给出表达式.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cmath&gt;</span>
+<span class="hljs-preprocessor">#include &lt;set&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">bool</span> isPrime(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">2</span>; i&lt;=<span class="hljs-built_in">sqrt</span>(n); ++i) {
+        <span class="hljs-keyword">if</span>( n%i ==<span class="hljs-number">0</span> ) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+}
+
+<span class="hljs-keyword">int</span> main( )
+{
+    <span class="hljs-keyword">int</span> prime[<span class="hljs-number">1250</span>] = {<span class="hljs-number">2</span>}, p = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">int</span> i=<span class="hljs-number">3</span>; i&lt;=<span class="hljs-number">1000</span>; ++i ) {
+        <span class="hljs-keyword">if</span>(isPrime(i)) prime[++p] = i;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"p = "</span> &lt;&lt; p &lt;&lt; endl;
+    ++p;
+    <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>&gt;</span>ss;
+    <span class="hljs-keyword">int</span> add[<span class="hljs-number">1250</span>] = {};
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= p; ++i ) {
+        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> j=<span class="hljs-number">1</span>; j &lt;= p+<span class="hljs-number">1</span>-i; ++j ) {
+            add[j] = add[j] + prime[j+i-<span class="hljs-number">2</span>];
+            <span class="hljs-built_in">cout</span> &lt;&lt; add[j] &lt;&lt; <span class="hljs-string">' '</span>;
+            ss.insert(add[j]);
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+    <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>&gt;</span>::iterator it = ss.begin();
+    <span class="hljs-keyword">while</span>( it != ss.end() ) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; *it &lt;&lt; endl;
+        it++;
+    }
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-keyword">while</span>(<span class="hljs-built_in">cin</span> &gt;&gt; n) {
+        <span class="hljs-keyword">if</span>( ss.find(n) != ss.end() ) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"yes\n"</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"no\n"</span>; 
+    } 
+}</code></pre>
+
+<p><strong>敬天赋异禀的我!</strong></p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

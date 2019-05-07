@@ -1,0 +1,90 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79546569				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>这是一个平面上点或向量类, 包含了常用的向量运算如: 数乘, 点乘.</p>
+
+<p>三维或更高维的类可由此拓展出来. </p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-comment">/*
+计算几何入门
+设计一个点(向量)类, 包含各种属性和操作
+ */</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cmath&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">class</span> Point;
+<span class="hljs-keyword">typedef</span> Point Vector;
+
+<span class="hljs-keyword">class</span> Point 
+{
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">double</span> x, y;
+    Point(<span class="hljs-keyword">int</span> x = <span class="hljs-number">0.0</span>, <span class="hljs-keyword">int</span> y = <span class="hljs-number">0.0</span>):x(x),y(y){}  <span class="hljs-comment">//构造函数</span>
+    <span class="hljs-keyword">double</span> norm() {  <span class="hljs-comment">//返回向量的模的平方</span>
+        <span class="hljs-keyword">return</span> x*x + y*y;
+    }
+    <span class="hljs-keyword">double</span> <span class="hljs-built_in">abs</span>() {
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">sqrt</span>(norm());  <span class="hljs-comment">//返回向量的模</span>
+    }
+
+    Point <span class="hljs-keyword">operator</span> + (Point &amp;p) {  <span class="hljs-comment">//+</span>
+        <span class="hljs-keyword">return</span> Point(x + p.x, y + p.y);
+    }
+    Point <span class="hljs-keyword">operator</span> - (Point &amp;p) {  <span class="hljs-comment">//-</span>
+        <span class="hljs-keyword">return</span> Point(x - p.x, y - p.y);
+    }
+    Point <span class="hljs-keyword">operator</span> * (<span class="hljs-keyword">double</span> k) {  <span class="hljs-comment">//*</span>
+        <span class="hljs-keyword">return</span> Point(k*x, k*y);
+    }
+    Point <span class="hljs-keyword">operator</span> / (<span class="hljs-keyword">double</span> k) {  <span class="hljs-comment">//除</span>
+        <span class="hljs-keyword">return</span> Point(x/k, y/k);
+    }
+
+    Point <span class="hljs-keyword">operator</span> * (Point <span class="hljs-keyword">const</span> p) {
+        <span class="hljs-keyword">return</span> Point(x*p.x, y*p.y);
+    }
+    Point dot(Point <span class="hljs-keyword">const</span> v) {
+        <span class="hljs-keyword">return</span> Point(x*v.x, y*v.y);
+    }
+    <span class="hljs-comment">/*Point cross(Point &amp;v) {
+        Point ()
+    }*/</span>
+    <span class="hljs-keyword">friend</span> ostream &amp; <span class="hljs-keyword">operator</span> &lt;&lt; (ostream &amp; out, Point <span class="hljs-keyword">const</span> p);
+};
+
+ostream &amp; <span class="hljs-keyword">operator</span> &lt;&lt; (ostream &amp; out, Point <span class="hljs-keyword">const</span> p)
+{
+    out &lt;&lt; <span class="hljs-string">"x = "</span> &lt;&lt; p.x &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; <span class="hljs-string">"y = "</span> &lt;&lt; p.y;
+    <span class="hljs-keyword">return</span> out;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    Point p1(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>);
+    Point p2(<span class="hljs-number">3</span>,<span class="hljs-number">4</span>);
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"p1的模平方: "</span> &lt;&lt; p1.norm() &lt;&lt; endl;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"p1的模: "</span> &lt;&lt; p1.<span class="hljs-built_in">abs</span>() &lt;&lt; endl;
+    Point p3 = p1 + p2;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"p3: x = "</span> &lt;&lt; p3.x &lt;&lt; <span class="hljs-string">" y = "</span> &lt;&lt; p3.y &lt;&lt; endl;
+    p2 = p2*<span class="hljs-number">5</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"现在5*p2: x = "</span> &lt;&lt; p2.x &lt;&lt; <span class="hljs-string">" y = "</span> &lt;&lt; p2.y &lt;&lt; endl;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"p3: "</span> &lt;&lt; p3 &lt;&lt; endl;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"计算p1,p2的点积:\n"</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; p1.dot(p2) &lt;&lt; endl;
+    <span class="hljs-built_in">cout</span> &lt;&lt; p1*p2 &lt;&lt; endl;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

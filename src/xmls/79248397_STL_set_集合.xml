@@ -1,0 +1,273 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79248397				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>——————2018-4-14更新——————— <br>
+set中判定一个元素是否存在除了用find, <strong>还可以用count()函数</strong> <br>
+如果存在, 返回一, 如果不存在, 返回0. (元素的数量)</p>
+
+
+
+<h3 id="set的排序规则-使用cmp结构体">set的排序规则, 使用cmp结构体</h3>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;set&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> cmp {
+    <span class="hljs-keyword">bool</span> <span class="hljs-keyword">operator</span> () (<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y) {
+        <span class="hljs-keyword">return</span> x &gt; y;
+    }
+};
+
+<span class="hljs-keyword">struct</span> comp {
+    <span class="hljs-keyword">bool</span> <span class="hljs-keyword">operator</span> () (<span class="hljs-built_in">string</span> x, <span class="hljs-built_in">string</span> y) {
+        <span class="hljs-keyword">if</span>(x.size() == y.size()) <span class="hljs-keyword">return</span> x &lt; y;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> x.size() &lt; y.size();
+    }
+};
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>, cmp&gt;</span> s;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) {
+        s.insert(i);
+    }
+    <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>, cmp&gt;</span>::iterator it = s.begin();
+    <span class="hljs-keyword">while</span>(it != s.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; *it &lt;&lt; <span class="hljs-string">' '</span>;
+        it++;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+
+    <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-built_in">string</span>, comp&gt;</span> str;
+    str.insert(<span class="hljs-string">"abc"</span>);
+    str.insert(<span class="hljs-string">"gh"</span>);
+    str.insert(<span class="hljs-string">"fhlsd"</span>);
+    str.insert(<span class="hljs-string">"z"</span>);
+    <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-built_in">string</span>, cmp&gt;</span>::iterator is = str.begin();
+    <span class="hljs-keyword">while</span>(is != str.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; *is &lt;&lt; <span class="hljs-string">' '</span>;
+        is++;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}</code></pre>
+
+<h3 id="erase函数使用">erase()函数使用</h3>
+
+<p>有三种传递参数的方法</p>
+
+<p><img src="https://img-blog.csdn.net/20180414103026833?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+<h2 id="set中的交集-并集-差集-对称差"><strong>set中的交集, 并集, 差集, 对称差</strong></h2>
+
+<p>使用方法全在下面代码 <br>
+<strong>虽然参数有点多, 有点烦, 但仔细想想, 正是这么多这么细的参数, 才好实现这些函数的功能, 才能跟灵活的使用集合的运算</strong> <br>
+<strong>需要注意的是, 这些函数是包含在算法库里面的</strong>, 之前还以为就在set里面呢.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;set&gt; </span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;  <span class="hljs-comment">//注意, 这些函数是在算法库里的 </span></span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> s1, s2, s3, s4, s5, s6, s7;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) {
+        s1.insert(i);
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">7</span>; j &lt; <span class="hljs-number">16</span>; ++j) {
+        s2.insert(j);
+    }
+
+    <span class="hljs-comment">//交集 </span>
+    set_intersection(s1.begin(), s1.end(), s2.begin(), s2.end(), inserter(s3, s3.begin()));
+    <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>&gt;</span>::iterator it = s3.begin();
+    <span class="hljs-keyword">while</span>(it != s3.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; *it &lt;&lt; <span class="hljs-string">' '</span>;
+        it ++;
+    } 
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+
+    <span class="hljs-comment">//并集 </span>
+    set_union(s1.begin(), s1.end(), s2.begin(), s2.end(), inserter(s4, s4.begin())); 
+    it = s4.begin();
+    <span class="hljs-keyword">while</span>(it != s4.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; *it &lt;&lt; <span class="hljs-string">' '</span>;
+        it ++;
+    } 
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+
+    <span class="hljs-comment">//差集1</span>
+    set_difference(s1.begin(), s1.end(), s2.begin(), s2.end(), inserter(s5, s5.begin())); 
+    it = s5.begin();
+    <span class="hljs-keyword">while</span>(it != s5.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; *it &lt;&lt; <span class="hljs-string">' '</span>;
+        it ++;
+    } 
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+
+    <span class="hljs-comment">//差集2</span>
+    set_difference(s2.begin(), s2.end(), s1.begin(), s1.end(), inserter(s6, s6.begin())); 
+    it = s6.begin();
+    <span class="hljs-keyword">while</span>(it != s6.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; *it &lt;&lt; <span class="hljs-string">' '</span>;
+        it ++;
+    } 
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+
+    <span class="hljs-comment">//对称差</span>
+    set_symmetric_difference(s1.begin(), s1.end(), s2.begin(), s2.end(), inserter(s7, s7.begin())); 
+    it = s7.begin();
+    <span class="hljs-keyword">while</span>(it != s7.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; *it &lt;&lt; <span class="hljs-string">' '</span>;
+        it++;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}</code></pre>
+
+<p>——————以上是更新————————–</p>
+
+
+
+<h2 id="set是cstl中常用的容器-意思是集合">set是C++STL中常用的容器, 意思是集合</h2>
+
+<p>和数学中的集合一样, 它的每一个元素都是唯一的, 即不存在相同的元素 <br>
+set里元素排列是有顺序的, <strong>默认为升序排序</strong> <br>
+和sort一样, 排序的规则可以<strong>自定义</strong></p>
+
+<p>常用的函数有: <br>
+begin()     　　 返回set容器的第一个元素的地址</p>
+
+<p>end() 　　　　 返回set容器的最后一个元素地址</p>
+
+<p>clear()   　　     删除set容器中的所有的元素</p>
+
+<p>empty() 　　　 判断set容器是否为空</p>
+
+<p>max_size() 　   返回set容器可能包含的元素最大个数</p>
+
+<p>size() 　　　　 返回当前set容器中的元素个数</p>
+
+<p>erase(it) 　　　　 删除迭代器指针it处元素</p>
+
+<p>find() 　　　　 查找元素出现的位置, 如果出现返回迭代器, 如果不出现返回set.end();</p>
+
+<p>使用代码示例1:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;set&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">set</span> &lt;<span class="hljs-keyword">int</span>&gt;</span> s;
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">10</span>; i &gt;= <span class="hljs-number">0</span>; --i ) {
+        s.insert(i);
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>&gt;</span>::iterator it = s.begin(); it != s.end(); ++it) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; *it &lt;&lt; endl;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"size = "</span> &lt;&lt; s.size() &lt;&lt; endl;
+    s.clear();
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"size = "</span> &lt;&lt; s.size() &lt;&lt; endl; 
+    <span class="hljs-keyword">if</span>(s.empty()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"now the set is empty!\n"</span>;
+    }
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">10</span>; i &gt;= <span class="hljs-number">0</span>; --i ) {
+        s.insert(i);
+    }
+    <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>&gt;</span>::iterator ii = s.begin();
+    s.erase(ii);
+    <span class="hljs-keyword">for</span>(<span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>&gt;</span>::iterator it = s.begin(); it != s.end(); ++it) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; *it &lt;&lt; endl;
+    }
+}</code></pre>
+
+<p>我在查资料的时候看到有博主提到<strong>count函数</strong> <br>
+这是算法库中的计数函数, 返回一个值在容器中出现的次数 <br>
+包含在algorithm中 <br>
+count(begin, end, value);</p>
+
+<p>以及<strong>count_if函数</strong>, 自定义计数规则</p>
+
+<p>示例2:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstdlib&gt;</span>
+<span class="hljs-preprocessor">#include &lt;ctime&gt;</span>
+<span class="hljs-preprocessor">#define random(a,b) rand()%(b+1-a) + a</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">bool</span> cmp(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">if</span>(n &gt; <span class="hljs-number">10</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    srand(time(NULL));
+    <span class="hljs-keyword">int</span> a[<span class="hljs-number">100</span>];
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; ++i ) {
+        a[i] = random(<span class="hljs-number">1</span>, <span class="hljs-number">20</span>); 
+        <span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    <span class="hljs-built_in">cout</span> &lt;&lt; count_if(a, a+<span class="hljs-number">100</span>, cmp);
+}</code></pre>
+
+<p>使用示例3:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;set&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>&gt;</span>s;
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">20</span>; ++i ) {
+        s.insert(i%<span class="hljs-number">6</span>);
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"size = "</span> &lt;&lt; s.size() &lt;&lt; endl;
+    <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-keyword">int</span>&gt;</span>::iterator it = s.begin();
+    <span class="hljs-keyword">while</span>(it != s.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; *it &lt;&lt; endl;
+        it++;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; *s.find(<span class="hljs-number">4</span>) &lt;&lt; endl;
+    <span class="hljs-keyword">if</span>(s.find(<span class="hljs-number">6</span>) == s.end()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"no such a number !\n"</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; count(s.begin(), s.end(), <span class="hljs-number">2</span>) &lt;&lt; endl;
+    <span class="hljs-built_in">cout</span> &lt;&lt; count(s.begin(), s.end(), -<span class="hljs-number">1</span>) &lt;&lt; endl;
+    <span class="hljs-built_in">cout</span> &lt;&lt; count(s.begin(), s.end(), <span class="hljs-number">6</span>) &lt;&lt; endl;
+}</code></pre>
+
+<p><a href="http://www.cnblogs.com/yaoyueduzhen/p/4536929.html" rel="nofollow">参考资料1</a> <br>
+<a href="http://blog.csdn.net/u011032846/article/details/46348371" rel="nofollow">参考资料2</a> <br>
+<a href="http://blog.csdn.net/lyj2014211626/article/details/69615514" rel="nofollow">参考资料3</a></p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

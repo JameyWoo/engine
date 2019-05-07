@@ -1,0 +1,97 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81355645				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>本博客介绍使用爬虫爬取猫眼电影最受期待榜单</p>
+
+<p>先看<code>main函数</code>代码, 这个函数用来获取一个页面上的榜单信息, 我们大致了解一下爬虫程序的框架</p>
+
+<pre class="prettyprint"><code class=" hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span><span class="hljs-params">(offset)</span>:</span>
+    url = <span class="hljs-string">'http://maoyan.com/board/6?offset='</span> + str(offset)
+    html = getHtml(url)
+    info = getRank(html)
+    show(info)</code></pre>
+
+<p>我们可以看到, main函数有一个<code>offset</code>参数传递进来</p>
+
+<ul>
+<li>首先第一步是构造url, 通过传递的offset参数构造不同页面的url.</li>
+<li>然后是调用getHtml函数获取html页面. </li>
+<li>再调用getRank函数获取排行.  </li>
+<li>最后show函数用来展示结果.</li>
+</ul>
+
+<p>首先我们观察url, 用chrome浏览器打开<code>http://maoyan.com/board/6?offset=0</code>, 就可以看到页面了. 观察一下会发现榜单有好几页, 翻页之后offset参数变成了<code>10,20,30,40</code>, 那么<strong>我们就可以只修改offset参数获取不同页面上的信息了. <code>offset</code>作为参数传递</strong></p>
+
+<p>然后我们具体获取一个页面的信息</p>
+
+<p><strong><em>调用getHtml函数获取到html页面, 将文件传递进getRank页面, 用正则表达式分析我们需要的信息(可通过浏览器查看源代码分析). getRank返回的列表就是一个排行上的信息了, 它是一个元组, 有三个元素, 分别是排行, 名称, 主演.</em></strong></p>
+
+<p>最后是展示阶段, 如果就这样输出会很难看, 那么我们就需要进行一些格式化处理. 可通过下面这样的代码来格式化</p>
+
+<pre class="prettyprint"><code class=" hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">show</span><span class="hljs-params">(info)</span>:</span>
+    tmp = <span class="hljs-string">'{0:^5}{1:{3}^16}{2:{3}&lt;10}'</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(len(info)):
+        u = info[i]
+        <span class="hljs-keyword">with</span> open(<span class="hljs-string">'save.txt'</span>, <span class="hljs-string">'a'</span>, encoding=<span class="hljs-string">'utf-8'</span>) <span class="hljs-keyword">as</span> f:
+            f.write(tmp.format(u[<span class="hljs-number">0</span>], u[<span class="hljs-number">1</span>], u[<span class="hljs-number">2</span>], chr(<span class="hljs-number">12288</span>)) + <span class="hljs-string">'\n'</span>)
+        print(tmp.format(u[<span class="hljs-number">0</span>], u[<span class="hljs-number">1</span>], u[<span class="hljs-number">2</span>], chr(<span class="hljs-number">12288</span>)))</code></pre>
+
+<p>如果我们想要输出到一个txt文件当中, 就用python的文件写入方法写入, <strong>这里要注意的是使用模式<code>'a'</code>, 这样后面的内容就可以追加进来而不会覆盖之前的内容了. <code>encoding='utf-8'</code>, 设置编码也是非常重要的, 不然txt文件会是乱码的.</strong></p>
+
+<p>完整代码</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs python"><span class="hljs-keyword">import</span> re
+<span class="hljs-keyword">import</span> requests
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getHtml</span><span class="hljs-params">(url)</span>:</span>
+    <span class="hljs-keyword">try</span>:
+        headers = {
+            <span class="hljs-string">'User-Agent'</span>: <span class="hljs-string">'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.84 Safari/537.36'</span>
+        }
+        r = requests.get(url, headers=headers)
+        r.encoding = r.apparent_encoding
+        r.raise_for_status()
+        <span class="hljs-comment"># print(r.text)</span>
+        <span class="hljs-keyword">return</span> r.text
+    <span class="hljs-keyword">except</span>:
+        <span class="hljs-keyword">return</span> <span class="hljs-string">""</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getRank</span><span class="hljs-params">(html)</span>:</span>
+    r = re.compile(<span class="hljs-string">r'index-(\d+).*?title="(.*?)".*?"star"&gt;(.*?)&lt;/p&gt;'</span>, re.S)
+    info = re.findall(r, html)
+    <span class="hljs-keyword">return</span> info
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">show</span><span class="hljs-params">(info)</span>:</span>
+    tmp = <span class="hljs-string">'{0:^5}{1:{3}^16}{2:{3}&lt;10}'</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(len(info)):
+        u = info[i]
+        <span class="hljs-keyword">with</span> open(<span class="hljs-string">'save.txt'</span>, <span class="hljs-string">'a'</span>, encoding=<span class="hljs-string">'utf-8'</span>) <span class="hljs-keyword">as</span> f:
+            f.write(tmp.format(u[<span class="hljs-number">0</span>], u[<span class="hljs-number">1</span>], u[<span class="hljs-number">2</span>], chr(<span class="hljs-number">12288</span>)) + <span class="hljs-string">'\n'</span>)
+        print(tmp.format(u[<span class="hljs-number">0</span>], u[<span class="hljs-number">1</span>], u[<span class="hljs-number">2</span>], chr(<span class="hljs-number">12288</span>)))
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span><span class="hljs-params">(offset)</span>:</span>
+    url = <span class="hljs-string">'http://maoyan.com/board/6?offset='</span> + str(offset)
+    html = getHtml(url)
+    info = getRank(html)
+    show(info)
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    <span class="hljs-keyword">with</span> open(<span class="hljs-string">'save.txt'</span>, <span class="hljs-string">'w'</span>, encoding=<span class="hljs-string">'utf-8'</span>) <span class="hljs-keyword">as</span> f:
+        f.write(<span class="hljs-string">'{0:{3}^5}{1:{3}^16}{2:{3}^10}'</span>.format(<span class="hljs-string">'排行'</span>, <span class="hljs-string">'名称'</span>, <span class="hljs-string">'主演'</span>, chr(<span class="hljs-number">12288</span>)) + <span class="hljs-string">'\n'</span>)
+    print(<span class="hljs-string">'{0:{3}^5}{1:{3}^16}{2:{3}^10}'</span>.format(<span class="hljs-string">'排行'</span>, <span class="hljs-string">'名称'</span>, <span class="hljs-string">'主演'</span>, chr(<span class="hljs-number">12288</span>)))
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">5</span>):
+        main(i * <span class="hljs-number">10</span>)</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

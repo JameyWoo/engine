@@ -1,0 +1,88 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/80972797				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h3 id="数塔取数">数塔取数</h3>
+
+<p>这是一道<strong>入门的动态规划题</strong>, 没做过的可能很难想出, 但是做过的会觉得很简单. </p>
+
+<p>这道题相比最基础的数塔取数多了一个求路径. <strong>只要记录所继承的下一层数的下标. 最后从头开始走过这些下标就是路径了.</strong> </p>
+
+<p>时间复杂度是<strong>O(n)</strong>, n为数塔的数的个数.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1005</span>;
+<span class="hljs-keyword">int</span> n, sum[maxn][maxn];
+
+<span class="hljs-keyword">struct</span> T {
+    <span class="hljs-keyword">int</span> x, y;
+} arr[maxn][maxn];
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">memset</span>(sum, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(sum));
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= i; ++j) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; arr[i][j].x;
+        }
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        arr[n][i].y = i;
+        sum[n][i] = arr[n][i].x;
+    }
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">1</span>; --i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= i; ++j) {
+            <span class="hljs-keyword">if</span> (sum[i + <span class="hljs-number">1</span>][j] &gt; sum[i + <span class="hljs-number">1</span>][j + <span class="hljs-number">1</span>]) {
+                sum[i][j] = sum[i + <span class="hljs-number">1</span>][j] + arr[i][j].x;
+                arr[i][j].y = j;
+            } <span class="hljs-keyword">else</span> {
+                sum[i][j] = sum[i + <span class="hljs-number">1</span>][j + <span class="hljs-number">1</span>] + arr[i][j].x;
+                arr[i][j].y = j + <span class="hljs-number">1</span>;
+            }
+        }
+    }
+
+    <span class="hljs-comment">/*for (int i = 1; i &lt;= n; ++i) {
+        for (int j = 1; j &lt;= i; ++j) {
+            cout &lt;&lt; sum[i][j] &lt;&lt; ' ';
+        }
+        cout &lt;&lt; endl;
+    }*/</span>
+
+    <span class="hljs-built_in">cout</span> &lt;&lt; sum[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] &lt;&lt; <span class="hljs-string">'\n'</span>;
+
+    <span class="hljs-keyword">int</span> k = <span class="hljs-number">1</span>, next = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">while</span> (k &lt;= n) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; arr[k][next].x &lt;&lt; <span class="hljs-string">' '</span>;
+        next = arr[k++][next].y;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}
+
+<span class="hljs-comment">/*
+5
+
+9
+12 15
+10 6 8
+2 18 9 5
+19 7 10 4 16
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

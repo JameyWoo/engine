@@ -1,0 +1,195 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/82915538				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p></p><div class="toc"><h3>文章目录</h3><ul><ul><li><a href="#_1" rel="nofollow">免责声明</a></li><li><a href="#_6" rel="nofollow">背景</a></li><li><a href="#_11" rel="nofollow">展示</a></li><li><a href="#_18" rel="nofollow">原始功能</a></li><li><a href="#_27" rel="nofollow">自定义功能</a></li><ul><li><a href="#1___31" rel="nofollow">1.  自定义词语内容</a></li><li><a href="#2__44" rel="nofollow">2. 自定义颜色</a></li><li><a href="#3__73" rel="nofollow">3. 自定义消失速度</a></li><li><a href="#4__79" rel="nofollow">4. 字体大小</a></li></ul><li><a href="#_99" rel="nofollow">代码</a></li><ul><li><a href="#_100" rel="nofollow">我的**点击冒出泡泡**完整代码</a></li><li><a href="#__164" rel="nofollow">社会主义核心价值观-点击提醒 原始代码</a></li></ul></ul></ul></div><p></p>
+<h2><a id="_1"></a>免责声明</h2>
+<p>不介绍具体的脚本代码, 因为我还不会写JavaScript, 只介绍一些代码上的改动, 从而实现一些自定义的功能. <strong>初始代码系网上摘抄, 侵删.</strong></p>
+<hr>
+<h2><a id="_6"></a>背景</h2>
+<p>此脚本作为<strong>Chrome浏览器下插件Tampermonkey(油猴)的脚本.</strong> 是用JavaScript写的. <strong>不知道油猴的请先百度一下, 这是一个有趣的平台</strong></p>
+<hr>
+<h2><a id="_11"></a>展示</h2>
+<p>先展示一下它的画面吧, 如图是在谷歌和百度页面上的连续点击. (点击一次只会冒出一个词哦)<br>
+注意看左边部分.<br>
+<img src="https://img-blog.csdn.net/20181001104202517?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述"><br>
+注意看中间部分(今天是国庆哦, 69年建国庆)<br>
+<img src="https://img-blog.csdn.net/20181001104319118?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述"></p>
+<h2><a id="_18"></a>原始功能</h2>
+<p>我把这个功能叫做<strong>点击冒出文字泡泡</strong>, 这些泡泡在点击处出现, 然后上升, 然后渐渐消失不见. 我觉得还是挺有意思的, 特别是自定义了冒出的字之后.</p>
+<p><strong>原始的字为社会注意核心价值观</strong>, 旨在让我们在浏览网页时弹出价值观从而实现更好的自我精神升华, 在潜移默化中成为一个价值观正确的社会好儿童/少年/青年/中年/老年.</p>
+<p>上面展示的两张图片是已经自定义了的. 详情请看下面介绍.</p>
+<hr>
+<h2><a id="_27"></a>自定义功能</h2>
+<p>既然要玩当然得自定义了.</p>
+<h3><a id="1___31"></a>1.  自定义词语内容</h3>
+<p>博主把社会主义核心价值观全部都替换成了博主喜欢看的小说的一些人物, 设定之类的, 增添了浏览网页时的乐趣, 简直妙不可言. 大家也可以自定义.</p>
+<p>设置词语的代码是这一块:</p>
+<pre class=" language-js"><code class="prism  language-js">    <span class="token keyword">var</span> coreSocialistValues <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"\u59EC\u5C0F\u91CE"</span><span class="token punctuation">,</span> <span class="token string">"\u767D\u53D1\u6284"</span><span class="token punctuation">,</span> <span class="token string">"\u7FBD\u5C0F\u7136"</span><span class="token punctuation">,</span> <span class="token string">"\u6613\u5C0F\u5189"</span><span class="token punctuation">,</span> <span class="token string">"\u5415\u5C0F\u5C18"</span><span class="token punctuation">,</span> <span class="token string">"\u8352\u5929\u5E1D"</span><span class="token punctuation">,</span>
+                               <span class="token string">"\u542C\u96EA\u697C"</span><span class="token punctuation">,</span> <span class="token string">"\u9F99\u5C0F\u8944"</span><span class="token punctuation">,</span> <span class="token string">"\u5929\u9A71"</span><span class="token punctuation">,</span><span class="token string">"\u8FB0\u6708"</span><span class="token punctuation">,</span> <span class="token string">"\u82CF\u664B\u5B89"</span><span class="token punctuation">,</span> <span class="token string">"\u897F\u5C0F\u9759"</span><span class="token punctuation">,</span> <span class="token string">"\u9F0E\u5251\u9601"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+</code></pre>
+<p><strong>这个数组的每个元素都是一个词语, 用<code>Unicode</code>编码的, 因此, 我们只要找到我们要替换的每个字的<code>Unicode</code>编码替换上去就可以了.</strong></p>
+<p>推荐一个查找字符编码的网站: <a href="https://www.qqxiuzi.cn/bianma/zhongrihan.php" rel="nofollow">千千秀字</a><br>
+<img src="https://img-blog.csdn.net/20181001105141886?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述"></p>
+<h3><a id="2__44"></a>2. 自定义颜色</h3>
+<p>每个字显示的颜色也是可以自定义的, 它的代码块是这个地方</p>
+<pre class=" language-js"><code class="prism  language-js">       span<span class="token punctuation">.</span>style<span class="token punctuation">.</span>cssText <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'z-index: 9999999; position: absolute; font-size: 14px; font-weight: bold; color: #3333ff; top: '</span><span class="token punctuation">,</span> y <span class="token operator">-</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token string">'px; left: '</span><span class="token punctuation">,</span> x<span class="token punctuation">,</span> <span class="token string">'px;'</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>看见键值为<code>color</code>的键值对了吗? 它的值<code>#3333ff</code>是蓝色的十六进制编码.<br>
+<strong>在这里, 可以用颜色对应的十六进制编码表示, 也可以用内置的颜色字符来表示, 如<code>blue</code>, <code>red</code></strong></p>
+<p><strong>仅仅是替换我们想要的颜色还不够哦, 我们得想方法让它每点击一次就换一种颜色, 因此我给它设置了一个随机.</strong></p>
+<p>添加了下面几行代码:</p>
+<pre class=" language-js"><code class="prism  language-js">        <span class="token keyword">var</span> col <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'aqua'</span><span class="token punctuation">,</span> <span class="token string">'black'</span><span class="token punctuation">,</span> <span class="token string">'blue'</span><span class="token punctuation">,</span> <span class="token string">'fuchsia'</span><span class="token punctuation">,</span> <span class="token string">'gray'</span><span class="token punctuation">,</span> <span class="token string">'green'</span><span class="token punctuation">,</span> <span class="token string">'lime'</span><span class="token punctuation">,</span> <span class="token string">'maroon'</span><span class="token punctuation">,</span> <span class="token string">'navy'</span><span class="token punctuation">,</span> <span class="token string">'olive'</span><span class="token punctuation">,</span> <span class="token string">'orange'</span><span class="token punctuation">,</span> <span class="token string">'purple'</span><span class="token punctuation">,</span> <span class="token string">'red'</span><span class="token punctuation">,</span> <span class="token string">'silver'</span><span class="token punctuation">,</span> <span class="token string">'teal'</span><span class="token punctuation">,</span> <span class="token string">'white'</span><span class="token punctuation">,</span> <span class="token string">'yellow'</span><span class="token punctuation">]</span>
+        Math<span class="token punctuation">.</span>seed <span class="token operator">=</span> <span class="token number">1999</span>
+        <span class="token keyword">var</span> r <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">*</span>col<span class="token punctuation">.</span>length<span class="token punctuation">)</span>
+        span<span class="token punctuation">.</span>style<span class="token punctuation">.</span>color <span class="token operator">=</span> col<span class="token punctuation">[</span>r<span class="token punctuation">]</span><span class="token punctuation">;</span>
+</code></pre>
+<p><code>col</code>数组里面的元素是17种标准色.<br>
+<code>Math.seed</code>是设置随机种子, 虽然在此代码中不设置也是可以的.<br>
+<code>r</code>的值是随机化区间<code>[0, 17)</code>的某个值. <code>Math.random()</code>返回<code>[0, 1)</code>的某个小数, 它乘以<code>col</code>数组的长度就得到了区间<code>[0, 17)</code>的某个随机值, 不过还是小数, 我们用<code>Math.floor()</code>函数对其进行向下取整.</p>
+<p>就这样, 我们每次点击都是这17种标准色中的某一个颜色啦.</p>
+<p>参考:</p>
+<ol>
+<li><a href="https://www.cnblogs.com/starof/p/4988516.html" rel="nofollow">随机值</a>   2. <a href="https://blog.csdn.net/u013152587/article/details/68086729" rel="nofollow">随机种子</a> 3. <a href="http://www.w3school.com.cn/cssref/css_colornames.asp" rel="nofollow">CSS颜色名</a></li>
+</ol>
+<h3><a id="3__73"></a>3. 自定义消失速度</h3>
+<p>下面这行代码可以自定义消失速度, 大家可以测试一下选择一个较好的速度</p>
+<pre class=" language-js"><code class="prism  language-js">            id <span class="token operator">=</span> <span class="token function">setInterval</span><span class="token punctuation">(</span>frame<span class="token punctuation">,</span> <span class="token number">16.7</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 16.7 为消失速度</span>
+</code></pre>
+<h3><a id="4__79"></a>4. 字体大小</h3>
+<pre class=" language-js"><code class="prism  language-js">       span<span class="token punctuation">.</span>style<span class="token punctuation">.</span>cssText <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'z-index: 9999999; position: absolute; font-size: 14px; font-weight: bold; color: #3333ff; top: '</span><span class="token punctuation">,</span> y <span class="token operator">-</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token string">'px; left: '</span><span class="token punctuation">,</span> x<span class="token punctuation">,</span> <span class="token string">'px;'</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>这行代码中, <code>font-size</code>为字体的大小. 同样, 我们可以用上面随机化的方法, 给字体做随机的微调, 让它更有趣.</p>
+<p>比如</p>
+<pre class=" language-js"><code class="prism  language-js">        <span class="token keyword">var</span> font <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'12px'</span><span class="token punctuation">,</span> <span class="token string">'13px'</span><span class="token punctuation">,</span> <span class="token string">'14px'</span><span class="token punctuation">,</span> <span class="token string">'15px'</span><span class="token punctuation">,</span> <span class="token string">'16px'</span><span class="token punctuation">]</span>
+        <span class="token keyword">var</span> f <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">*</span>font<span class="token punctuation">.</span>length<span class="token punctuation">)</span>
+        span<span class="token punctuation">.</span>style<span class="token punctuation">.</span>fontSize <span class="token operator">=</span> font<span class="token punctuation">[</span>f<span class="token punctuation">]</span>
+</code></pre>
+<p>发现的一个问题是, 在cssText中, 字体大小键值为<code>font-size</code>, 但在外部修改不能使用<code>-</code>符号, 而是用<code>fontSize</code>来表示.</p>
+<p>参考:<br>
+<a href="http://www.w3school.com.cn/cssref/pr_font_font-size.asp" rel="nofollow">CSS font-size 属性</a></p>
+<hr>
+<h2><a id="_99"></a>代码</h2>
+<h3><a id="_100"></a>我的<strong>点击冒出泡泡</strong>完整代码</h3>
+<pre class=" language-js"><code class="prism  language-js"><span class="token comment">// ==UserScript==</span>
+<span class="token comment">// @name         点击冒出泡泡</span>
+<span class="token comment">// @namespace    http://tampermonkey.net/</span>
+<span class="token comment">// @version      0.1</span>
+<span class="token comment">// @description  在点击鼠标左键时冒出文字泡泡, 嗯, 我把它叫做泡泡.</span>
+<span class="token comment">// @author       姬小野</span>
+<span class="token comment">// @include      http://*</span>
+<span class="token comment">// @include      file:/*</span>
+<span class="token comment">// @include      https://*</span>
+<span class="token comment">// @grant        none</span>
+<span class="token comment">// @run-at       document-idle</span>
+<span class="token comment">// ==/UserScript==</span>
+
+<span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token string">'use strict'</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> coreSocialistValues <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"\u59EC\u5C0F\u91CE"</span><span class="token punctuation">,</span> <span class="token string">"\u767D\u53D1\u6284"</span><span class="token punctuation">,</span> <span class="token string">"\u7FBD\u5C0F\u7136"</span><span class="token punctuation">,</span> <span class="token string">"\u6613\u5C0F\u5189"</span><span class="token punctuation">,</span> <span class="token string">"\u5415\u5C0F\u5C18"</span><span class="token punctuation">,</span> <span class="token string">"\u8352\u5929\u5E1D"</span><span class="token punctuation">,</span>
+                               <span class="token string">"\u542C\u96EA\u697C"</span><span class="token punctuation">,</span> <span class="token string">"\u9F99\u5C0F\u8944"</span><span class="token punctuation">,</span> <span class="token string">"\u5929\u9A71"</span><span class="token punctuation">,</span><span class="token string">"\u8FB0\u6708"</span><span class="token punctuation">,</span> <span class="token string">"\u82CF\u664B\u5B89"</span><span class="token punctuation">,</span> <span class="token string">"\u897F\u5C0F\u9759"</span><span class="token punctuation">,</span> <span class="token string">"\u9F0E\u5251\u9601"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        index <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> coreSocialistValues<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>e<span class="token punctuation">.</span>target<span class="token punctuation">.</span>tagName <span class="token operator">==</span> <span class="token string">'A'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">var</span> x <span class="token operator">=</span> e<span class="token punctuation">.</span>pageX<span class="token punctuation">,</span>
+            y <span class="token operator">=</span> e<span class="token punctuation">.</span>pageY<span class="token punctuation">,</span>
+            span <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'span'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        span<span class="token punctuation">.</span>textContent <span class="token operator">=</span> coreSocialistValues<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        index <span class="token operator">=</span> <span class="token punctuation">(</span>index <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">%</span> coreSocialistValues<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+        span<span class="token punctuation">.</span>style<span class="token punctuation">.</span>cssText <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'z-index: 9999999; position: absolute; font-size: 104px; font-weight: bold; color: #3333ff; top: '</span><span class="token punctuation">,</span> y <span class="token operator">-</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token string">'px; left: '</span><span class="token punctuation">,</span> x<span class="token punctuation">,</span> <span class="token string">'px;'</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> col <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'aqua'</span><span class="token punctuation">,</span> <span class="token string">'black'</span><span class="token punctuation">,</span> <span class="token string">'blue'</span><span class="token punctuation">,</span> <span class="token string">'fuchsia'</span><span class="token punctuation">,</span> <span class="token string">'gray'</span><span class="token punctuation">,</span> <span class="token string">'green'</span><span class="token punctuation">,</span> <span class="token string">'lime'</span><span class="token punctuation">,</span> <span class="token string">'maroon'</span><span class="token punctuation">,</span> <span class="token string">'navy'</span><span class="token punctuation">,</span> <span class="token string">'olive'</span><span class="token punctuation">,</span> <span class="token string">'orange'</span><span class="token punctuation">,</span> <span class="token string">'purple'</span><span class="token punctuation">,</span> <span class="token string">'red'</span><span class="token punctuation">,</span> <span class="token string">'silver'</span><span class="token punctuation">,</span> <span class="token string">'teal'</span><span class="token punctuation">,</span> <span class="token string">'white'</span><span class="token punctuation">,</span> <span class="token string">'yellow'</span><span class="token punctuation">]</span>
+        Math<span class="token punctuation">.</span>seed <span class="token operator">=</span> <span class="token number">1999</span>
+        <span class="token keyword">var</span> r <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">*</span>col<span class="token punctuation">.</span>length<span class="token punctuation">)</span>
+        span<span class="token punctuation">.</span>style<span class="token punctuation">.</span>color <span class="token operator">=</span> col<span class="token punctuation">[</span>r<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> font <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'12px'</span><span class="token punctuation">,</span> <span class="token string">'13px'</span><span class="token punctuation">,</span> <span class="token string">'14px'</span><span class="token punctuation">,</span> <span class="token string">'15px'</span><span class="token punctuation">,</span> <span class="token string">'16px'</span><span class="token punctuation">]</span>
+        <span class="token keyword">var</span> f <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">*</span>font<span class="token punctuation">.</span>length<span class="token punctuation">)</span>
+        span<span class="token punctuation">.</span>style<span class="token punctuation">.</span>fontSize <span class="token operator">=</span> font<span class="token punctuation">[</span>f<span class="token punctuation">]</span>
+        document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>span<span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token function">animate</span><span class="token punctuation">(</span>span<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">function</span> <span class="token function">animate</span><span class="token punctuation">(</span>el<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
+            top <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>el<span class="token punctuation">.</span>style<span class="token punctuation">.</span>top<span class="token punctuation">)</span><span class="token punctuation">,</span>
+            id <span class="token operator">=</span> <span class="token function">setInterval</span><span class="token punctuation">(</span>frame<span class="token punctuation">,</span> <span class="token number">16.7</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 消失速度,原来是16.7</span>
+
+        <span class="token keyword">function</span> <span class="token function">frame</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">&gt;</span> <span class="token number">180</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token function">clearInterval</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                el<span class="token punctuation">.</span>parentNode<span class="token punctuation">.</span><span class="token function">removeChild</span><span class="token punctuation">(</span>el<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                i <span class="token operator">+=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+                el<span class="token punctuation">.</span>style<span class="token punctuation">.</span>top <span class="token operator">=</span> top <span class="token operator">-</span> i <span class="token operator">+</span> <span class="token string">'px'</span><span class="token punctuation">;</span>
+                el<span class="token punctuation">.</span>style<span class="token punctuation">.</span>opacity <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">180</span> <span class="token operator">-</span> i<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">180</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>读者可在油猴编辑脚本处将其复制粘贴上去.<br>
+此处<br>
+<img src="https://img-blog.csdn.net/20181001111541524?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述"></p>
+<h3><a id="__164"></a>社会主义核心价值观-点击提醒 原始代码</h3>
+<pre class=" language-js"><code class="prism  language-js"><span class="token comment">// ==UserScript==</span>
+<span class="token comment">// @name         社会主义核心价值观 - 点击时提醒</span>
+<span class="token comment">// @namespace    http://tampermonkey.net/</span>
+<span class="token comment">// @version      0.2</span>
+<span class="token comment">// @description  社会主义核心价值观 在你每次点击时飘出并提示！</span>
+<span class="token comment">// @author       Cody</span>
+<span class="token comment">// @include      http://*</span>
+<span class="token comment">// @include      https://*</span>
+<span class="token comment">// @grant        none</span>
+<span class="token comment">// @run-at       document-idle</span>
+<span class="token comment">// ==/UserScript==</span>
+
+<span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token string">'use strict'</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> coreSocialistValues <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"\u5bcc\u5f3a"</span><span class="token punctuation">,</span> <span class="token string">"\u6c11\u4e3b"</span><span class="token punctuation">,</span> <span class="token string">"\u6587\u660e"</span><span class="token punctuation">,</span> <span class="token string">"\u548c\u8c10"</span><span class="token punctuation">,</span> <span class="token string">"\u81ea\u7531"</span><span class="token punctuation">,</span> <span class="token string">"\u5e73\u7b49"</span><span class="token punctuation">,</span> <span class="token string">"\u516c\u6b63"</span> <span class="token punctuation">,</span><span class="token string">"\u6cd5\u6cbb"</span><span class="token punctuation">,</span> <span class="token string">"\u7231\u56fd"</span><span class="token punctuation">,</span> <span class="token string">"\u656c\u4e1a"</span><span class="token punctuation">,</span> <span class="token string">"\u8bda\u4fe1"</span><span class="token punctuation">,</span> <span class="token string">"\u53cb\u5584"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        index <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> coreSocialistValues<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>e<span class="token punctuation">.</span>target<span class="token punctuation">.</span>tagName <span class="token operator">==</span> <span class="token string">'A'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">var</span> x <span class="token operator">=</span> e<span class="token punctuation">.</span>pageX<span class="token punctuation">,</span>
+            y <span class="token operator">=</span> e<span class="token punctuation">.</span>pageY<span class="token punctuation">,</span>
+            span <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'span'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        span<span class="token punctuation">.</span>textContent <span class="token operator">=</span> coreSocialistValues<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        index <span class="token operator">=</span> <span class="token punctuation">(</span>index <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">%</span> coreSocialistValues<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+        span<span class="token punctuation">.</span>style<span class="token punctuation">.</span>cssText <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'z-index: 9999999; position: absolute; font-size: 14px; font-weight: bold; color: red; top: '</span><span class="token punctuation">,</span> y <span class="token operator">-</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token string">'px; left: '</span><span class="token punctuation">,</span> x<span class="token punctuation">,</span> <span class="token string">'px;'</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>span<span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token function">animate</span><span class="token punctuation">(</span>span<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">function</span> <span class="token function">animate</span><span class="token punctuation">(</span>el<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
+            top <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>el<span class="token punctuation">.</span>style<span class="token punctuation">.</span>top<span class="token punctuation">)</span><span class="token punctuation">,</span>
+            id <span class="token operator">=</span> <span class="token function">setInterval</span><span class="token punctuation">(</span>frame<span class="token punctuation">,</span> <span class="token number">16.7</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">function</span> <span class="token function">frame</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">&gt;</span> <span class="token number">180</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token function">clearInterval</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                el<span class="token punctuation">.</span>parentNode<span class="token punctuation">.</span><span class="token function">removeChild</span><span class="token punctuation">(</span>el<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                i <span class="token operator">+=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+                el<span class="token punctuation">.</span>style<span class="token punctuation">.</span>top <span class="token operator">=</span> top <span class="token operator">-</span> i <span class="token operator">+</span> <span class="token string">'px'</span><span class="token punctuation">;</span>
+                el<span class="token punctuation">.</span>style<span class="token punctuation">.</span>opacity <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">180</span> <span class="token operator">-</span> i<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">180</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

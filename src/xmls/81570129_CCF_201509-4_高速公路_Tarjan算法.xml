@@ -1,0 +1,71 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81570129				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>CCF 201509-4 高速公路 <a href="http://118.190.20.162/view.page?gpid=T29" rel="nofollow">传送门</a></p>
+
+<p>这道题基本算是<strong>裸的Tarjan算法</strong>了, 只要求出每个强连通分量, 然后根据这些分量的元素数计算便利城市对即可, 数据也没有优化的坑. 会Tarjan算法的人大概会在考场上大呼简单, 但不会的人恐怕只有0分了, 说明CCF认证还是需要一定量的算法知识的.</p>
+
+<p>第一稿只得了80分. 找了很多博客对比, 期间发现他们很多人, 一个简单的Tarjan算法写的那么复杂, 又乱又长, 无用的操作太多. <strong>最后发现这个20分的错误是我算法的错误(题目还是裸的Tarjan算法). 在找到强连通分量时没有及时地标记出栈(<code>in_stack[stack[top]] = false;</code>). 所以我此前的算法根本是错的, 能得80分也是运气. </strong> </p>
+
+<p>100分代码</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> max_n = <span class="hljs-number">10005</span>;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> G[max_n];
+<span class="hljs-keyword">int</span> dfn[max_n], low[max_n], ans = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">int</span> n, m, <span class="hljs-built_in">stack</span>[max_n], top = <span class="hljs-number">0</span>, index = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">bool</span> in_stack[max_n];
+
+<span class="hljs-keyword">void</span> tarjan(<span class="hljs-keyword">int</span> u)
+{
+    dfn[u] = low[u] = ++index;
+    <span class="hljs-built_in">stack</span>[++top] = u;
+    in_stack[u] = <span class="hljs-keyword">true</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; G[u].size(); ++i) {
+        <span class="hljs-keyword">int</span> v = G[u][i];
+        <span class="hljs-keyword">if</span> (!dfn[v]) { <span class="hljs-comment">// 更新新的点.</span>
+            tarjan(v);
+            low[u] = min(low[u], low[v]);
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (in_stack[v]) {
+            low[u] = min(low[u], low[v]);
+        } <span class="hljs-comment">// 还剩下一种不在栈中但是已经访问过的情况,是其他连通分量的</span>
+    }
+    <span class="hljs-keyword">if</span> (dfn[u] == low[u]) {
+        <span class="hljs-keyword">int</span> cnt = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">do</span> {
+            ++cnt;
+            in_stack[<span class="hljs-built_in">stack</span>[top]] = <span class="hljs-keyword">false</span>; <span class="hljs-comment">// 我靠, 漏写了这一条.</span>
+        } <span class="hljs-keyword">while</span> (<span class="hljs-built_in">stack</span>[--top + <span class="hljs-number">1</span>] != u);
+        ans += (cnt - <span class="hljs-number">1</span>)*cnt / <span class="hljs-number">2</span>;
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>, u, v; i &lt; m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; u &gt;&gt; v;
+        G[u].push_back(v);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (!dfn[i]) tarjan(i);
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

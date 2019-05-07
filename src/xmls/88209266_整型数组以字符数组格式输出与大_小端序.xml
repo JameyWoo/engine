@@ -1,0 +1,122 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/88209266				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h2><a id="_0"></a>选题三</h2>
+<p>仿照选题一中的代码，定义一个整型数/短整型数组，应该如何实现？对如下代码你预估的执行结果是什么？ 实际GCC 中执行结果是什么？请解析。</p>
+<pre><code class="prism language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span> </span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">char</span> a<span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">'H'</span><span class="token punctuation">,</span><span class="token string">'N'</span><span class="token punctuation">,</span><span class="token string">'U'</span><span class="token punctuation">,</span><span class="token string">'e'</span><span class="token punctuation">,</span><span class="token string">'r'</span><span class="token punctuation">,</span><span class="token string">'\0'</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">char</span> b<span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token punctuation">{</span><span class="token number">72</span><span class="token punctuation">,</span><span class="token number">78</span><span class="token punctuation">,</span><span class="token number">85</span><span class="token punctuation">,</span><span class="token number">101</span><span class="token punctuation">,</span><span class="token number">114</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> c<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token punctuation">{</span><span class="token punctuation">(</span><span class="token number">72</span><span class="token operator">&lt;&lt;</span><span class="token number">24</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token punctuation">(</span><span class="token number">78</span><span class="token operator">&lt;&lt;</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token punctuation">(</span><span class="token number">85</span><span class="token operator">&lt;&lt;</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token number">101</span><span class="token punctuation">,</span><span class="token number">114</span><span class="token operator">&lt;&lt;</span><span class="token number">24</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d,%d\n"</span><span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s\n"</span><span class="token punctuation">,</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s\n"</span><span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s\n"</span><span class="token punctuation">,</span>c<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2><a id="_17"></a>使用（短）整型</h2>
+<pre><code class="prism language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span> </span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">float</span> a<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token punctuation">{</span><span class="token number">1143139122437582505939828736.0</span><span class="token punctuation">,</span><span class="token number">76482007234779498639230238720.0</span><span class="token punctuation">,</span><span class="token number">9.222452464e-39</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> b<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">1819043144</span><span class="token punctuation">,</span><span class="token number">1870078063</span><span class="token punctuation">,</span><span class="token number">6581362</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">short</span> c<span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">25928</span><span class="token punctuation">,</span><span class="token number">27756</span><span class="token punctuation">,</span><span class="token number">8303</span><span class="token punctuation">,</span><span class="token number">28535</span><span class="token punctuation">,</span><span class="token number">27762</span><span class="token punctuation">,</span><span class="token number">100</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d\n"</span><span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s\n"</span><span class="token punctuation">,</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s\n"</span><span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s\n"</span><span class="token punctuation">,</span>c<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>输出结果：</p>
+<pre><code>4
+Hello world
+Hello world
+Hello world
+</code></pre>
+<h2><a id="_39"></a>预估与实际</h2>
+<p>预估输出：</p>
+<pre><code>1,4
+HNUer
+HNUer
+HNUer
+</code></pre>
+<p>实际输出</p>
+<pre><code>1,4
+HNUer
+HNUer
+eUNH
+</code></pre>
+<h2><a id="_56"></a>初始分析</h2>
+<p>根据对代码一的粗略了解，知道了用%s格式输出数组，将按照读取字符串的方式，每次读取一个char长度即1字节的长度。因此要分析输出结果，需要求出对应的c数组的二进制位。</p>
+<p><strong>将这些数转化成对应的<code>char</code>类型</strong></p>
+<p><code>(72&lt;&lt;24)+(78&lt;&lt;16)+(85&lt;&lt;8)+101</code> // 第一个数<br>
+<code>1213093221</code> // 转化为十进制数位<br>
+<code>0100 1000 0100 1110 0101 0101 0110 0101</code> // 转化为二进制数</p>
+<p><code>114&lt;&lt;24</code> // 第二个数<br>
+<code>1912602624</code> // 转化为十进制数位<br>
+<code>0111 0010 0000 0000 0000 0000 0000 0000</code> // 转化为二进制数</p>
+<p><strong>然后逐一分析每个Byte。</strong></p>
+<p>分析结果是这样的</p>
+<pre><code>0100 1000 0100 1110 0101 0101 0110 0101
+0100 1000   the decimalism is   72, the char is H
+0100 1110   the decimalism is   78, the char is N
+0101 0101   the decimalism is   85, the char is U
+0110 0101   the decimalism is   101, the char is e
+
+0111 0010 0000 0000 0000 0000 0000 0000
+0111 0010   the decimalism is   114, the char is r
+0000 0000   the decimalism is   0, the char is
+0000 0000   the decimalism is   0, the char is
+0000 0000   the decimalism is   0, the char is
+</code></pre>
+<p><code>decimalism</code> 的意思是十进制。</p>
+<p>也就是说，int数组c如果按位转化为char*字符串，那么输出应该和前面几个一样，为<code>HNUer</code>才是，为什么会反而输出的是<code>eUNH</code>。</p>
+<h2><a id="_90"></a>解惑</h2>
+<p>原来，在计算机中，有种叫做字节序的东西。</p>
+<blockquote>
+<p>字节顺序，又称端序或尾序（英语：Endianness），在计算机科学领域中，指存储器中或在数字通信链路中，组成多字节的字的字节的排列顺序。</p>
+</blockquote>
+<blockquote>
+<p>在几乎所有的机器上，多字节对象都被存储为连续的字节序列。例如在C语言中，一个类型为int的变量x地址为0x100，那么其对应地址表达式&amp;x的值为0x100。且x的四个字节将被存储在存储器的0x100, 0x101, 0x102, 0x103位置。</p>
+</blockquote>
+<blockquote>
+<p>字节的排列方式有两个通用规则。例如，一个多位的整数，按照存储地址从低到高排序的字节中，如果该整数的最低有效字节（类似于最低有效位）在最高有效字节的前面，则称小端序；反之则称大端序。在网络应用中，字节序是一个必须被考虑的因素，因为不同机器类型可能采用不同标准的字节序，所以均按照网络标准转化。</p>
+</blockquote>
+<blockquote>
+<p>例如假设上述变量x类型为int，位于地址0x100处，它的十六进制为0x01234567，地址范围为0x100~0x103字节，其内部排列顺序依赖于机器的类型。大端法从首位开始将是：0x100: 01, 0x101: 23,…。而小端法将是：0x100: 67, 0x101: 45,…。<br>
+—引自维基百科</p>
+</blockquote>
+<p>举个栗子</p>
+<p>对于一个类型为int，位于地址0x100处，它的十六进制为0x12345678，地址范围为0x100~0x103字节的变量，它的大端序是这样的：<br>
+纵向看<br>
+<img src="https://img-blog.csdnimg.cn/20190305214925835.png" alt="在这里插入图片描述"><br>
+横向看<br>
+<img src="https://img-blog.csdnimg.cn/20190305214738725.png" alt="在这里插入图片描述"></p>
+<p>而小端序是这样的：</p>
+<p>纵向看：<br>
+<img src="https://img-blog.csdnimg.cn/20190305214940809.png" alt="在这里插入图片描述"></p>
+<p>横向看：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190305215011483.png" alt="在这里插入图片描述"></p>
+<p>因此，我以为会输出<code>HNUer</code>，是<strong>因为我误把输出字符的顺序当成了从高位先输出</strong>。而实际上，在我的计算机上，字符存储的是字节序是小端序。</p>
+<p><strong>从低位往高位读</strong>的话，它是读出<code>eUNH</code>，遇到第一个’\0’中止。 如下图：<br>
+<img src="https://img-blog.csdnimg.cn/20190305220122807.png" alt="在这里插入图片描述"></p>
+<p>如果是大端序的话<br>
+从低位往高位读，刚好就是HNUer。如下图：<br>
+<img src="https://img-blog.csdnimg.cn/20190305221433497.png" alt="在这里插入图片描述"></p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,507 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/89221100				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p></p><div class="toc"><h3>文章目录</h3><ul><ul><li><a href="#_3" rel="nofollow">环境</a></li><li><a href="#_12" rel="nofollow">使用方法</a></li><li><a href="#phase_1_24" rel="nofollow">phase 1</a></li><li><a href="#phase_2_49" rel="nofollow">phase 2</a></li><li><a href="#phase_3_102" rel="nofollow">phase 3</a></li><li><a href="#phase_4_216" rel="nofollow">phase 4</a></li><li><a href="#phase_5_325" rel="nofollow">phase 5</a></li><li><a href="#phase_6_409" rel="nofollow">phase 6</a></li><li><a href="#secret_phase_510" rel="nofollow">secret phase</a></li><li><a href="#_556" rel="nofollow">结果展示</a></li></ul></ul></div><p></p>
+<hr>
+<h2><a id="_3"></a>环境</h2>
+<pre><code>操作系统：ubuntu 12.04（32bit）
+gcc版本：4.6.3
+实验时间：2019/4/10 - 2019/4/11
+bomb lab版本：csapp 原书第2版
+@author：姬小野
+</code></pre>
+<hr>
+<h2><a id="_12"></a>使用方法</h2>
+<p>1、	使用命令 objdump -d bomb &gt; bomb.s，获取可执行文件bomb的汇编源码，同时重定向输出到文件bomb.s中。<br>
+即可在文件中方便地查看汇编代码<br>
+<img src="https://img-blog.csdnimg.cn/20190411215212171.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>2、	阅读官方文档，得知可以将输入写入到文件中，就不用每次拆炸弹都需要自己从头开始手动输入。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190411215222326.png" alt="在这里插入图片描述"></p>
+<hr>
+<h2><a id="phase_1_24"></a>phase 1</h2>
+<p>汇编代码分析和注释如下</p>
+<pre><code>08048b50 &lt;phase_1&gt;:
+ 8048b50:   83 ec 1c                sub    $0x1c,%esp
+ 8048b53:   c7 44 24 04 bc a1 04    movl   $0x804a1bc,0x4(%esp) # 为什么这个奇怪的地址入栈？gdb打印，发现一个字符串
+ 8048b5a:   08 
+ 8048b5b:   8b 44 24 20             mov    0x20(%esp),%eax
+ 8048b5f:   89 04 24                mov    %eax,(%esp)
+ 8048b62:   e8 8d 04 00 00          call   8048ff4 &lt;strings_not_equal&gt; # 判断字符串是否相等
+ 8048b67:   85 c0                   test   %eax,%eax # 和jz配合检查%eax是否为0，为0跳。test，执行与运算。
+ 8048b69:   74 05                   je     8048b70 &lt;phase_1+0x20&gt; # je就是jz
+ 8048b6b:   e8 96 05 00 00          call   8049106 &lt;explode_bomb&gt;
+ 8048b70:   83 c4 1c                add    $0x1c,%esp # 返回了，栈指针指回帧指针处
+ 8048b73:   c3                      ret    
+</code></pre>
+<p>使用gdb工具打印地址0x804a1bc处的值。<br>
+得到如下字符串，猜测是phase1的密码。<br>
+(gdb) x/s 0x804a1bc<br>
+0x804a1bc:   “We have to stand with our North Korean allies.”</p>
+<hr>
+<h2><a id="phase_2_49"></a>phase 2</h2>
+<p>汇编代码分析和注释如下</p>
+<pre><code>08048b74 &lt;phase_2&gt;: 
+ 8048b74:   53                      push   %ebx
+ 8048b75:   83 ec 38                sub    $0x38,%esp # 为局部变量划分空间。栈向低地址方向增长，所以用sub
+ 8048b78:   8d 44 24 18             lea    0x18(%esp),%eax
+ 8048b7c:   89 44 24 04             mov    %eax,0x4(%esp)
+ 8048b80:   8b 44 24 40             mov    0x40(%esp),%eax
+ 8048b84:   89 04 24                mov    %eax,(%esp)
+ 8048b87:   e8 af 06 00 00          call   804923b &lt;read_six_numbers&gt; # 读取6个数字
+
+ 8048b8c:   83 7c 24 18 00          cmpl   $0x0,0x18(%esp) # 判断第一个数字是否为0，如果不是bomb爆炸。bingo
+ 8048b91:   79 05                   jns    8048b98 &lt;phase_2+0x24&gt;
+ 8048b93:   e8 6e 05 00 00          call   8049106 &lt;explode_bomb&gt;
+
+ 8048b98:   bb 01 00 00 00          mov    $0x1,%ebx # for循环的开始，设置i(%ebx)为1
+
+ 8048b9d:   89 d8                   mov    %ebx,%eax # %eax是一个临时值，对它进行操作后，和下一个数字进行比较。
+ 8048b9f:   03 44 9c 14             add    0x14(%esp,%ebx,4),%eax # 上一个数字加到%eax上
+ 8048ba3:   39 44 9c 18             cmp    %eax,0x18(%esp,%ebx,4) # 比较%eax和当前数字
+ 8048ba7:   74 05                   je     8048bae &lt;phase_2+0x3a&gt; # 判断与爆炸
+ 8048ba9:   e8 58 05 00 00          call   8049106 &lt;explode_bomb&gt;
+ 8048bae:   83 c3 01                add    $0x1,%ebx # 相当于i++
+ 8048bb1:   83 fb 06                cmp    $0x6,%ebx # 相当于i != 6
+ 8048bb4:   75 e7                   jne    8048b9d &lt;phase_2+0x29&gt;
+
+ 8048bb6:   83 c4 38                add    $0x38,%esp # 将栈指针移到帧指针处，意味着函数要返回了。这两句相当于leave
+ 8048bb9:   5b                      pop    %ebx
+ 8048bba:   c3                      ret    
+</code></pre>
+<p>关键代码（for循环部分）如下</p>
+<pre><code>int x = 0, i;
+for (i = 1; i != 6; i++) {
+    x += i;
+    if (input[i] != x) bomb();
+}
+</code></pre>
+<p>第一个数字是0<br>
+第二个数字为0 + 1 = 1<br>
+第三个数字为1 + 2 = 3<br>
+第四个数字为3 + 3 = 6<br>
+第五个数字为6 + 4 = 10<br>
+第六个数字为10 + 5 = 15<br>
+结果为 0 1 3 6 10 15</p>
+<hr>
+<h2><a id="phase_3_102"></a>phase 3</h2>
+<p>汇编代码分析与注释如下</p>
+<pre><code>08048bbb &lt;phase_3&gt;:
+ 8048bbb:   83 ec 2c                sub    $0x2c,%esp
+ 8048bbe:   8d 44 24 1c             lea    0x1c(%esp),%eax
+ 8048bc2:   89 44 24 0c             mov    %eax,0xc(%esp)
+ 8048bc6:   8d 44 24 18             lea    0x18(%esp),%eax
+ 8048bca:   89 44 24 08             mov    %eax,0x8(%esp)
+ 8048bce:   c7 44 24 04 af a3 04    movl   $0x804a3af,0x4(%esp) # "%d %d"，两个数字？
+ 8048bd5:   08 
+ 8048bd6:   8b 44 24 30             mov    0x30(%esp),%eax
+ 8048bda:   89 04 24                mov    %eax,(%esp)
+ 8048bdd:   e8 8e fc ff ff          call   8048870 &lt;__isoc99_sscanf@plt&gt; # 应该是输入
+ 8048be2:   83 f8 01                cmp    $0x1,%eax # 判断scanf输入的值得数量是否大于1
+ 8048be5:   7f 05                   jg     8048bec &lt;phase_3+0x31&gt; # 大于，到8048bec,否则爆炸
+ 8048be7:   e8 1a 05 00 00          call   8049106 &lt;explode_bomb&gt;
+ 8048bec:   83 7c 24 18 07          cmpl   $0x7,0x18(%esp)
+ 8048bf1:   77 66                   ja     8048c59 &lt;phase_3+0x9e&gt; # 大于u，到8048c59,即爆炸
+
+ 8048bf3:   8b 44 24 18             mov    0x18(%esp),%eax # switch 的判断值
+ 8048bf7:   ff 24 85 1c a2 04 08    jmp    *0x804a21c(,%eax,4) # 跳转表
+
+ 8048bfe:   b8 00 00 00 00          mov    $0x0,%eax
+ 8048c03:   eb 05                   jmp    8048c0a &lt;phase_3+0x4f&gt; # 到8048c0a
+ 8048c05:   b8 0d 03 00 00          mov    $0x30d,%eax
+ 8048c0a:   2d 0a 01 00 00          sub    $0x10a,%eax
+ 8048c0f:   eb 05                   jmp    8048c16 &lt;phase_3+0x5b&gt; # 到8048c16
+ 8048c11:   b8 00 00 00 00          mov    $0x0,%eax
+ 8048c16:   05 4e 01 00 00          add    $0x14e,%eax
+ 8048c1b:   eb 05                   jmp    8048c22 &lt;phase_3+0x67&gt; # 到8048c22
+ 8048c1d:   b8 00 00 00 00          mov    $0x0,%eax
+ 8048c22:   2d 94 00 00 00          sub    $0x94,%eax
+ 8048c27:   eb 05                   jmp    8048c2e &lt;phase_3+0x73&gt; # 到8048c2e
+ 8048c29:   b8 00 00 00 00          mov    $0x0,%eax
+ 8048c2e:   05 94 00 00 00          add    $0x94,%eax
+ 8048c33:   eb 05                   jmp    8048c3a &lt;phase_3+0x7f&gt; # 到8048c3a
+ 8048c35:   b8 00 00 00 00          mov    $0x0,%eax
+ 8048c3a:   2d 94 00 00 00          sub    $0x94,%eax
+ 8048c3f:   eb 05                   jmp    8048c46 &lt;phase_3+0x8b&gt; # 到8048c46
+ 8048c41:   b8 00 00 00 00          mov    $0x0,%eax
+ 8048c46:   05 94 00 00 00          add    $0x94,%eax
+ 8048c4b:   eb 05                   jmp    8048c52 &lt;phase_3+0x97&gt; # 到8048c52
+ 8048c4d:   b8 00 00 00 00          mov    $0x0,%eax
+ 8048c52:   2d 94 00 00 00          sub    $0x94,%eax
+ 8048c57:   eb 0a                   jmp    8048c63 &lt;phase_3+0xa8&gt; # 到8048c63
+ 8048c59:   e8 a8 04 00 00          call   8049106 &lt;explode_bomb&gt;
+ 8048c5e:   b8 00 00 00 00          mov    $0x0,%eax
+ 8048c63:   83 7c 24 18 05          cmpl   $0x5,0x18(%esp)
+ 8048c68:   7f 06                   jg     8048c70 &lt;phase_3+0xb5&gt; # 到8048c70，即爆炸
+ 8048c6a:   3b 44 24 1c             cmp    0x1c(%esp),%eax # 输入的第二个数？
+ 8048c6e:   74 05                   je     8048c75 &lt;phase_3+0xba&gt; # 到8048c75，成功过关
+ 8048c70:   e8 91 04 00 00          call   8049106 &lt;explode_bomb&gt;
+ 8048c75:   83 c4 2c                add    $0x2c,%esp
+ 8048c78:   c3                      ret    
+</code></pre>
+<p>分析如下：</p>
+<p>看这两行，发现地址0x804a3af有点怪，在gdb中打印，发现它的值是"%d %d"，说明输入是两个数字</p>
+<pre><code>8048bce:    c7 44 24 04 af a3 04    movl   $0x804a3af,0x4(%esp) # "%d %d"，两个数字？
+</code></pre>
+<pre><code>8048bdd:    e8 8e fc ff ff          call   8048870 &lt;__isoc99_sscanf@plt&gt; # 调用的函数为scanf
+</code></pre>
+<p>判断scanf输入的值的数量，如果小于等于1，则爆炸</p>
+<pre><code>8048be2:    83 f8 01                cmp    $0x1,%eax # case 值从2开始
+8048be5:    7f 05                   jg     8048bec &lt;phase_3+0x31&gt; # 大于，到8048bec, 否则爆炸
+</code></pre>
+<p>发现如果输入的第一个参数大于7，那么也爆炸</p>
+<pre><code>8048bec:    83 7c 24 18 07          cmpl   $0x7,0x18(%esp)
+8048bf1:    77 66                   ja     8048c59 &lt;phase_3+0x9e&gt; # 大于u，到8048c59,即爆炸
+</code></pre>
+<p>参数1范围在 0 &lt;= arg1 &lt;= 7 内。</p>
+<p>接下来就是执行switch的跳转表</p>
+<pre><code>8048bf3:    8b 44 24 18             mov    0x18(%esp),%eax # switch 的判断值
+8048bf7:    ff 24 85 1c a2 04 08    jmp    *0x804a21c(,%eax,4) # 跳转表
+</code></pre>
+<p>下面的就是几条case语句了。<br>
+分析switch结束之后的语句，发现arg1 &gt; 5的话，爆炸</p>
+<pre><code>8048c63:    83 7c 24 18 05          cmpl   $0x5,0x18(%esp)
+8048c68:    7f 06                   jg     8048c70 &lt;phase_3+0xb5&gt; # 到8048c70，即爆炸
+</code></pre>
+<p>所以arg1的范围为[0, 5]。</p>
+<p>case一共有8组，case 0 ~ case 7</p>
+<pre><code>case 0: a = 0;
+case 1: a -= 10a;
+case 2: a += 14e;
+case 3: a -= 94;
+case 4: a += 94;
+case 5: a -= 94;
+case 6: a += 94;
+case 7: a -= 94;
+</code></pre>
+<p>在执行之前，a = 0</p>
+<p>经测试，有六组可行的数据。分别是：</p>
+<pre><code>0 701
+1 -80
+2 186
+3 -148
+4 0
+5 -148
+</code></pre>
+<hr>
+<h2><a id="phase_4_216"></a>phase 4</h2>
+<p>汇编代码分析与注释如下</p>
+<pre><code>08048c79 &lt;func4&gt;:
+ 8048c79:   83 ec 1c                sub    $0x1c,%esp
+ 8048c7c:   89 5c 24 10             mov    %ebx,0x10(%esp)
+ 8048c80:   89 74 24 14             mov    %esi,0x14(%esp)
+ 8048c84:   89 7c 24 18             mov    %edi,0x18(%esp)
+ 8048c88:   8b 74 24 20             mov    0x20(%esp),%esi # 6
+ 8048c8c:   8b 5c 24 24             mov    0x24(%esp),%ebx # 2
+ 8048c90:   85 f6                   test   %esi,%esi # 判断是否为0！也是基例！！！
+ 8048c92:   7e 2b                   jle    8048cbf &lt;func4+0x46&gt; # 结果小于等于0则跳转！
+ 8048c94:   83 fe 01                cmp    $0x1,%esi
+ 8048c97:   74 2b                   je     8048cc4 &lt;func4+0x4b&gt; # 递归基例，等于1！！！
+ 8048c99:   89 5c 24 04             mov    %ebx,0x4(%esp)
+ 8048c9d:   8d 46 ff                lea    -0x1(%esi),%eax
+ 8048ca0:   89 04 24                mov    %eax,(%esp)
+ 8048ca3:   e8 d1 ff ff ff          call   8048c79 &lt;func4&gt; # 第一个递归
+ 8048ca8:   8d 3c 18                lea    (%eax,%ebx,1),%edi
+ 8048cab:   89 5c 24 04             mov    %ebx,0x4(%esp)
+ 8048caf:   83 ee 02                sub    $0x2,%esi
+ 8048cb2:   89 34 24                mov    %esi,(%esp)
+ 8048cb5:   e8 bf ff ff ff          call   8048c79 &lt;func4&gt; # 第二个递归，返回值是%eax？
+ 8048cba:   8d 1c 07                lea    (%edi,%eax,1),%ebx
+ 8048cbd:   eb 05                   jmp    8048cc4 &lt;func4+0x4b&gt;
+ 8048cbf:   bb 00 00 00 00          mov    $0x0,%ebx
+ 8048cc4:   89 d8                   mov    %ebx,%eax
+ 8048cc6:   8b 5c 24 10             mov    0x10(%esp),%ebx
+ 8048cca:   8b 74 24 14             mov    0x14(%esp),%esi
+ 8048cce:   8b 7c 24 18             mov    0x18(%esp),%edi
+ 8048cd2:   83 c4 1c                add    $0x1c,%esp
+ 8048cd5:   c3                      ret    
+
+
+08048cd6 &lt;phase_4&gt;:
+ 8048cd6:   83 ec 2c                sub    $0x2c,%esp
+ 8048cd9:   8d 44 24 18             lea    0x18(%esp),%eax
+ 8048cdd:   89 44 24 0c             mov    %eax,0xc(%esp)
+ 8048ce1:   8d 44 24 1c             lea    0x1c(%esp),%eax
+ 8048ce5:   89 44 24 08             mov    %eax,0x8(%esp)
+ 8048ce9:   c7 44 24 04 af a3 04    movl   $0x804a3af,0x4(%esp) # 同样，是"%d %d"
+ 8048cf0:   08 
+ 8048cf1:   8b 44 24 30             mov    0x30(%esp),%eax
+ 8048cf5:   89 04 24                mov    %eax,(%esp)
+ 8048cf8:   e8 73 fb ff ff          call   8048870 &lt;__isoc99_sscanf@plt&gt; # scanf，截止目前，和上面完全一样
+ 8048cfd:   83 f8 02                cmp    $0x2,%eax
+ 8048d00:   75 0e                   jne    8048d10 &lt;phase_4+0x3a&gt; # 判断是否输入两个参数
+ 8048d02:   8b 44 24 18             mov    0x18(%esp),%eax # 第一个参数
+ 8048d06:   83 f8 01                cmp    $0x1,%eax
+ 8048d09:   7e 05                   jle    8048d10 &lt;phase_4+0x3a&gt; # arg2 &gt;= 2
+ 8048d0b:   83 f8 04                cmp    $0x4,%eax
+ 8048d0e:   7e 05                   jle    8048d15 &lt;phase_4+0x3f&gt; # arg2 &lt;= 4
+ 8048d10:   e8 f1 03 00 00          call   8049106 &lt;explode_bomb&gt;
+ 8048d15:   8b 44 24 18             mov    0x18(%esp),%eax # arg1赋值给%eax
+ 8048d19:   89 44 24 04             mov    %eax,0x4(%esp) # func的参数2
+ 8048d1d:   c7 04 24 06 00 00 00    movl   $0x6,(%esp) # func的参数1，越早的参数越小!!!
+ 8048d24:   e8 50 ff ff ff          call   8048c79 &lt;func4&gt; # 调用func4了
+ 8048d29:   3b 44 24 1c             cmp    0x1c(%esp),%eax # func4返回的结果(%eax是返回值)，判断是否和参数2相等
+ 8048d2d:   74 05                   je     8048d34 &lt;phase_4+0x5e&gt; # 判断结果，相等就OK，否则爆炸
+ 8048d2f:   e8 d2 03 00 00          call   8049106 &lt;explode_bomb&gt;
+ 8048d34:   83 c4 2c                add    $0x2c,%esp
+ 8048d37:   c3                      ret    
+</code></pre>
+<p>phase 4的过程是输入两个数(y, x)，然后调用一个函数func4(x, 6)，判断y 是否等于这个函数的返回值。如果不是，则爆炸。<br>
+根据下面四行代码可知，输入x 的取值范围为[2, 4]。</p>
+<pre><code>8048d06:   83 f8 01                cmp    $0x1,%eax
+ 8048d09:   7e 05                   jle    8048d10 &lt;phase_4+0x3a&gt; # arg2 &gt;= 2
+ 8048d0b:   83 f8 04                cmp    $0x4,%eax
+ 8048d0e:   7e 05                   jle    8048d15 &lt;phase_4+0x3f&gt; # arg2 &lt;= 4
+</code></pre>
+<p>以x = 2做讨论，下面的语句是执行func(6, 2)。结果是多少呢？</p>
+<pre><code>8048d15:   8b 44 24 18             mov    0x18(%esp),%eax # arg1赋值给%eax
+ 8048d19:   89 44 24 04             mov    %eax,0x4(%esp) # func的参数2
+ 8048d1d:   c7 04 24 06 00 00 00    movl   $0x6,(%esp) # func的参数1，越早的参数越小!!!
+ 8048d24:   e8 50 ff ff ff          call   8048c79 &lt;func4&gt; # 调用func4了
+</code></pre>
+<p>分析func函数，发现它是一个递归函数。它有两个递归基例，和两个可能的自身调用。</p>
+<pre><code>int func4(int b, int a) {
+    if (b &lt;= 0) return 0;
+    if (b == 1) return a;
+    return func4(a, b - 1) + a + func4(a, b - 2);
+}
+</code></pre>
+<p>递归基例：</p>
+<pre><code>8048c90:   85 f6                   test   %esi,%esi # 判断是否为0！也是基例！！！
+ 8048c92:   7e 2b                   jle    8048cbf &lt;func4+0x46&gt; # 结果小于等于0则跳转！
+ 8048c94:   83 fe 01                cmp    $0x1,%esi
+ 8048c97:   74 2b                   je     8048cc4 &lt;func4+0x4b&gt; # 递归基例，等于1！！！
+</code></pre>
+<p>递归调用</p>
+<pre><code>8048ca3:   e8 d1 ff ff ff          call   8048c79 &lt;func4&gt; # 第一个递归调用
+</code></pre>
+<pre><code>8048cb5:   e8 bf ff ff ff          call   8048c79 &lt;func4&gt; # 第二个递归调用，返回值是%eax
+</code></pre>
+<p>根据上面的分析不难得出三种解，他们都可以通过关卡4.</p>
+<pre><code>40 2
+60 3
+80 4
+</code></pre>
+<hr>
+<h2><a id="phase_5_325"></a>phase 5</h2>
+<p>汇编代码分析与注释如下：</p>
+<pre><code>08048d38 &lt;phase_5&gt;:
+ 8048d38:   53                      push   %ebx
+ 8048d39:   83 ec 28                sub    $0x28,%esp
+ 8048d3c:   8b 5c 24 30             mov    0x30(%esp),%ebx
+ 8048d40:   65 a1 14 00 00 00       mov    %gs:0x14,%eax
+ 8048d46:   89 44 24 1c             mov    %eax,0x1c(%esp)
+ 8048d4a:   31 c0                   xor    %eax,%eax
+ 8048d4c:   89 1c 24                mov    %ebx,(%esp) # 数组开始？
+ 8048d4f:   e8 87 02 00 00          call   8048fdb &lt;string_length&gt; # 计算长度，写入到%eax里面了
+ 8048d54:   83 f8 06                cmp    $0x6,%eax
+ 8048d57:   74 05                   je     8048d5e &lt;phase_5+0x26&gt; # 字符串长度为6
+ 8048d59:   e8 a8 03 00 00          call   8049106 &lt;explode_bomb&gt;
+
+ 8048d5e:   b8 00 00 00 00          mov    $0x0,%eax # i = 0
+ 8048d63:   0f be 14 03             movsbl (%ebx,%eax,1),%edx # 符号扩展双字。%ebx的值是什么？
+ 8048d67:   83 e2 0f                and    $0xf,%edx
+ 8048d6a:   0f b6 92 3c a2 04 08    movzbl 0x804a23c(%edx),%edx
+ 8048d71:   88 54 04 15             mov    %dl,0x15(%esp,%eax,1) # 替换了读入的字符？
+ 8048d75:   83 c0 01                add    $0x1,%eax # i++
+ 8048d78:   83 f8 06                cmp    $0x6,%eax
+ 8048d7b:   75 e6                   jne    8048d63 &lt;phase_5+0x2b&gt; # 循环，0 &lt;= i &lt; 6
+
+ 8048d7d:   c6 44 24 1b 00          movb   $0x0,0x1b(%esp)
+ 8048d82:   c7 44 24 04 12 a2 04    movl   $0x804a212,0x4(%esp) # oilers，刚好6个！
+ 8048d89:   08 
+ 8048d8a:   8d 44 24 15             lea    0x15(%esp),%eax
+ 8048d8e:   89 04 24                mov    %eax,(%esp) # 传递字符数组！数组，所以是地址？！
+ 8048d91:   e8 5e 02 00 00          call   8048ff4 &lt;strings_not_equal&gt;
+ 8048d96:   85 c0                   test   %eax,%eax
+ 8048d98:   74 05                   je     8048d9f &lt;phase_5+0x67&gt; # 判断字符是否相等，不相等则爆炸
+ 8048d9a:   e8 67 03 00 00          call   8049106 &lt;explode_bomb&gt;
+ 8048d9f:   8b 44 24 1c             mov    0x1c(%esp),%eax
+ 8048da3:   65 33 05 14 00 00 00    xor    %gs:0x14,%eax
+ 8048daa:   74 09                   je     8048db5 &lt;phase_5+0x7d&gt;
+ 8048dac:   8d 74 26 00             lea    0x0(%esi,%eiz,1),%esi
+ 8048db0:   e8 1b fa ff ff          call   80487d0 &lt;__stack_chk_fail@plt&gt; # 栈检查
+ 8048db5:   83 c4 28                add    $0x28,%esp
+ 8048db8:   5b                      pop    %ebx
+ 8048db9:   c3                      ret   
+</code></pre>
+<p>这是一道字符串的题目，提交答案正确的时候还有点小惊讶，没想到自己的第一个猜测就正确了！</p>
+<p>首先是判断输入的字符串的长度，限制在6.</p>
+<pre><code>8048d4f:    e8 87 02 00 00          call   8048fdb &lt;string_length&gt; # 计算长度，写入到%eax里面了
+8048d54:    83 f8 06                cmp    $0x6,%eax
+8048d57:    74 05                   je     8048d5e &lt;phase_5+0x26&gt; # 字符串长度为6
+</code></pre>
+<p>接下来的那一大段就是一个i = 0 到 i &lt; 6 的for循环</p>
+<p>在循环中使用了我们读取的字符串。这个循环做了什么工作呢？先看看循环体之后的一段，这是一个字符串比较过程。比较的两个字符串是0x15(%esp)和地址0x804a212中的字符串。使用gdb工具，查看0x804a212处的值，发现是oilers。0x15(%esp)是我们输入的字符串，那么这个判断是不是说明我们输入的字符串应该是oilers呢？没这么简单！</p>
+<pre><code> 8048d8a:   8d 44 24 15             lea    0x15(%esp),%eax
+ 8048d8e:   89 04 24                mov    %eax,(%esp) # 传递字符数组！数组，所以是地址？！
+ 8048d91:   e8 5e 02 00 00          call   8048ff4 &lt;strings_not_equal&gt;
+ 8048d96:   85 c0                   test   %eax,%eax
+ 8048d98:   74 05                   je     8048d9f &lt;phase_5+0x67&gt; # 判断字符是否相等，不相等则爆炸
+</code></pre>
+<p>观察for循环，我发现，0x15(%esp)处的值不再是原生的输入数据了，而是经过了更改的。如何更改？这就是解密的关键过程。</p>
+<pre><code> 8048d5e:   b8 00 00 00 00          mov    $0x0,%eax # i = 0
+ 8048d63:   0f be 14 03             movsbl (%ebx,%eax,1),%edx # 符号扩展双字。%ebx的值是什么？
+ 8048d67:   83 e2 0f                and    $0xf,%edx
+ 8048d6a:   0f b6 92 3c a2 04 08    movzbl 0x804a23c(%edx),%edx
+ 8048d71:   88 54 04 15             mov    %dl,0x15(%esp,%eax,1) # 替换了读入的字符？
+ 8048d75:   83 c0 01                add    $0x1,%eax # i++
+ 8048d78:   83 f8 06                cmp    $0x6,%eax
+ 8048d7b:   75 e6                   jne    8048d63 &lt;phase_5+0x2b&gt; # 循环，0 &lt;= i &lt; 6
+</code></pre>
+<p>假设读入a[6].i = 0 时，对a[0]，首先将它与0xf相与，得到的值作为偏移量，和0x804a23c地址相加得到一个新的地址，传递给%edx，然后再把低八位传递给a[0]。也就是说，原先的a[0]是用来生成地址的，生成了地址，这个地址的值在哪里？我们使用gdb查看0x804a23c。</p>
+<pre><code>(gdb) x/s 0x804a23c
+0x804a23c &lt;array.2954&gt;:  "maduiersnfotvbylSo you think you can stop the bomb with ctrl-c, do you?"
+</code></pre>
+<p>发现它是一个字符串（字符数组），它里面0-15位置的字符，就是我们解密的素材了。逆向的过程是，我们要找到oilers，找到每个字符的下表，如o的下标10，i的下标4，l（15），e（5），r（6），s（7）。<br>
+这串密码10-4-15-5-6-7是原生字符串和0xf相与之后得到的，那么什么字符串可以得到这串密码呢？一种可能的解是ASCII值为10-4-15-5-6-7的字符串。但是它是多解的，因为与0xf相与截取的是低四位，所以高四位无论是什么都没关系。为了输入方便，我把它们调整到了a-z区间，每个字符加(01100000)2，也就是96. 得到的这组可行解为 <code>jdoefg</code> 。第五关也顺利通过了。</p>
+<hr>
+<h2><a id="phase_6_409"></a>phase 6</h2>
+<p>汇编代码分析与注释如下</p>
+<pre><code>08048dba &lt;phase_6&gt;:
+ 8048dba:   56                      push   %esi
+ 8048dbb:   53                      push   %ebx
+ 8048dbc:   83 ec 44                sub    $0x44,%esp
+ 8048dbf:   8d 44 24 10             lea    0x10(%esp),%eax
+ 8048dc3:   89 44 24 04             mov    %eax,0x4(%esp)
+ 8048dc7:   8b 44 24 50             mov    0x50(%esp),%eax
+ 8048dcb:   89 04 24                mov    %eax,(%esp)
+ 8048dce:   e8 68 04 00 00          call   804923b &lt;read_six_numbers&gt; # 同样是六个数字
+ 8048dd3:   be 00 00 00 00          mov    $0x0,%esi # int i = 0。恐怕是while循环
+ 8048dd8:   8b 44 b4 10             mov    0x10(%esp,%esi,4),%eax # 第一个数值！
+ 8048ddc:   83 e8 01                sub    $0x1,%eax # 如果%eax初始值为7，那么减1后会爆炸.应&lt;=6且&gt;=1
+ 8048ddf:   83 f8 05                cmp    $0x5,%eax # 需要小于等于5
+ 8048de2:   76 05                   jbe    8048de9 &lt;phase_6+0x2f&gt; # 小于等于跳转，无符号!
+ 8048de4:   e8 1d 03 00 00          call   8049106 &lt;explode_bomb&gt;
+ 8048de9:   83 c6 01                add    $0x1,%esi # i++
+ 8048dec:   83 fe 06                cmp    $0x6,%esi # i &lt; 6
+ 8048def:   74 33                   je     8048e24 &lt;phase_6+0x6a&gt; # 跳转到很下面，下面循环继续？while循环吧，break
+ 8048df1:   89 f3                   mov    %esi,%ebx
+ 8048df3:   8b 44 9c 10             mov    0x10(%esp,%ebx,4),%eax
+ 8048df7:   39 44 b4 0c             cmp    %eax,0xc(%esp,%esi,4) # 上一个数字！因为i++了，然后0xc比0x10少4
+ 8048dfb:   75 05                   jne    8048e02 &lt;phase_6+0x48&gt; # 如果上一个数字和这个数字不相等，跳转，否则爆炸
+ 8048dfd:   e8 04 03 00 00          call   8049106 &lt;explode_bomb&gt;
+ 8048e02:   83 c3 01                add    $0x1,%ebx # ++
+ 8048e05:   83 fb 05                cmp    $0x5,%ebx # 和5比较
+ 8048e08:   7e e9                   jle    8048df3 &lt;phase_6+0x39&gt; # 小于就进入循环。双重循环do while
+ 8048e0a:   eb cc                   jmp    8048dd8 &lt;phase_6+0x1e&gt; # soga，大循环跳转
+
+ 8048e0c:   8b 52 08                mov    0x8(%edx),%edx # 段一，这是一个结构体的指针。数值、编号、下一地址(+8)。 
+ 8048e0f:   83 c0 01                add    $0x1,%eax # 2,
+ 8048e12:   39 c8                   cmp    %ecx,%eax
+ 8048e14:   75 f6                   jne    8048e0c &lt;phase_6+0x52&gt;
+ 8048e16:   89 54 b4 28             mov    %edx,0x28(%esp,%esi,4) # 段二。读入的6个数之后的存储区，存结构体的地址。
+ 8048e1a:   83 c3 01                add    $0x1,%ebx
+ 8048e1d:   83 fb 06                cmp    $0x6,%ebx
+ 8048e20:   75 07                   jne    8048e29 &lt;phase_6+0x6f&gt;
+ 8048e22:   eb 1c                   jmp    8048e40 &lt;phase_6+0x86&gt;
+
+ 8048e24:   bb 00 00 00 00          mov    $0x0,%ebx # 0
+ 8048e29:   89 de                   mov    %ebx,%esi # 0
+ 8048e2b:   8b 4c 9c 10             mov    0x10(%esp,%ebx,4),%ecx # a[0]
+ 8048e2f:   b8 01 00 00 00          mov    $0x1,%eax # eax = 1
+ 8048e34:   ba 3c c1 04 08          mov    $0x804c13c,%edx 
+ 8048e39:   83 f9 01                cmp    $0x1,%ecx # 判断a[0] &gt; 1?
+ 8048e3c:   7f ce                   jg     8048e0c &lt;phase_6+0x52&gt; # 如果大于跳转到段一，上面
+ 8048e3e:   eb d6                   jmp    8048e16 &lt;phase_6+0x5c&gt; # 否则跳转到段二，上面
+
+ 8048e40:   8b 5c 24 28             mov    0x28(%esp),%ebx # 第一个数据的地址
+ 8048e44:   8b 44 24 2c             mov    0x2c(%esp),%eax # 第二个数据的地址
+ 8048e48:   89 43 08                mov    %eax,0x8(%ebx)
+ 8048e4b:   8b 54 24 30             mov    0x30(%esp),%edx
+ 8048e4f:   89 50 08                mov    %edx,0x8(%eax)
+ 8048e52:   8b 44 24 34             mov    0x34(%esp),%eax
+ 8048e56:   89 42 08                mov    %eax,0x8(%edx)
+ 8048e59:   8b 54 24 38             mov    0x38(%esp),%edx
+ 8048e5d:   89 50 08                mov    %edx,0x8(%eax)
+ 8048e60:   8b 44 24 3c             mov    0x3c(%esp),%eax
+ 8048e64:   89 42 08                mov    %eax,0x8(%edx)
+ 8048e67:   c7 40 08 00 00 00 00    movl   $0x0,0x8(%eax)
+
+ 8048e6e:   be 05 00 00 00          mov    $0x5,%esi # i = 5，循环从5开始到1. # 这个循环判断p-&gt;val大于p-&gt;next-&gt;val
+ 8048e73:   8b 43 08                mov    0x8(%ebx),%eax # 下面三条，这时相互影响，类似递归调用啊。
+ 8048e76:   8b 10                   mov    (%eax),%edx
+ 8048e78:   39 13                   cmp    %edx,(%ebx)
+ 8048e7a:   7d 05                   jge    8048e81 &lt;phase_6+0xc7&gt; # 这是关键了
+ 8048e7c:   e8 85 02 00 00          call   8049106 &lt;explode_bomb&gt;
+ 8048e81:   8b 5b 08                mov    0x8(%ebx),%ebx
+ 8048e84:   83 ee 01                sub    $0x1,%esi
+ 8048e87:   75 ea                   jne    8048e73 &lt;phase_6+0xb9&gt; # ZF为0时跳转，ZF是最近操作得出的结果为0，ZF=1。也就是esi = 1 - 1 = 0时，ZF = 1，不跳转。所以可以作为一个循环，当 i &gt;= 1时，循环继续。
+ 8048e89:   83 c4 44                add    $0x44,%esp
+ 8048e8c:   5b                      pop    %ebx
+ 8048e8d:   5e                      pop    %esi
+ 8048e8e:   c3                      ret    
+</code></pre>
+<p>第一大段是一个双重循环用来判断数组a中是否有重复的数据，并且a中元素的值限制在 1 &lt;= a[i] &lt;= 6，因为做了无符号跳转，所以负数不行！那么这些数据就是[1, 6]的一个排列，刚刚好！</p>
+<p>第二大段是根据读入的六个数字，将结构体的地址按顺序添加到栈中，根据后面的分析我们可以知道我们的目的是根据输入数据将链表元素重新排列，使得它从大到小排列。<br>
+结构体包含三个数据：val、id、下一元素地址。因此它是一个链表。</p>
+<p>用GDB分析地址0x804c13c</p>
+<pre><code>(gdb) x/18x 0x804c13c
+0x804c13c &lt;node1&gt;:  0x00000148  0x00000001  0x0804c148  0x00000218
+0x804c14c &lt;node2+4&gt;:    0x00000002  0x0804c154  0x00000259  0x00000003
+0x804c15c &lt;node3+8&gt;:    0x0804c160  0x0000012f  0x00000004  0x0804c16c
+0x804c16c &lt;node5&gt;:  0x00000152  0x00000005  0x0804c178  0x000002ab
+0x804c17c &lt;node6+4&gt;:    0x00000006  0x00000000
+</code></pre>
+<p>第三大段是根据我们添加的结构体的地址的顺序，将链表重新映射。与第二段结合就是，将链表元素按照输入的数据的顺序排列好。比如我们输入<code>6 3 2 5 1 4</code>，它的意思就是将原先排在第6的元素排在第一个，将原先排在第1的元素排在第5个。第二大段是整理元素地址顺序，第三大段是通过这个顺序修改元素地址。从而实现链表的排序。</p>
+<p>第四大段的功能是，从排列后的第一个元素开始，以指向下一元素地址的方式遍历整个链表，同时比较当前元素和下一元素的值。因此它是一个循环量为5的一重循环。且，如果出现当前元素小于下一元素的情况，将会爆照。这里要求排列好的顺序是非递增序的。</p>
+<p>因此，在了解了第4大段的功能之后，我们可以逆向地推理出应该输入的六个数据。也就是 <code>6 3 2 5 1 4</code>。</p>
+<hr>
+<h2><a id="secret_phase_510"></a>secret phase</h2>
+<p>从函数phase_defused的汇编代码中可以发现隐藏关卡的入口。<br>
+打印地址0x804a3be的值，发现它是DrEvil（邪恶博士？哈哈）</p>
+<p><img src="https://img-blog.csdnimg.cn/20190421103219968.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+在关卡四的密码后面加上DrEvil就可以在最后（六关通关后）进入隐藏关卡了。<br>
+<img src="https://img-blog.csdnimg.cn/20190421103314367.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/20190421103319705.png" alt="在这里插入图片描述"><br>
+从下面的条件判断，可初步看到输入数据的范围<br>
+<img src="https://img-blog.csdnimg.cn/20190421103343347.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+接下来调用函数fun7，发现它有两个参数，第一个参数是一个地址（指针），第二个参数是我们输入的数据。<br>
+最后执行fun7返回的结果需要是4 。否则就会爆炸。<br>
+<img src="https://img-blog.csdnimg.cn/20190421103353352.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+那么进入fun7里面分析，它有三种情况fun7(int <em>a, int b)：<br>
+1、<em>a == b 时，return 0<br>
+2、<em>a &lt; b 时，return 2</em>fun7(</em>(a+8), b) + 1；<br>
+3、<em>a &gt; b 时，return 2</em>fun7(</em>(a+4), b);<br>
+那么它的函数大概是这样的</p>
+<pre><code class="prism language-cpp"><span class="token keyword">int</span> <span class="token function">fun7</span><span class="token punctuation">(</span><span class="token keyword">int</span> <span class="token operator">*</span>a<span class="token punctuation">,</span> <span class="token keyword">int</span> b<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">*</span>a <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">*</span>a <span class="token operator">==</span> b<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">*</span>a <span class="token operator">&lt;</span> b<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> c <span class="token operator">=</span> <span class="token function">fun7</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">(</span>a <span class="token operator">+</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">2</span><span class="token operator">*</span>c <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> c <span class="token operator">=</span> <span class="token function">fun7</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">(</span>a <span class="token operator">+</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">2</span><span class="token operator">*</span>c<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>那么，要得到4</p>
+<pre><code>4 = 2*2
+2 = 1*2
+1 = 0*2 + 1
+0 = 0
+</code></pre>
+<p><img src="https://img-blog.csdnimg.cn/20190421103447268.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+根据那样的结构，最后会得到输入的数据等于0x7，也就是7.</p>
+<p>那么secret phase的结果就是7了</p>
+<hr>
+<h2><a id="_556"></a>结果展示</h2>
+<p>an<br>
+swer 为输入文件。<br>
+<img src="https://img-blog.csdnimg.cn/2019042110314956.png" alt="在这里插入图片描述"><br>
+程序结果<br>
+<img src="https://img-blog.csdnimg.cn/20190421103137421.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

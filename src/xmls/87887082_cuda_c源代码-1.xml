@@ -1,0 +1,164 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/87887082				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>记录下学习cuda过程中的源代码，附有注释以便回顾学习。</p>
+<pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+__global__ void add(int a, int b, int *c) {
+	*c = a + b;
+}
+
+int test1(void) { // 设备指针和生成设备内存
+	int c;
+	int *dev_c;
+	cudaMalloc((void**)&amp;dev_c, sizeof(int));
+	add &lt;&lt; &lt;1, 1 &gt;&gt; &gt; (1, 3, dev_c);
+	//printf("%d\n", *dev_c);
+	cudaMemcpy(&amp;c, dev_c, sizeof(int), cudaMemcpyDeviceToHost);
+	printf("%d\n", c);
+	cout &lt;&lt; c &lt;&lt; endl;
+	cudaFree(dev_c);
+	//test();
+	return 0;
+}
+
+int test2() { // 测试在主机代码使用设备指针
+	int *dev;
+	cudaMalloc((void**)&amp;dev, sizeof(int));
+	*dev = 3; // 不能这样，虽然编译不会出现问题，但是运行过程中会中途退出
+	cout &lt;&lt; "hello" &lt;&lt; endl;
+	//cout &lt;&lt; dev &lt;&lt; endl;
+	return 0;
+}
+
+int test3() { // 获取设备信息
+	int count;
+	cudaGetDeviceCount(&amp;count); // GPU数量
+	cout &lt;&lt; "有" &lt;&lt; count &lt;&lt; "个GPU设备" &lt;&lt; endl;
+	cudaDeviceProp prop;
+	for (int i = 0; i &lt; count; ++i) {
+		cudaGetDeviceProperties(&amp;prop, i);
+		cout &lt;&lt; "  ---  Genenal Information of Device  --  " &lt;&lt; endl;
+		cout &lt;&lt; "name: " &lt;&lt; prop.name &lt;&lt; endl;
+		cout &lt;&lt; "Compute capability: " &lt;&lt; prop.major &lt;&lt; "." &lt;&lt; prop.minor &lt;&lt; endl;
+		cout &lt;&lt; "Clock Rate: " &lt;&lt; prop.clockRate &lt;&lt; endl;
+
+		cout &lt;&lt; "\n  __  Memory Information for device __  " &lt;&lt; endl;
+		cout &lt;&lt; "Total global memery: " &lt;&lt; prop.totalGlobalMem &lt;&lt; endl;
+		cout &lt;&lt; "Total constant memery: " &lt;&lt; prop.totalConstMem &lt;&lt; endl;// 常量内存总量，什么鬼
+	}
+	return 0;
+}
+
+void test4() { // 根据条件选择设备，版本号大于等于1.3
+	cudaDeviceProp prop;
+	int dev;
+	cudaGetDevice(&amp;dev);
+	cout &lt;&lt; "ID of current device is " &lt;&lt; dev &lt;&lt; endl;
+
+	memset(&amp;prop, 0, sizeof(cudaDeviceProp));
+	prop.major = 1;
+	prop.minor = 3;
+	cudaChooseDevice(&amp;dev, &amp;prop);
+	cout &lt;&lt; "the id of choose device is " &lt;&lt; dev &lt;&lt; endl;
+	cudaSetDevice(dev);
+}
+
+const int N = 10;
+
+__global__ void add(int *a, int *b, int *c) {
+	int tid = blockIdx.x;
+	if (tid &lt; N) {
+		c[tid] = a[tid] + b[tid];
+	}
+}
+
+void test5() { // cuda进行十位的矢量相加
+	int a[N], b[N], c[N];
+	for (int i = 0; i &lt; 10; ++i) { // 初始化矢量
+		a[i] = -i - 3;
+		b[i] = i * i;
+	}
+	int *dev_a, *dev_b, *dev_c; // 在GPU上分配内存
+	cudaMalloc((void**)&amp;dev_a, N*sizeof(int));
+	cudaMalloc((void**)&amp;dev_b, N * sizeof(int));
+	cudaMalloc((void**)&amp;dev_c, N * sizeof(int));
+	cudaMemcpy(dev_a, a, sizeof(a), cudaMemcpyHostToDevice);
+	cudaMemcpy(dev_b, b, sizeof(b), cudaMemcpyHostToDevice);
+	for (int i = 0; i &lt; 100000; ++i)
+		add &lt;&lt; &lt;N, 1 &gt;&gt; &gt; (dev_a, dev_b, dev_c); // 左线程块的数量，右一个线程块的线程数量
+	cudaMemcpy(c, dev_c, sizeof(c), cudaMemcpyDeviceToHost);
+
+	for (int i = 0; i &lt; N; ++i) {
+		cout &lt;&lt; a[i] &lt;&lt; " + " &lt;&lt; b[i] &lt;&lt; " = " &lt;&lt; c[i] &lt;&lt; endl;
+	}
+
+	cudaFree(dev_a);
+	cudaFree(dev_b);
+	cudaFree(dev_c);
+}
+
+__global__ void add_2(int *a, int *b, int *c) {
+	int tid = threadIdx.x;
+	if (tid &lt; N) {
+		c[tid] = a[tid] + b[tid];
+	}
+}
+
+void test6() { // cuda进行十位的矢量相加 // 使用并行线程而非并行线程块实现
+	int a[N], b[N], c[N];
+	for (int i = 0; i &lt; 10; ++i) { // 初始化矢量
+		a[i] = -i - 3;
+		b[i] = i * i;
+	}
+	int *dev_a, *dev_b, *dev_c; // 在GPU上分配内存
+	cudaMalloc((void**)&amp;dev_a, N * sizeof(int));
+	cudaMalloc((void**)&amp;dev_b, N * sizeof(int));
+	cudaMalloc((void**)&amp;dev_c, N * sizeof(int));
+	cudaMemcpy(dev_a, a, sizeof(a), cudaMemcpyHostToDevice);
+	cudaMemcpy(dev_b, b, sizeof(b), cudaMemcpyHostToDevice);
+	for (int i = 0; i &lt; 100000; ++i)
+		add_2 &lt;&lt; &lt;1, N &gt;&gt; &gt; (dev_a, dev_b, dev_c); // 左线程块的数量，右一个线程块的线程数量
+	cudaMemcpy(c, dev_c, sizeof(c), cudaMemcpyDeviceToHost);
+
+	for (int i = 0; i &lt; N; ++i) {
+		cout &lt;&lt; a[i] &lt;&lt; " + " &lt;&lt; b[i] &lt;&lt; " = " &lt;&lt; c[i] &lt;&lt; endl;
+	}
+
+	cudaFree(dev_a);
+	cudaFree(dev_b);
+	cudaFree(dev_c);
+}
+
+__global__ void add_3() {
+	int bx = blockIdx.x, tx = threadIdx.x;
+	int bd = blockDim.x, gd = gridDim.x; // 测试有多少个
+	printf("bx = %d  tx = %d  bd = %d  gd = %d\n\n", bx, tx, bd, gd);
+	//cout &lt;&lt; "hello, world" &lt;&lt; endl; // 核函数里面似乎不能使用cout？可以使用printf？
+	//cout &lt;&lt; "bx = " &lt;&lt; bx &lt;&lt; "  tx = " &lt;&lt; tx &lt;&lt; endl;
+	//cout &lt;&lt; "bd = " &lt;&lt; bd &lt;&lt; "  gd = " &lt;&lt; gridDim.x &lt;&lt; endl &lt;&lt; endl;
+}
+
+void test7() {
+	add_3 &lt;&lt; &lt;2, 5 &gt;&gt; &gt; ();
+}
+
+int main() {
+	test7();
+}
+</code></pre>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

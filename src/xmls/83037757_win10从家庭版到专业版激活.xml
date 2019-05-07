@@ -1,0 +1,38 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>找了几个博客, 激活专业版非常顺利, 不知道会不会有后遗症…</p>
+<p><a href="https://blog.csdn.net/hce1478506318/article/details/80863274" rel="nofollow">博客一</a></p>
+<p>这篇博客帮助我把win10家庭版升级到win10专业版, 但是win10专业版显示未激活.</p>
+<p><a href="https://blog.csdn.net/AinUser/article/details/79247841" rel="nofollow">博客2</a></p>
+<p>这篇博客帮助我把win10pro激活.</p>
+<p>注: 本博客时间<code>2018-10-13</code>, 内容可能会有时效性.</p>
+<hr>
+<p>以下内容转载自上面两博客, 合成一拨.</p>
+<h2><a id="_16"></a>博客一提供:</h2>
+<pre><code>win10家庭版升级专业版密钥(我用的是第三个)：
+VK7JG-NPHTM-C97JM-9MPGT-3V66T
+4N7JM-CV98F-WY9XX-9D8CF-369TT 
+FMPND-XFTD4-67FJC-HDR8C-3YH26
+可以联系小编vx: zxc786455244  获取最新可用密钥。
+</code></pre>
+<h2><a id="_25"></a>博客二提供:</h2>
+<pre><code>1.  以管理员身份运行cmd
+2. 输入 slmgr.vbs /upk   
+3. 弹出窗口显未“已成功卸载了产品密钥”。弹出窗口显未“已成功卸载了产品密钥”。
+4. 输入 slmgr /ipk W269N-WFGWX-YVC9B-4J6C9-T83GX
+弹出窗口提示：“成功的安装了产品密钥”。
+5. 输入  slmgr /skms zh.us.to
+弹出窗口提示：“密钥管理服务计算机名成功的设置为zh.us.to”。
+6. 输入 slmgr /ato
+弹出窗口提示：“成功的激活了产品”。
+</code></pre>
+<h1><a id="_38"></a>激活成功</h1>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,98 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79456849				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>find函数和distance函数都是算法库里的函数 <br>
+包含在头文件algorithm中, 算是STL的内容</p>
+
+<p>只介绍最简单的用法</p>
+
+<p>find函数有三个参数, 分别代表 <br>
+(起点, 终点后一位, 要找的数) <br>
+返回一个地址</p>
+
+<p>可以是容器, 或者数组</p>
+
+<p>如果没有找到, 则返回终点后一位的地址 <br>
+找到了, 返回区间[first,end)中第一个值等于value的元素的地址</p>
+
+<p><strong>进阶版本是find_if()函数</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span> &lt;<span class="hljs-keyword">int</span>&gt;</span> v;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) {
+        v.push_back(i);
+    }
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span> &lt;<span class="hljs-keyword">int</span>&gt;</span> ::iterator it = find(v.begin(), v.end(), <span class="hljs-number">9</span>);
+    <span class="hljs-keyword">if</span>(it != v.end()) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"在当前vector中\n"</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"不在当前vector中\n"</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+
+    <span class="hljs-keyword">int</span> a[<span class="hljs-number">10</span>];
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i)
+        a[i] = i;
+    <span class="hljs-keyword">int</span> *p =  find(a, a + <span class="hljs-number">10</span>, <span class="hljs-number">10</span>);
+    <span class="hljs-keyword">if</span>(p == a+<span class="hljs-number">10</span>) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"不在这个数组中\n"</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"在这个数组中\n"</span>;
+}</code></pre>
+
+<p>find_if()函数</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">bool</span> cmp(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">return</span> (n &gt; <span class="hljs-number">3</span> &amp;&amp; n &lt; <span class="hljs-number">19</span>);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> a[<span class="hljs-number">10</span>];
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) {
+        a[i] = i;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; *find_if(a, a+<span class="hljs-number">10</span>, cmp);
+}</code></pre>
+
+<p>distance是返回容器中两个地址之间的距离</p>
+
+<p>参数为(地址, 地址) <br>
+返回值为整型</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> a[<span class="hljs-number">10</span>];
+    <span class="hljs-keyword">int</span> dis = distance(a, a+<span class="hljs-number">2</span>);
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"距离为: "</span> &lt;&lt; dis &lt;&lt; endl; 
+
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) {
+        a[i] = i;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"该数组中, 2和7的距离是: \n"</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; distance(find(a, a+<span class="hljs-number">10</span>, <span class="hljs-number">2</span>), find(a, a+<span class="hljs-number">10</span>, <span class="hljs-number">7</span>));
+}</code></pre>
+
+<p>参考资料 <br>
+<a href="http://blog.csdn.net/scarletty/article/details/7058398" rel="nofollow">1</a> <br>
+<a href="http://blog.csdn.net/xiajun07061225/article/details/7491256" rel="nofollow">2</a></p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

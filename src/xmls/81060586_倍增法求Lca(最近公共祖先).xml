@@ -1,0 +1,347 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81060586				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><div class="toc">
+<ul>
+<li><ul>
+<li><a href="#一-明确问题" rel="nofollow">一. 明确问题</a></li>
+<li><a href="#二-思路引导" rel="nofollow">二. 思路引导</a></li>
+<li><a href="#三-整体框架" rel="nofollow">三. 整体框架.</a><ul>
+<li><a href="#步骤一" rel="nofollow">步骤一</a></li>
+<li><a href="#步骤二" rel="nofollow">步骤二</a></li>
+<li><a href="#步骤三" rel="nofollow">步骤三</a></li>
+<li><a href="#步骤四" rel="nofollow">步骤四</a></li>
+</ul>
+</li>
+<li><a href="#完整代码" rel="nofollow">完整代码</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</p>
+
+<h2 id="一-明确问题">一. 明确问题</h2>
+
+<p>看标题便知道了, 这篇博客力求解决的问题是<strong>求出一棵树的两个结点的最近公共祖先(LCA), 方法是倍增法.</strong></p>
+
+<p>那么什么是Lca呢? </p>
+
+<blockquote>
+  <p><strong>它是一棵树上两个结点向上移动, 最后交汇的第一个结点, 也就是说这两个结点祖先里离树根最远也是离他们最近的结点.</strong></p>
+</blockquote>
+
+<p>什么是倍增法呢? </p>
+
+<blockquote>
+  <p><strong>此问题说的是用倍增法求解lca问题, 那么我们可以推测这种方法还可以解决其他的一些问题(不在当下讨论范围). 在学习的过程中, 我是这么理解的: 它是一种类似于二分的方法, 不过这里不是二分, 而是倍增, 以2倍, 4倍, 等等倍数增长</strong></p>
+</blockquote>
+
+<p>一下没有理解倍增法没关系, 看后面的做法, 再结合前面, 前后贯通大概可以理解的七七八八.</p>
+
+
+
+<h2 id="二-思路引导">二. 思路引导</h2>
+
+<p><strong>下面的思路试图把过程模块化, 如果你不知道一个地方如何实现, 还请不要纠结</strong>(比如不要纠结于树的深度怎么求, 假设我们求好了树的深度)</p>
+
+<p>我们找的是任意两个结点的最近公共祖先, 那么我们可以考虑这么两种种情况:</p>
+
+<ol>
+<li>两结点的深度相同.</li>
+<li>两结点深度不同.</li>
+</ol>
+
+<p>算法实现来说, <strong>第一种情况是第二种情况的特殊情况, 第二种情况是要转化成第一种情况的</strong></p>
+
+<p>先不考虑其他, 我们思考这么一个问题: <strong>对于两个深度不同的结点, 把深度更深的那个向其父节点迭代, 直到这个迭代结点和另一个结点深度相同, 那么这两个深度相同的结点的Lca也就是原两个结点的Lca. </strong> 因此第二种情况转化成第一种情况来求解Lca是可行的.</p>
+
+<p>现在还不知道如何把两个结点迭代到相同深度, 别急, 这里用到的是上面提到的<strong>倍增法</strong>.</p>
+
+<p>那么剩下的问题事就解决第一种情况了, 两个结点深度相同了. 怎么求他们的Lca呢?</p>
+
+<p>这里也是用了倍增法. 思路和上一步的倍增法是一样的, 不同之处有两点 <br>
+1. 这次是两个结点一起迭代向前的. <br>
+2.  这次迭代停止的条件和上次不一样.</p>
+
+<p>OK, 现在无法理解上面的几个过程没关系,<strong>只要知道我们用递增法解决了上述的两个问题.</strong> 具体细节看下面分析.</p>
+
+
+
+<h2 id="三-整体框架">三. 整体框架.</h2>
+
+<p>那么过了一遍上面的思路引导之后, 我们可以大概想一想怎么实现整个的问题了.</p>
+
+<p>其实用求Lca这个问题可以分为两块: <strong>预处理 + 查询</strong>, 其中预处理是O(VlogV), 而一次查询是O(logV), V代表结点数量. 所以总<strong>时间复杂度为O(VlogV +ＱlogV)</strong>. Q为查询次数</p>
+
+<p>其步骤是这样的:  <br>
+1. 存储一棵树(邻接表法) <br>
+2.  获取树各结点的上的深度(dfs或bfs) <br>
+3.  获取2次幂祖先的结点, 用parents[maxn][20]数组存储, <strong>倍增法关键</strong> <br>
+4.  用倍增法查询Lca</p>
+
+<h3 id="步骤一">步骤一</h3>
+
+<p><strong>用邻接表存储一棵树, 并用from[]数组记录各结点的父节点, 其中没有父节点的就是root.</strong></p>
+
+<p>parents[u][]数组存储的是u结点的祖先结点.  <br>
+如parents[u][0], 是u结点的2⁰祖先结点, 即1祖先, 也即父节点. 在输入过程中可以直接得到. <br>
+parents[u][1], 是u结点的2¹祖先结点,即2祖先, 也即父亲的父亲 <br>
+parents[u][2], 是u结点的2²祖先结点, 即4祖先, 也即(父亲的父亲)的(父亲的父亲), 也就是爷爷的爷爷. </p>
+
+<p><strong>理解这个关系很重要, 这也是通过父亲结点获取整个祖先结点的关键.</strong> 现在可以先跳过.</p>
+
+<pre class="prettyprint"><code class=" hljs cs"><span class="hljs-keyword">void</span> getData()
+{
+    cin &gt;&gt; n;
+    <span class="hljs-keyword">int</span> u, v;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; n; ++i) {
+        cin &gt;&gt; u &gt;&gt; v;
+        G[u].push_back(v);
+        parents[v][<span class="hljs-number">0</span>] = u;
+        <span class="hljs-keyword">from</span>[v] = <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">from</span>[i] == -<span class="hljs-number">1</span>) root = i;
+    }
+}</code></pre>
+
+<h3 id="步骤二">步骤二</h3>
+
+<p><strong>获取各结点的深度, 可以用DFS或这BFS方法</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-keyword">void</span> getDepth_dfs(<span class="hljs-keyword">int</span> u) <span class="hljs-comment">// DFS求深度</span>
+{
+    <span class="hljs-keyword">int</span> len = G[u].size();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; len; ++i) {
+        <span class="hljs-keyword">int</span> v = G[u][i];
+        depth[v] = depth[u] + <span class="hljs-number">1</span>;
+        getDepth_dfs(v);
+    }
+}
+
+<span class="hljs-keyword">void</span> getDepth_bfs(<span class="hljs-keyword">int</span> u) <span class="hljs-comment">// BFS求深度</span>
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> Q;
+    Q.push(u);
+    <span class="hljs-keyword">while</span> (!Q.empty()) {
+        <span class="hljs-keyword">int</span> v = Q.front();
+        Q.pop();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; G[v].size(); ++i) {
+            depth[G[v][i]] = depth[v] + <span class="hljs-number">1</span>;
+            Q.push(G[v][i]);
+        }
+    }
+}</code></pre>
+
+<h3 id="步骤三">步骤三</h3>
+
+<p><strong>求祖先</strong></p>
+
+<p>在步骤一里面我们讨论了parents数组的意义, 它存的是结点u的2次幂祖先, 从父亲结点开始. 为什么要存2次幂? 这就是<strong>倍增法</strong>的思想了, 我们进行范围缩小不是一步一步的, 那样太暴力了, <strong>所以我们需要某个跨度, 让我们能够先跨越大步, 接近的时候在小步小步跨越, 这样可以大大节省时间.</strong></p>
+
+<p><strong>读者可能会疑惑, 先大步, 后小步, 可是我怎么知道什么时候该大步, 什么时候该小步呢? 难道不会不小心跨过头吗? </strong></p>
+
+<p>其实不会的, 在代码实现上, <strong>这样的跨越有条件约束, 是非常讲究的. 读者不必为此纠结, </strong> 不过要讲解也是十分费力不讨好的事情, 所以请读者认证推敲后面Lca函数的代码, 认真琢磨为什么是那样跨越, 其中真味自会品出. <strong>最好是自己写几个例子, 模拟跨越的过程, 在结合现实意义去理解</strong></p>
+
+<p>那么我们回到当前问题. 请看下面这个公式:</p>
+
+<blockquote>
+  <p><strong>parents[i][j] = parents[parents[i][j-1]][j-1]</strong></p>
+</blockquote>
+
+<p>这是构造此数组的公式. 不难理解, <strong>父亲的父亲就是爷爷, 爷爷的爷爷就是4倍祖先. </strong> 请读者结合现实意义去理解. </p>
+
+<pre class="prettyprint"><code class=" hljs cs"><span class="hljs-keyword">void</span> getParents()
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> up = <span class="hljs-number">1</span>; (<span class="hljs-number">1</span> &lt;&lt; up) &lt;= n; ++up) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+            parents[i][up] = parents[parents[i][up - <span class="hljs-number">1</span>]][up - <span class="hljs-number">1</span>];
+        }
+    }
+}</code></pre>
+
+<h3 id="步骤四">步骤四</h3>
+
+<p>做完了前面<strong>O(VlogV)</strong>的预处理操作, 剩下的就是查询了, 一次查询<strong>O(logV)</strong></p>
+
+<p>因此, 我们可以敏锐的想到: <strong>Lca算法适合查询次数比较多的情况, 不然, 光是预处理就花了那么多时间了</strong>. 所以说, 查询是我们享受成果的时候了.</p>
+
+<pre class="prettyprint"><code class=" hljs rsl">int Lca(int u, int v)
+{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">depth</span>[u] &lt; <span class="hljs-built_in">depth</span>[v]) swap(u, v); <span class="hljs-comment">// 使满足u深度更大, 便于后面操作 </span>
+    int i = -<span class="hljs-number">1</span>, j;
+    <span class="hljs-comment">// i求的是最大二分跨度 </span>
+    <span class="hljs-keyword">while</span> ((<span class="hljs-number">1</span> &lt;&lt; (i + <span class="hljs-number">1</span>)) &lt;= <span class="hljs-built_in">depth</span>[u]) ++i;
+
+    <span class="hljs-comment">// 下面这个循环是为了让u和v到同一深度 </span>
+    <span class="hljs-keyword">for</span> (j = i; j &gt;= <span class="hljs-number">0</span>; --j) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">depth</span>[u] - (<span class="hljs-number">1</span> &lt;&lt; j) &gt;= <span class="hljs-built_in">depth</span>[v]) { <span class="hljs-comment">// 是&gt;=, 因为如果&lt;,代表跳过头了,跳到了上面. </span>
+            u = parents[u][j];
+        }
+    }
+
+    <span class="hljs-keyword">if</span> (u == v) <span class="hljs-keyword">return</span> u; <span class="hljs-comment">// 刚好是祖宗 </span>
+
+    <span class="hljs-comment">// u和v一起二分找祖宗</span>
+    <span class="hljs-keyword">for</span> (j = i; j &gt;= <span class="hljs-number">0</span>; --j) {
+        <span class="hljs-keyword">if</span> (parents[u][j] != parents[v][j]) {
+            u = parents[u][j];
+            v = parents[v][j];
+        }
+    }
+    <span class="hljs-keyword">return</span> parents[u][<span class="hljs-number">0</span>]; <span class="hljs-comment">// 说明上个循环迭代到了Lca的子结点 </span>
+}</code></pre>
+
+<ul>
+<li><p>首先把u调整到深度更大(或相同)的结点, 便于后面操作.</p></li>
+<li><p>然后获取最大跨度i, 所有的跨越都是从i开始的.</p></li>
+<li><p>再然后把u上升到和v一样的深度. 也就是我们前面讨论过的情况二转情况一.</p></li>
+<li><p>最后, 两个结点同时迭代, 直到找到Lca</p></li>
+</ul>
+
+<p>至此, 我们的问题就解决了.</p>
+
+<h2 id="完整代码">完整代码</h2>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10005</span>;
+<span class="hljs-keyword">int</span> parents[maxn][<span class="hljs-number">20</span>], depth[maxn];
+<span class="hljs-keyword">int</span> n, from[maxn], root = -<span class="hljs-number">1</span>;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> G[maxn];
+
+<span class="hljs-keyword">void</span> init()
+{
+    <span class="hljs-built_in">memset</span>(parents, -<span class="hljs-number">1</span>, <span class="hljs-keyword">sizeof</span>(parents));
+    <span class="hljs-built_in">memset</span>(from, -<span class="hljs-number">1</span>, <span class="hljs-keyword">sizeof</span>(from));
+    <span class="hljs-built_in">memset</span>(depth, -<span class="hljs-number">1</span>, <span class="hljs-keyword">sizeof</span>(depth));
+}
+
+<span class="hljs-keyword">void</span> getData()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">int</span> u, v;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; u &gt;&gt; v;
+        G[u].push_back(v);
+        parents[v][<span class="hljs-number">0</span>] = u;
+        from[v] = <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (from[i] == -<span class="hljs-number">1</span>) root = i;
+    }
+}
+
+<span class="hljs-keyword">void</span> getDepth_dfs(<span class="hljs-keyword">int</span> u)
+{
+    <span class="hljs-keyword">int</span> len = G[u].size();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; len; ++i) {
+        <span class="hljs-keyword">int</span> v = G[u][i];
+        depth[v] = depth[u] + <span class="hljs-number">1</span>;
+        getDepth_dfs(v);
+    }
+}
+
+<span class="hljs-keyword">void</span> getDepth_bfs(<span class="hljs-keyword">int</span> u)
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> Q;
+    Q.push(u);
+    <span class="hljs-keyword">while</span> (!Q.empty()) {
+        <span class="hljs-keyword">int</span> v = Q.front();
+        Q.pop();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; G[v].size(); ++i) {
+            depth[G[v][i]] = depth[v] + <span class="hljs-number">1</span>;
+            Q.push(G[v][i]);
+        }
+    }
+}
+
+<span class="hljs-keyword">void</span> getParents()
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> up = <span class="hljs-number">1</span>; (<span class="hljs-number">1</span> &lt;&lt; up) &lt;= n; ++up) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+            parents[i][up] = parents[parents[i][up - <span class="hljs-number">1</span>]][up - <span class="hljs-number">1</span>];
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> Lca(<span class="hljs-keyword">int</span> u, <span class="hljs-keyword">int</span> v)
+{
+    <span class="hljs-keyword">if</span> (depth[u] &lt; depth[v]) swap(u, v);
+    <span class="hljs-keyword">int</span> i = -<span class="hljs-number">1</span>, j;
+    <span class="hljs-keyword">while</span> ((<span class="hljs-number">1</span> &lt;&lt; (i + <span class="hljs-number">1</span>)) &lt;= depth[u]) ++i;
+    <span class="hljs-keyword">for</span> (j = i; j &gt;= <span class="hljs-number">0</span>; --j) {
+        <span class="hljs-keyword">if</span> (depth[u] - (<span class="hljs-number">1</span> &lt;&lt; j) &gt;= depth[v]) {
+            u = parents[u][j];
+        }
+    }
+    <span class="hljs-keyword">if</span> (u == v) <span class="hljs-keyword">return</span> u;
+    <span class="hljs-keyword">for</span> (j = i; j &gt;= <span class="hljs-number">0</span>; --j) {
+        <span class="hljs-keyword">if</span> (parents[u][j] != parents[v][j]) {
+            u = parents[u][j];
+            v = parents[v][j];
+        }
+    }
+    <span class="hljs-keyword">return</span> parents[u][<span class="hljs-number">0</span>];
+}
+
+<span class="hljs-keyword">void</span> questions()
+{
+    <span class="hljs-keyword">int</span> q, u, v;
+    <span class="hljs-built_in">cin</span> &gt;&gt; q;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; q; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; u &gt;&gt; v;
+        <span class="hljs-keyword">int</span> ans = Lca(u, v);
+        <span class="hljs-built_in">cout</span> &lt;&lt; ans &lt;&lt; endl;
+        <span class="hljs-comment">//cout &lt;&lt; u &lt;&lt; " 和 " &lt;&lt; v &lt;&lt; " 的最近公共祖先(LCA)是: " &lt;&lt; ans &lt;&lt; endl; </span>
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    init();
+    getData();
+    depth[root] = <span class="hljs-number">1</span>;
+    getDepth_dfs(root);
+    <span class="hljs-comment">//getDepth_bfs(root);</span>
+    getParents();
+    questions();
+}
+<span class="hljs-comment">/*
+9
+1 2
+1 3
+1 4
+2 5
+2 6
+3 7
+6 8
+7 9
+5
+1 3
+5 6
+8 9
+8 4
+5 8
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

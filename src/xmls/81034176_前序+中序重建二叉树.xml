@@ -1,0 +1,205 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81034176				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>如何构建一棵二叉树?</p>
+
+<p>代码只有自己真正写的时候才会发现很多漏洞. 因为当我写好代码, 以为一切万事大吉的时候, 发现一切根本不是那么回事! <strong>所有的一切都崩塌了!</strong></p>
+
+<p><strong>输入一组数据就可以构建二叉树? too young too simple ! </strong></p>
+
+<p>不过我还是那样干了, 按照书上说的插入方法, 每次传递一个数就在二叉树中插入一个数, 就这样构建起了一棵经不起考验的二叉树. 按照插入的规则找到第一个NULL, 把数插入进去, 这显然对于一般的是不行的.</p>
+
+<p>我的理解是, <strong>按照这种方法插入的树是一棵单链的树!!!</strong> 因为规则就完全错了.</p>
+
+<p>下面其中操作包括 <br>
+1. 二叉树结点的建立, 最好声明时就把子结点指向NULL <br>
+2.  插入结点. <strong>插入的规则一定要规定好</strong>, 要不然乱七八糟.  <br>
+3.  前序遍历, 中序遍历, 后序遍历. 一个模子.</p>
+
+<p>代码很垃圾, 但是可以作为二叉树操作的模板. 虽然逻辑有问题</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-comment">/* 似乎是失败了 
+目的: 
+1. 二叉树的建立(插入操作)
+*/</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> val;
+    Node *left, *right;
+};
+
+Node* newNode(<span class="hljs-keyword">int</span> x)
+{
+    Node* node = <span class="hljs-keyword">new</span> Node;
+    node-&gt;val = x;
+    node-&gt;left = node-&gt;right = NULL;  <span class="hljs-comment">// 这个很重要! 一定不要忘! </span>
+    <span class="hljs-keyword">return</span> node;
+}
+
+<span class="hljs-keyword">void</span> insert(Node* &amp;root, <span class="hljs-keyword">int</span> x, <span class="hljs-keyword">bool</span> &amp;flag) <span class="hljs-comment">// &amp;很重要! </span>
+{
+    <span class="hljs-keyword">if</span> (root == NULL) {
+        <span class="hljs-keyword">if</span> (flag) {
+            root = newNode(x);
+            flag = <span class="hljs-number">0</span>;
+        }
+        <span class="hljs-keyword">return</span>;
+    }
+    insert(root-&gt;left, x, flag);
+    insert(root-&gt;right, x, flag);
+}
+
+<span class="hljs-comment">// 话说这个建树的过程好奇怪 </span>
+Node* creatTree(<span class="hljs-keyword">int</span> data[], <span class="hljs-keyword">int</span> n)
+{
+    Node* root = NULL; 
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">bool</span> flag = <span class="hljs-number">1</span>;
+        insert(root, data[i], flag);
+    }
+    <span class="hljs-keyword">return</span> root;
+}
+
+<span class="hljs-keyword">void</span> preOrder(Node* root)
+{
+    <span class="hljs-keyword">if</span> (root == NULL) <span class="hljs-keyword">return</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; root-&gt;val &lt;&lt; <span class="hljs-string">' '</span>;
+    preOrder(root-&gt;left);
+    preOrder(root-&gt;right);
+}
+
+<span class="hljs-keyword">void</span> inOrder(Node *root)
+{
+    <span class="hljs-keyword">if</span> (root == NULL) <span class="hljs-keyword">return</span>;
+    inOrder(root-&gt;left);
+    <span class="hljs-built_in">cout</span> &lt;&lt; root-&gt;val &lt;&lt; <span class="hljs-string">' '</span>;
+    inOrder(root-&gt;right);
+}
+
+<span class="hljs-keyword">void</span> postOrder(Node *root)
+{
+    <span class="hljs-keyword">if</span> (root == NULL) <span class="hljs-keyword">return</span>;
+    postOrder(root-&gt;left);
+    postOrder(root-&gt;right);
+    <span class="hljs-built_in">cout</span> &lt;&lt; root-&gt;val &lt;&lt; <span class="hljs-string">' '</span>;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, data[<span class="hljs-number">1005</span>];
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; data[i];
+    }
+    Node *root;
+    root = creatTree(data, n);
+    <span class="hljs-comment">//preOrder(root); // 前序遍历</span>
+    <span class="hljs-built_in">cout</span> &lt;&lt; root-&gt;right;
+    <span class="hljs-comment">//cout &lt;&lt; root-&gt;left-&gt;left-&gt;val;</span>
+}
+<span class="hljs-comment">/*
+7
+1 2 3 4 5 6 7
+*/</span></code></pre>
+
+<hr>
+
+<p>那么我们来正经的讨论讨论, 怎么重建一棵二叉树呢?</p>
+
+<p>有很多种方法, 这里介绍<strong>前序+中序方法</strong></p>
+
+<p>看书可以知道, 要重建一棵二叉树, 至少知道这颗二叉树的<strong>中序遍历和(前序遍历与后序遍历中的一个)</strong>. </p>
+
+<p>三种遍历所给的信息各不相同, 但是其实<strong>前序和后序遍历所得到的信息是非常类似的.</strong></p>
+
+<p>前序: <strong>第一个数是根节点.</strong></p>
+
+<p>中序: <strong>左子树在根节点左边, 右子树在根节点右边</strong></p>
+
+<p>所以我们可以结合前序和中序的性质, <strong>用前序找到根节点, 在中序中将左子树和右子树划分, 从而递归求解.</strong></p>
+
+<p><strong>注意: 这些函数不要忘记返回root, 不然有啥用?</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> val;
+    Node *left, *right;
+};
+
+Node* newNode(<span class="hljs-keyword">int</span> x)
+{
+    Node* root = <span class="hljs-keyword">new</span> Node;
+    root-&gt;val = x;
+    root-&gt;left = root-&gt;right = NULL;
+    <span class="hljs-keyword">return</span> root; <span class="hljs-comment">// 不要忘了... </span>
+}
+
+Node* buildTree(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> pre, <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> vin)
+{
+    <span class="hljs-keyword">if</span> (pre.empty() || vin.empty()) <span class="hljs-keyword">return</span> NULL; 
+    <span class="hljs-keyword">int</span> val = pre[<span class="hljs-number">0</span>];
+    Node *root = newNode(val);
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> preLeft, preRight, vinLeft, vinRight;
+    <span class="hljs-keyword">int</span> index = -<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (index = <span class="hljs-number">0</span>; vin[index] != val; ++index) {
+        vinLeft.push_back(vin[index]);
+        preLeft.push_back(pre[index + <span class="hljs-number">1</span>]);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = index + <span class="hljs-number">1</span>; i &lt; vin.size(); ++i) {
+        vinRight.push_back(vin[i]);
+        preRight.push_back(pre[i]);
+    }
+    root-&gt;left = buildTree(preLeft, vinLeft);
+    root-&gt;right = buildTree(preRight, vinRight);
+    <span class="hljs-keyword">return</span> root; <span class="hljs-comment">// 不要忘记return它了 </span>
+}
+
+<span class="hljs-keyword">void</span> preOrder(Node* root)
+{
+    <span class="hljs-keyword">if</span> (root == NULL) <span class="hljs-keyword">return</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; root-&gt;val &lt;&lt; <span class="hljs-string">' '</span>;
+    preOrder(root-&gt;left);
+    preOrder(root-&gt;right);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> pre, vin;
+    <span class="hljs-keyword">int</span> n, x;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x;
+        pre.push_back(x);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x;
+        vin.push_back(x);
+    }
+    Node* root = buildTree(pre, vin);
+    preOrder(root);
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}
+<span class="hljs-comment">/*
+8
+
+1 2 4 7 3 5 6 8
+
+4 7 2 1 5 3 8 6
+*/</span> </code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

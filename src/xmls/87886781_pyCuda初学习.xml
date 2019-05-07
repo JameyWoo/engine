@@ -1,0 +1,90 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/87886781				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>今天找了篇文章学习了一下pycuda，发现过程其实和Cuda C差不多，而且代码里面还要用到Cuda C，感觉就是用了python的外壳，整理好了数据，然后传递给编写好的Cuda C，编译器编译即可。</p>
+<p>开始时遇到了一个问题，在解释下面这段代码时，出现这样的提示<br>
+<code>nvcc fatal : Cannot find compiler 'cl.exe' in PATH although Visual Studio 12.0 is added to PATH</code></p>
+<pre><code>mod = SourceModule("""
+ __global__ void doublify(float *a)
+ {
+ int idx = threadIdx.x + threadIdx.y*4;
+ a[idx] *= 2;
+ }
+ """)
+</code></pre>
+<p>在谷歌一下解决方法后，得到解决的方法是将cl.exe文件添加到环境变量中。在我的VS版本里这个程序的路径是<code>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\Hostx64\x64</code>，开始添加到系统环境变量里面总是失败，在powershell上还是找不到，经过多次尝试和重启之后终于添加成功。虽然还是不知道之前几次为什么没有添加成功，但是现在最开始的问题已经得到了解决。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190222224306824.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+<a href="https://blog.cycleuser.org/pycuda-tutorial-zhong-wen-ban.html" rel="nofollow">教程文章地址</a></p>
+<p>源代码如下</p>
+<pre><code>#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+import pycuda.driver as cuda
+import pycuda.autoinit
+from pycuda.compiler import SourceModule
+
+
+# In[2]:
+
+
+import numpy
+a = numpy.random.randn(4, 4)
+
+
+# In[3]:
+
+
+a = a.astype(numpy.float32)
+
+
+# In[4]:
+
+
+a_gpu = cuda.mem_alloc(a.nbytes)
+cuda.memcpy_htod(a_gpu, a)
+
+
+# In[5]:
+
+
+mod = SourceModule("""
+__global__ void doublify(float *a_gpu) {
+    int idx = threadIdx.x + threadIdx.y*4;
+    a_gpu[idx] *= 2;
+}
+""")
+
+
+# In[6]:
+
+
+func = mod.get_function("doublify")
+func(a_gpu, block=(4,4,1))
+
+
+# In[7]:
+
+
+a_doubled = numpy.empty_like(a)
+cuda.memcpy_dtoh(a_doubled, a_gpu)
+print (a_doubled)
+print (a)
+
+</code></pre>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

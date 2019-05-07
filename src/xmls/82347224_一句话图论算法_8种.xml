@@ -1,0 +1,454 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/82347224				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><div class="toc">
+<ul>
+<li><ul>
+<li><ul>
+<li><ul>
+<li><a href="#一句话dijkstra算法" rel="nofollow">一句话Dijkstra算法</a></li>
+<li><a href="#一句话spfa算法" rel="nofollow">一句话SPFA算法</a></li>
+<li><a href="#一句话kruskal算法" rel="nofollow">一句话Kruskal算法</a></li>
+<li><a href="#一句话prim算法" rel="nofollow">一句话Prim算法</a></li>
+<li><a href="#一句话tarjan算法" rel="nofollow">一句话Tarjan算法</a></li>
+<li><a href="#一句话euler回路算法" rel="nofollow">一句话Euler回路算法</a></li>
+<li><a href="#一句话floyd算法" rel="nofollow">一句话floyd算法</a></li>
+<li><a href="#一句话dag最长路算法" rel="nofollow">一句话DAG最长路算法</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</p>
+
+<h4 id="一句话dijkstra算法">一句话Dijkstra算法</h4>
+
+<p><strong>从源点开始更新邻边，遍历到达其最近的点，以其作为新源点，重复操作直到所有点更新完毕。</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> to, val;
+    Node (<span class="hljs-keyword">int</span> t, <span class="hljs-keyword">int</span> v) : to(t), val(v) {}
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10005</span>;
+
+<span class="hljs-keyword">int</span> n, m;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Node&gt;</span> G[maxn];
+<span class="hljs-keyword">int</span> vis[maxn] = {}, dis[maxn];
+
+<span class="hljs-keyword">void</span> Dijkstra()
+{
+    dis[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">int</span> u = -<span class="hljs-number">1</span>, _min = <span class="hljs-number">0x3f3f3f3f</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            <span class="hljs-keyword">if</span> (!vis[j] &amp;&amp; _min &gt; dis[j]) {
+                _min = dis[j];
+                u = j;
+            }
+        }
+        <span class="hljs-keyword">if</span> (u == -<span class="hljs-number">1</span>) <span class="hljs-keyword">break</span>;
+        vis[u] = <span class="hljs-keyword">true</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; G[u].size(); ++j) {
+            <span class="hljs-keyword">int</span> v = G[u][j].to, d = G[u][j].val;
+            dis[v] = min(dis[v], dis[u] + d);
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        dis[i] = <span class="hljs-number">0x3f3f3f3f</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-keyword">int</span> from, to, val;
+        <span class="hljs-built_in">cin</span> &gt;&gt; from &gt;&gt; to &gt;&gt; val;
+        G[from].push_back(Node(to, val));
+        G[to].push_back(Node(from, val));
+    }
+    Dijkstra();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        <span class="hljs-built_in">cout</span> &lt;&lt; dis[i] &lt;&lt; <span class="hljs-string">' '</span>;
+}</code></pre>
+
+<h4 id="一句话spfa算法">一句话SPFA算法</h4>
+
+<p><strong>一条边当且仅当有和他相连的边更新后它才会更新，使用队列不断找出这样的边，直到无法找出</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> to, val;
+    Node (<span class="hljs-keyword">int</span> t, <span class="hljs-keyword">int</span> v): to(t), val(v) {}
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10005</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;
+
+<span class="hljs-keyword">int</span> n, m;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Node&gt;</span> G[maxn];
+<span class="hljs-keyword">int</span> dis[maxn];
+<span class="hljs-keyword">bool</span> inq[maxn] = {};
+
+<span class="hljs-keyword">void</span> SPFA()
+{
+    dis[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> Q;
+    Q.push(<span class="hljs-number">1</span>);
+    inq[<span class="hljs-number">1</span>] = <span class="hljs-keyword">true</span>;
+    <span class="hljs-keyword">while</span> (!Q.empty()) {
+        <span class="hljs-keyword">int</span> now = Q.front();
+        Q.pop();
+        inq[now] = <span class="hljs-keyword">false</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; G[now].size(); ++i) {
+            <span class="hljs-keyword">int</span> u = now;
+            <span class="hljs-keyword">int</span> v = G[now][i].to, d = G[now][i].val;
+            <span class="hljs-keyword">if</span> (dis[v] &gt; dis[u] + d) {
+                dis[v] = dis[u] + d;
+                <span class="hljs-keyword">if</span> (!inq[v]) {
+                    Q.push(v);
+                    inq[v] = <span class="hljs-keyword">true</span>;
+                }
+            }
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">memset</span>(dis, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span>(dis));
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-keyword">int</span> from, to, val;
+        <span class="hljs-built_in">cin</span> &gt;&gt; from &gt;&gt; to &gt;&gt; val;
+        G[from].push_back(Node(to, val));
+        G[to].push_back(Node(from, val));
+    }
+    SPFA();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        <span class="hljs-built_in">cout</span> &lt;&lt; dis[i] &lt;&lt; <span class="hljs-string">' '</span>;
+}</code></pre>
+
+<h4 id="一句话kruskal算法">一句话Kruskal算法</h4>
+
+<p><strong>给边按权值从小到大排序，依次找出使边不成环的所有边，所构成图即为最小生成树。</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Edge {
+    <span class="hljs-keyword">int</span> from, to, cost;
+    Edge (<span class="hljs-keyword">int</span> f, <span class="hljs-keyword">int</span> t, <span class="hljs-keyword">int</span> c): from(f), to(t), cost(c) {}
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10005</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;
+
+<span class="hljs-keyword">int</span> n, m;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Edge&gt;</span> edge;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> ans;
+<span class="hljs-keyword">int</span> father[maxn];
+
+<span class="hljs-keyword">bool</span> cmp(Edge x, Edge y)
+{
+    <span class="hljs-keyword">return</span> x.cost &lt; y.cost;
+}
+
+<span class="hljs-keyword">void</span> init()
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        father[i] = i;
+}
+
+<span class="hljs-keyword">int</span> find(<span class="hljs-keyword">int</span> x)
+{
+    <span class="hljs-keyword">return</span> x == father[x] ? x : father[x] = find(father[x]);
+}
+
+<span class="hljs-keyword">void</span> Kruskal()
+{
+    sort(edge.begin(), edge.end(), cmp);
+    <span class="hljs-keyword">for</span> (size_t i = <span class="hljs-number">0</span>; i &lt; edge.size(); ++i) {
+        <span class="hljs-keyword">int</span> x = find(edge[i].from), y = find(edge[i].to);
+        <span class="hljs-keyword">if</span> (x != y) {
+            father[x] = y;
+            ans.push_back(edge[i].cost);
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    init();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-keyword">int</span> from, to, cost;
+        <span class="hljs-built_in">cin</span> &gt;&gt; from &gt;&gt; to &gt;&gt; cost;
+        edge.push_back(Edge(from, to, cost));
+    }
+    Kruskal();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; ans.size(); ++i)
+        <span class="hljs-built_in">cout</span> &lt;&lt; ans[i] &lt;&lt; <span class="hljs-string">' '</span>;
+}</code></pre>
+
+
+
+<h4 id="一句话prim算法">一句话Prim算法</h4>
+
+<p><strong>类似Dijkstra算法，从源点出发，更新其邻边所连点，找到最短距离点，加入点集作为源点集，重复步骤直到所有点添加完毕</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> to, cost;
+    Node (<span class="hljs-keyword">int</span> t, <span class="hljs-keyword">int</span> c) : to(t), cost(c) {}
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10005</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;
+
+<span class="hljs-keyword">int</span> n, m;
+<span class="hljs-keyword">int</span> dis[maxn] = {};
+<span class="hljs-keyword">bool</span> vis[maxn] = {};
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Node&gt;</span> G[maxn];
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> ans;
+
+<span class="hljs-keyword">void</span> Prim()
+{
+    dis[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">int</span> u = -<span class="hljs-number">1</span>, _min = <span class="hljs-number">0x3f3f3f3f</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            <span class="hljs-keyword">if</span> (!vis[j] &amp;&amp; dis[j] &lt; _min) {
+                _min = dis[j];
+                u = j;
+            }
+        }
+        <span class="hljs-keyword">if</span> (u == -<span class="hljs-number">1</span>) <span class="hljs-keyword">break</span>;
+        vis[u] = <span class="hljs-keyword">true</span>;
+        ans.push_back(_min);
+        <span class="hljs-keyword">for</span> (size_t j = <span class="hljs-number">0</span>; j &lt; G[u].size(); ++j) {
+            <span class="hljs-keyword">int</span> v = G[u][j].to, d = G[u][j].cost;
+            dis[v] = min(dis[v], d);
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-built_in">memset</span>(dis, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span>(dis));
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-keyword">int</span> from, to, cost;
+        <span class="hljs-built_in">cin</span> &gt;&gt; from &gt;&gt; to &gt;&gt; cost;
+        G[from].push_back(Node(to, cost));
+        G[to].push_back(Node(from, cost));
+    }
+    Prim();
+    <span class="hljs-keyword">for</span> (size_t i = <span class="hljs-number">1</span>; i &lt; ans.size(); ++i)
+        <span class="hljs-built_in">cout</span> &lt;&lt; ans[i] &lt;&lt; <span class="hljs-string">' '</span>;
+}</code></pre>
+
+<h4 id="一句话tarjan算法">一句话Tarjan算法</h4>
+
+<p><strong>新时间戳遇上了旧时间戳，就连成了环，dfn和low相同，则为环（或单点）的起点，维护dfn和low是要点。</strong></p>
+
+<p><strong>tip：单向图</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;stack&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10005</span>;
+<span class="hljs-keyword">int</span> n, m;
+<span class="hljs-keyword">bool</span> ins[maxn] = {};
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> G[maxn];
+<span class="hljs-stl_container"><span class="hljs-built_in">stack</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> S;
+<span class="hljs-keyword">int</span> dfn[maxn] = {}, low[maxn];
+<span class="hljs-keyword">int</span> index = <span class="hljs-number">0</span>, ans = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">void</span> tarjan(<span class="hljs-keyword">int</span> u)
+{
+    S.push(u);
+    ins[u] = <span class="hljs-keyword">true</span>;
+    dfn[u] = low[u] = ++index;
+    <span class="hljs-keyword">for</span> (size_t i = <span class="hljs-number">0</span>; i &lt; G[u].size(); ++i) {
+        <span class="hljs-keyword">int</span> v = G[u][i];
+        <span class="hljs-keyword">if</span> (dfn[v] == <span class="hljs-number">0</span>) {
+            tarjan(v);
+            low[u] = min(low[u], low[v]);
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ins[v]) low[u] = min(low[u], low[v]);
+    }
+    <span class="hljs-keyword">if</span> (dfn[u] == low[u]) {
+        ans++;
+        <span class="hljs-keyword">int</span> now;
+        <span class="hljs-keyword">do</span> {
+            now = S.top();
+            S.pop();
+            ins[now] = <span class="hljs-keyword">false</span>;
+            <span class="hljs-built_in">cout</span> &lt;&lt; now &lt;&lt; <span class="hljs-string">' '</span>;
+        } <span class="hljs-keyword">while</span> (now != u);
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-keyword">int</span> from, to;
+        <span class="hljs-built_in">cin</span> &gt;&gt; from &gt;&gt; to;
+        G[from].push_back(to);  <span class="hljs-comment">// 有向图</span>
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (!dfn[i]) tarjan(i);
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"ans = "</span> &lt;&lt; ans &lt;&lt; endl;
+}</code></pre>
+
+<h4 id="一句话euler回路算法">一句话Euler回路算法</h4>
+
+<p><strong>断奇偶，一点出，栈结构，末尾入，走去边，倒着输。</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;stack&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1005</span>;
+<span class="hljs-keyword">int</span> n, m;
+<span class="hljs-keyword">bool</span> G[maxn][maxn] = {};
+<span class="hljs-stl_container"><span class="hljs-built_in">stack</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> S;
+
+<span class="hljs-keyword">void</span> Euler(<span class="hljs-keyword">int</span> u)
+{
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"u = "</span> &lt;&lt; u &lt;&lt; endl;
+    <span class="hljs-keyword">for</span> (size_t i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (G[u][i]) {
+            G[u][i] = G[i][u] = <span class="hljs-keyword">false</span>;
+            Euler(i);
+        }
+    }
+    S.push(u);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-keyword">int</span> from, to;
+        <span class="hljs-built_in">cin</span> &gt;&gt; from &gt;&gt; to;
+        G[from][to] = G[to][from] = <span class="hljs-keyword">true</span>;
+    }
+    Euler(<span class="hljs-number">4</span>);
+    <span class="hljs-keyword">while</span> (!S.empty()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; S.top() &lt;&lt; <span class="hljs-string">' '</span>;
+        S.pop();
+    }
+}</code></pre>
+
+<h4 id="一句话floyd算法">一句话floyd算法</h4>
+
+<p><strong>遍历每个点作为中间结点，如果可以以此点更新两邻点，则更新。</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1003</span>;
+<span class="hljs-keyword">int</span> n, m;
+<span class="hljs-keyword">int</span> G[maxn][maxn] = {};
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">memset</span>(G, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span>(G));
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        G[i][i] = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-keyword">int</span> from, to, cost;
+        <span class="hljs-built_in">cin</span> &gt;&gt; from &gt;&gt; to &gt;&gt; cost;
+        G[from][to] = G[to][from] = cost;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">1</span>; k &lt;= n; ++k) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+                G[i][j] = min(G[i][j], G[i][k] + G[k][j]);
+            }
+        }
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j)
+            <span class="hljs-built_in">cout</span> &lt;&lt; G[i][j] &lt;&lt; <span class="hljs-string">' '</span>;
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+}</code></pre>
+
+<h4 id="一句话dag最长路算法">一句话DAG最长路算法</h4>
+
+<p><strong>预知后事如何，请从前事算起，取最大值也。</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1005</span>;
+<span class="hljs-keyword">int</span> n, m;
+<span class="hljs-keyword">int</span> G[maxn][maxn] = {};
+<span class="hljs-keyword">int</span> dis[maxn] = {};
+
+<span class="hljs-keyword">int</span> DAG(<span class="hljs-keyword">int</span> u)
+{
+    <span class="hljs-keyword">if</span> (dis[u]) <span class="hljs-keyword">return</span> dis[u];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (G[i][u]) {
+            dis[u] = max(dis[u], DAG(i) + G[i][u]);
+        }
+    }
+    <span class="hljs-keyword">return</span> dis[u];
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-keyword">int</span> from, to, cost;
+        <span class="hljs-built_in">cin</span> &gt;&gt; from &gt;&gt; to &gt;&gt; cost;
+        G[from][to] = cost;
+    }
+    DAG(<span class="hljs-number">4</span>);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">5</span>; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; dis[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

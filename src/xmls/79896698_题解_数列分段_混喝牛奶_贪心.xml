@@ -1,0 +1,83 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79896698				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>P1181 数列分段Section I <br>
+<a href="https://www.luogu.org/problemnew/show/P1181" rel="nofollow">.</a> <br>
+是真的水题</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, m, cnt = <span class="hljs-number">1</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">int</span> *a = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span> [n+<span class="hljs-number">1</span>], *b = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span> [n+<span class="hljs-number">1</span>];
+    b[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        b[i] = <span class="hljs-number">0</span>;
+        <span class="hljs-built_in">cin</span> &gt;&gt; a[i];
+        b[i] = b[i-<span class="hljs-number">1</span>] + a[i];
+        <span class="hljs-keyword">if</span>(b[i] &gt; m) {
+            b[i] = a[i];
+            cnt++;
+        }
+    } 
+    <span class="hljs-built_in">cout</span> &lt;&lt; cnt;
+}
+<span class="hljs-comment">/*
+5 6
+4 2 4 5 1
+*/</span></code></pre>
+
+<p>混喝牛奶 <br>
+<a href="https://www.luogu.org/problemnew/show/P1208" rel="nofollow">.</a></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">int</span> *a;
+
+<span class="hljs-keyword">bool</span> cmp(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)
+{
+    <span class="hljs-keyword">return</span> a[x] &lt; a[y];
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> m, n;
+    <span class="hljs-keyword">int</span> *b = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span> [n], *c = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span> [n];
+    a = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span> [n];
+    <span class="hljs-built_in">cin</span> &gt;&gt; m &gt;&gt; n;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; a[c[i] = i] &gt;&gt; b[i];
+    }
+    sort(c, c+n, cmp);
+    <span class="hljs-keyword">int</span> mon = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; m &gt; <span class="hljs-number">0</span>; ++i) {
+        <span class="hljs-keyword">if</span>(m &gt;= b[c[i]]) {
+            mon += a[c[i]] * b[c[i]];
+            m -= b[c[i]];
+        } <span class="hljs-keyword">else</span> {
+            mon += a[c[i]] * m;
+            m = <span class="hljs-number">0</span>;
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; mon;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

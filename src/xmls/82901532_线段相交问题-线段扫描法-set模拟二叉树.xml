@@ -1,0 +1,129 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/82901532				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h2><a id="__0"></a><strong>线段相交问题: 线段扫描法</strong></h2>
+<p>预处理:</p>
+<p>对每个线段, 解析其端点信息.</p>
+<p>线段分两类, 一类与x轴平行, 作为扫描线段, 左端点记为LEFT, 右端点记为RIGHT</p>
+<p>第二类与y轴平行, 作为区间查询线段, 上端点记为TOP, 下端点记为BOTTOM</p>
+<p>对每个端点, 其类型为EndPoint, <strong>除了存储坐标外, 还存储其线段下标以及端点类型</strong></p>
+<hr>
+<p>核心步骤:</p>
+<p>给线段的端点排序, 按坐标y从小到大的顺序, 如果相同, 则按照标记从小到大(bottom, left, right, top依次递增)</p>
+<p>维护一个set集合, 记录那些与y轴平行的线段的底端点的x坐标(每遇到就插入). 当遇到这些线段的顶端点时, 将该坐标弹出.</p>
+<p>遇到一个与x轴平行线段的左端点时, 进行线段扫描. 右端点不进行处理</p>
+<p>在set集合中的这些端点代表着当前y区间长度可访问到的与y轴平行的线段, 但扫描线段要与它们相交, 还需要判断区间长度, 用set内置函数可解决.</p>
+<hr>
+<p>代码:</p>
+<pre><code class="language-cpp"><code class="prism  language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;iostream&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;algorithm&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;vector&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;set&gt;</span></span>
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Point</span> <span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+	<span class="token function">Point</span><span class="token punctuation">(</span><span class="token keyword">int</span> x <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token keyword">int</span> y <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token function">x</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">y</span><span class="token punctuation">(</span>y<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+	<span class="token keyword">int</span> x<span class="token punctuation">,</span> y<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Segment</span> <span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+	<span class="token function">Segment</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+	<span class="token function">Segment</span><span class="token punctuation">(</span>Point p1<span class="token punctuation">,</span> Point p2<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token function">p1</span><span class="token punctuation">(</span>p1<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">p2</span><span class="token punctuation">(</span>p2<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+	Point p1<span class="token punctuation">,</span> p2<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">EndPoint</span> <span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+	Point p<span class="token punctuation">;</span>
+	<span class="token keyword">int</span> seg<span class="token punctuation">,</span> st<span class="token punctuation">;</span>
+	<span class="token function">EndPoint</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+	<span class="token function">EndPoint</span><span class="token punctuation">(</span>Point p<span class="token punctuation">,</span> <span class="token keyword">int</span> seg<span class="token punctuation">,</span> <span class="token keyword">int</span> st<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token function">p</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">seg</span><span class="token punctuation">(</span>seg<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">st</span><span class="token punctuation">(</span>st<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+	<span class="token keyword">bool</span> <span class="token keyword">operator</span> <span class="token operator">&lt;</span> <span class="token punctuation">(</span><span class="token keyword">const</span> EndPoint <span class="token operator">&amp;</span>ep<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+		<span class="token keyword">if</span> <span class="token punctuation">(</span>p<span class="token punctuation">.</span>y <span class="token operator">==</span> ep<span class="token punctuation">.</span>p<span class="token punctuation">.</span>y<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+			<span class="token keyword">return</span> st <span class="token operator">&lt;</span> ep<span class="token punctuation">.</span>st<span class="token punctuation">;</span>
+		<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">return</span> p<span class="token punctuation">.</span>y <span class="token operator">&lt;</span> ep<span class="token punctuation">.</span>p<span class="token punctuation">.</span>y<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+EndPoint EP<span class="token punctuation">[</span><span class="token number">2</span> <span class="token operator">*</span> <span class="token number">1000000</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> BOTTOM 0</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> LEFT 1</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> RIGHT 2</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> TOP 3</span>
+
+<span class="token keyword">int</span> <span class="token function">manhattanIntersection</span><span class="token punctuation">(</span>vector<span class="token operator">&lt;</span>Segment<span class="token operator">&gt;</span> S<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+	<span class="token keyword">int</span> n <span class="token operator">=</span> S<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> k <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		<span class="token keyword">if</span> <span class="token punctuation">(</span>S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p1<span class="token punctuation">.</span>y <span class="token operator">==</span> S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p2<span class="token punctuation">.</span>y<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+			<span class="token keyword">if</span> <span class="token punctuation">(</span>S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p1<span class="token punctuation">.</span>x <span class="token operator">&gt;</span> S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p2<span class="token punctuation">.</span>x<span class="token punctuation">)</span> <span class="token function">swap</span><span class="token punctuation">(</span>S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p1<span class="token punctuation">,</span> S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+			<span class="token keyword">if</span> <span class="token punctuation">(</span>S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p1<span class="token punctuation">.</span>y <span class="token operator">&gt;</span> S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p2<span class="token punctuation">.</span>y<span class="token punctuation">)</span> <span class="token function">swap</span><span class="token punctuation">(</span>S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p1<span class="token punctuation">,</span> S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token punctuation">}</span>
+		<span class="token keyword">if</span> <span class="token punctuation">(</span>S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p1<span class="token punctuation">.</span>y <span class="token operator">==</span> S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p2<span class="token punctuation">.</span>y<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+			EP<span class="token punctuation">[</span>k<span class="token operator">++</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">EndPoint</span><span class="token punctuation">(</span>S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p1<span class="token punctuation">,</span> i<span class="token punctuation">,</span> LEFT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+			EP<span class="token punctuation">[</span>k<span class="token operator">++</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">EndPoint</span><span class="token punctuation">(</span>S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p2<span class="token punctuation">,</span> i<span class="token punctuation">,</span> RIGHT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+			EP<span class="token punctuation">[</span>k<span class="token operator">++</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">EndPoint</span><span class="token punctuation">(</span>S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p1<span class="token punctuation">,</span> i<span class="token punctuation">,</span> BOTTOM<span class="token punctuation">)</span><span class="token punctuation">;</span>
+			EP<span class="token punctuation">[</span>k<span class="token operator">++</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">EndPoint</span><span class="token punctuation">(</span>S<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p2<span class="token punctuation">,</span> i<span class="token punctuation">,</span> TOP<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token punctuation">}</span>
+	<span class="token punctuation">}</span>
+	
+	<span class="token function">sort</span><span class="token punctuation">(</span>EP<span class="token punctuation">,</span> EP <span class="token operator">+</span> <span class="token number">2</span><span class="token operator">*</span>n<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	set<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> BT<span class="token punctuation">;</span>
+	<span class="token keyword">int</span> cnt <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+	BT<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span><span class="token number">1000000001</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	
+	<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">2</span> <span class="token operator">*</span> n<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		<span class="token keyword">if</span> <span class="token punctuation">(</span>EP<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>st <span class="token operator">==</span> TOP<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+			BT<span class="token punctuation">.</span><span class="token function">erase</span><span class="token punctuation">(</span>EP<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p<span class="token punctuation">.</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>EP<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>st <span class="token operator">==</span> LEFT<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+			set<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token operator">::</span>iterator start <span class="token operator">=</span> BT<span class="token punctuation">.</span><span class="token function">lower_bound</span><span class="token punctuation">(</span>S<span class="token punctuation">[</span>EP<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>seg<span class="token punctuation">]</span><span class="token punctuation">.</span>p1<span class="token punctuation">.</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+			set<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token operator">::</span>iterator end <span class="token operator">=</span> BT<span class="token punctuation">.</span><span class="token function">upper_bound</span><span class="token punctuation">(</span>S<span class="token punctuation">[</span>EP<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>seg<span class="token punctuation">]</span><span class="token punctuation">.</span>p2<span class="token punctuation">.</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+			cnt <span class="token operator">+</span><span class="token operator">=</span> <span class="token function">distance</span><span class="token punctuation">(</span>start<span class="token punctuation">,</span> end<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>EP<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>st <span class="token operator">==</span> BOTTOM<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+			BT<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>EP<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>p<span class="token punctuation">.</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token punctuation">}</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">return</span> cnt<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+	<span class="token keyword">int</span> n<span class="token punctuation">;</span>
+	cin <span class="token operator">&gt;&gt;</span> n<span class="token punctuation">;</span>
+	vector<span class="token operator">&lt;</span>Segment<span class="token operator">&gt;</span> seg<span class="token punctuation">;</span>
+	<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		<span class="token keyword">int</span> x1<span class="token punctuation">,</span> y1<span class="token punctuation">,</span> x2<span class="token punctuation">,</span> y2<span class="token punctuation">;</span>
+		cin <span class="token operator">&gt;&gt;</span> x1 <span class="token operator">&gt;&gt;</span> y1 <span class="token operator">&gt;&gt;</span> x2 <span class="token operator">&gt;&gt;</span> y2<span class="token punctuation">;</span>
+		seg<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span><span class="token function">Segment</span><span class="token punctuation">(</span><span class="token function">Point</span><span class="token punctuation">(</span>x1<span class="token punctuation">,</span> y1<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">Point</span><span class="token punctuation">(</span>x2<span class="token punctuation">,</span> y2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">int</span> ans <span class="token operator">=</span> <span class="token function">manhattanIntersection</span><span class="token punctuation">(</span>seg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	cout <span class="token operator">&lt;&lt;</span> <span class="token string">"这些线段共有 "</span> <span class="token operator">&lt;&lt;</span> ans <span class="token operator">&lt;&lt;</span> <span class="token string">" 个交点."</span> <span class="token operator">&lt;&lt;</span> endl<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/*
+6
+2 2 2 5
+1 3 5 3
+4 1 4 4
+5 2 7 2
+6 1 6 3
+6 5 6 7
+*/</span>
+</code></code></pre>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

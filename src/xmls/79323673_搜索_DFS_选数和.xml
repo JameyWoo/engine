@@ -1,0 +1,128 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79323673				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><a href="https://www.luogu.org/problemnew/show/P1036" rel="nofollow">这是一道选数题目, 我认为比较有价值</a></p>
+
+<p>不是很难, 但这道题的一种算法设计给了我一些启发, 让我进一步理解DFS. <br>
+以及搜索树!</p>
+
+<p>以前AC过, 开始靠自己是A不了的, 后来看了题解A掉了</p>
+
+<p>再次写的时候也A掉了, 但方法拙劣了很多, 很暴力的沿用全排列的方法, 有了很多重复计算.</p>
+
+<p>接触搜索不久, 还没有掌握什么剪枝的技巧</p>
+
+<blockquote>
+  <p>思路是: <br>
+  枚举出所有的排列情况(期中k个数之和可能重复), 最后用组合数学的方法去重</p>
+</blockquote>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">int</span> n, k, num[<span class="hljs-number">22</span>], vis[<span class="hljs-number">22</span>], cnt = <span class="hljs-number">0</span>, ans = <span class="hljs-number">0</span>;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span> &lt;<span class="hljs-keyword">int</span>&gt;</span> vec;
+
+<span class="hljs-keyword">bool</span> isPrime(<span class="hljs-keyword">int</span> sum)
+{
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">2</span>; i &lt;= <span class="hljs-built_in">sqrt</span>(sum); ++i) {
+        <span class="hljs-keyword">if</span>(sum % i == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    } 
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+
+<span class="hljs-keyword">void</span> dfs()
+{
+    <span class="hljs-keyword">if</span>(cnt == k) {
+        <span class="hljs-keyword">int</span> sum = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; k; ++i) {
+            <span class="hljs-comment">//cout &lt;&lt; vec[i] &lt;&lt; ' ';</span>
+            sum += vec[i];
+        }
+        <span class="hljs-comment">//cout &lt;&lt; endl;</span>
+        <span class="hljs-keyword">if</span>(isPrime(sum)) {
+            ans++;
+        }
+        <span class="hljs-keyword">return</span>;
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span>(vis[i]) <span class="hljs-keyword">continue</span>;
+        vec.push_back(num[i]);
+        vis[i] = <span class="hljs-number">1</span>; cnt++;
+        dfs();
+        vis[i] = <span class="hljs-number">0</span>; cnt--;  
+        vec.pop_back(); 
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; k;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; num[i];
+    }
+    dfs();
+    <span class="hljs-keyword">int</span> tmp = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= k; ++i) {
+        tmp *= i;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans/tmp;
+}</code></pre>
+
+<p>代码不是很优美</p>
+
+<p>看了我以前做过的(学习借鉴别人的算法), 一时还难以理解. <br>
+总觉得用那种方法可能会出现重复, 可它确实是A掉了的</p>
+
+<p>后来突然醒悟过来, 不会重复</p>
+
+<blockquote>
+  <p>我把DFS的过程抽象地(或者说形象的)用搜索树来描述, 最终地答案就是根节点, 而它的值就是其所有子节点的和, 同理, 那些子结点的值也是它们的子结点的和. 直到最简单的那种判断情况.</p>
+</blockquote>
+
+<p>我觉得写出这种算法的人应该是对DFS理解的非常透彻了.</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">int</span> num[<span class="hljs-number">22</span>], n, k;
+
+<span class="hljs-keyword">bool</span> isPrime(<span class="hljs-keyword">int</span> sum)
+{
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">2</span>; i &lt;= <span class="hljs-built_in">sqrt</span>(sum); ++i)
+        <span class="hljs-keyword">if</span>(sum%i == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+
+<span class="hljs-comment">//这就是一棵搜索树! </span>
+<span class="hljs-keyword">int</span> dfs(<span class="hljs-keyword">int</span> start, <span class="hljs-keyword">int</span> sum, <span class="hljs-keyword">int</span> rem)
+{
+    <span class="hljs-keyword">int</span> ans = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span>(rem == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> isPrime(sum);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = start + <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-comment">//ans相当于搜索树的结点, 储存情况的种数, 然后向上汇总</span>
+        ans += dfs(i, sum + num[i], rem - <span class="hljs-number">1</span>);  
+    }
+    <span class="hljs-keyword">return</span> ans;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; k;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        <span class="hljs-built_in">cin</span> &gt;&gt; num[i];
+    <span class="hljs-built_in">cout</span> &lt;&lt; dfs(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, k); <span class="hljs-comment">//从1开始, 还剩n个, 所选数总数 </span>
+}</code></pre>
+
+<p>这种算法很棒</p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,162 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81262568				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>P1113 杂务 <a href="https://www.luogu.org/problemnew/show/P1113" rel="nofollow">传送门</a></p>
+
+<dl>
+<dt>题目描述</dt>
+<dd>John的农场在给奶牛挤奶前有很多杂务要完成，每一项杂务都需要一定的时间来完成它。比如：他们要将奶牛集合起来，将他们赶进牛棚，为奶牛清洗乳房以及一些其它工作。尽早将所有杂务完成是必要的，因为这样才有更多时间挤出更多的牛奶。当然，有些杂务必须在另一些杂务完成的情况下才能进行。比如：只有将奶牛赶进牛棚才能开始为它清洗乳房，还有在未给奶牛清洗乳房之前不能挤奶。我们把这些工作称为完成本项工作的准备工作。至少有一项杂务不要求有准备工作，这个可以最早着手完成的工作，标记为杂务 11 。John有需要完成的 nn 个杂务的清单，并且这份清单是有一定顺序的，杂务 k(k&gt;1)k(k&gt;1) 的准备工作只可能在杂务 11 至 k-1k−1 中。</dd>
+
+<dd>
+<p>写一个程序从 11 到 nn 读入每个杂务的工作说明。计算出所有杂务都被完成的最短时间。当然互相没有关系的杂务可以同时工作，并且，你可以假定John的农场有足够多的工人来同时完成任意多项任务。</p>
+</dd>
+
+<dt>输入输出格式</dt>
+<dd>输入格式： <br>
+第1行：一个整数 nn ，必须完成的杂务的数目( 3 \le n \le 10,0003≤n≤10,000 )；</dd>
+
+<dd>
+<p>第 22 至 (n+1)(n+1) 行： 共有 nn 行，每行有一些用 11 个空格隔开的整数，分别表示：</p>
+</dd>
+
+<dd>
+<ul>
+<li>工作序号( 11 至 nn ,在输入文件中是有序的)；</li>
+</ul>
+</dd>
+
+<dd>
+<ul>
+<li>完成工作所需要的时间 len(1 \le len \le 100)len(1≤len≤100) ；</li>
+</ul>
+</dd>
+
+<dd>
+<ul>
+<li>一些必须完成的准备工作，总数不超过 100100 个，由一个数字 00 结束。有些杂务没有需要准备的工作只描述一个单独的 00 ，整个输入文件中不会出现多余的空格。</li>
+</ul>
+</dd>
+
+<dd>
+<p>输出格式： <br>
+一个整数，表示完成所有杂务所需的最短时间。</p>
+</dd>
+
+<dt>输入输出样例</dt>
+<dd>输入样例#1：  <br>
+7 <br>
+1 5 0 <br>
+2 2 1 0 <br>
+3 3 2 0 <br>
+4 6 1 0 <br>
+5 1 2 4 0 <br>
+6 8 2 4 0 <br>
+7 4 3 5 6 0 <br>
+输出样例#1：  <br>
+23</dd>
+</dl>
+
+<p>看描述的时候就觉得肯定和拓扑排序有关了, 看完整道题发现大概就是一道DAG最长路的题目</p>
+
+<p>可以用DP来解决,或者是很复杂度关键路径</p>
+
+<p>因为DP写的比较简单,所以此代码用DP写.</p>
+
+<p>注意: 这种问题被叫做DAG最长路.明明是求最短的时间,为什么叫做最长路呢?<strong>这是因为虽然是最短的时间,但是我们要找到路径里面最长的,能够到终点的路,这条路上的杂物处理好了,其他的都可以处理好的,而反之,如果这其他的路都处理好了,而这条路没处理好,那么任务就不算完成. </strong></p>
+
+<p><strong>由于题目数据的输入一定是准备工作在前面, 所以可以取巧, 每次输入都处理好这个点的结果.后面的数据实不会对前面的产生影响的.</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10000</span> + <span class="hljs-number">5</span>;
+<span class="hljs-keyword">int</span> ans[maxn] = {};
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, _max = -<span class="hljs-number">1</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">int</span> u, time, x;
+        <span class="hljs-built_in">cin</span> &gt;&gt; u &gt;&gt; time;
+        <span class="hljs-keyword">int</span> tmp = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">while</span> (<span class="hljs-built_in">cin</span> &gt;&gt; x &amp;&amp; x) 
+            tmp = max(ans[x], tmp);
+        ans[u] = tmp + time;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        _max = max(_max, ans[i]);
+    <span class="hljs-built_in">cout</span> &lt;&lt; _max;
+}</code></pre>
+
+<p>还有一份长度BFS的代码</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt; </span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt; </span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10000</span> + <span class="hljs-number">5</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> G[maxn];
+<span class="hljs-keyword">int</span> cost[maxn] = {}; <span class="hljs-comment">// 处理完这个事件花费的时间 </span>
+<span class="hljs-keyword">int</span> time[maxn] = {}; <span class="hljs-comment">// 一个事件的处理时间 </span>
+<span class="hljs-keyword">bool</span> in[maxn] = {}; 
+
+<span class="hljs-keyword">void</span> DAG()
+{
+    cost[<span class="hljs-number">1</span>] = time[<span class="hljs-number">1</span>];
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> que;
+    que.push(<span class="hljs-number">1</span>);
+    in[<span class="hljs-number">1</span>] = <span class="hljs-keyword">true</span>;
+    <span class="hljs-keyword">while</span> (!que.empty()) {
+        <span class="hljs-keyword">int</span> u = que.front();
+        que.pop();
+        in[u] = <span class="hljs-keyword">false</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; G[u].size(); ++i) {
+            <span class="hljs-keyword">int</span> v = G[u][i];
+            cost[v] = max(cost[v], cost[u] + time[v]);
+            <span class="hljs-keyword">if</span> (!in[v]) {
+                in[v] = <span class="hljs-keyword">true</span>;
+                que.push(v);
+            }
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        cost[i] = -<span class="hljs-number">1</span>;
+    } 
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">int</span> u, x;
+        <span class="hljs-built_in">cin</span> &gt;&gt; u &gt;&gt; time[i];
+        <span class="hljs-keyword">while</span> (<span class="hljs-built_in">cin</span> &gt;&gt; x &amp;&amp; x) {
+            G[x].push_back(u);
+        }
+    }
+    DAG();
+    <span class="hljs-keyword">int</span> _max = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        _max = max(_max, cost[i]);
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; _max;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

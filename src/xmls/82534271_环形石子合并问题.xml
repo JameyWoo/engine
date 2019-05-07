@@ -1,0 +1,127 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/82534271				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>环形石子合并问题是在普通的相邻石子合并问题的基础上稍加拓展，石子变成了环形的，也就是说每个石子都可能和其左右两边的石子合并。</p>
+
+<p>那么它的dp解法也是基于普通的相邻石子合并问题，不了解的同学可以参考我写过的<a href="https://blog.csdn.net/wjh2622075127/article/details/81486980" rel="nofollow">这篇文章</a>。</p>
+
+<p>有两种解法，但他们基本的算法思想是一样的。</p>
+
+<hr>
+
+<p>第一种是和上面链接文章的写法类似，不同的是对于需要绕圈的点，普通的相邻石子合并问题是直接跳过（因为它无法到达），而对于环形的，有两种实现方法。</p>
+
+<p><strong>其一：使用一个取模运算，实现环形dp。其二：将环形拓展成2倍链状，开二倍的数组即可实现，这个比较好理解好实现。</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> n, num[<span class="hljs-number">105</span>], sum[<span class="hljs-number">105</span>] = {};
+<span class="hljs-keyword">int</span> dp[<span class="hljs-number">105</span>][<span class="hljs-number">105</span>], ans = <span class="hljs-number">0x3f3f3f3f</span>;;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; num[i];
+        num[i + n] = num[i];
+        dp[i][i] = <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n + n; ++i) {
+        sum[i] = sum[i - <span class="hljs-number">1</span>] + num[i];
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">2</span>; k &lt;= n; ++k) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">2</span>*n - k + <span class="hljs-number">1</span>; ++i) {
+            <span class="hljs-keyword">int</span> j = i + k - <span class="hljs-number">1</span>;
+            dp[i][j] = <span class="hljs-number">0x3f3f3f3f</span>;
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> t = i; t &lt; j; ++t) {
+                dp[i][j] = min(dp[i][j], dp[i][t] + dp[t + <span class="hljs-number">1</span>][j] + sum[j] - sum[i - <span class="hljs-number">1</span>]);
+            }
+        }
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        ans = min(ans, dp[i][i + n - <span class="hljs-number">1</span>]);
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+}
+<span class="hljs-comment">/*
+3
+1 2 3
+
+6
+3 5 7 3 4 2
+
+4
+3 5 2 3
+
+9
+1264 324 2344 23242 435 342 3243 6787 244 // 76328
+*/</span></code></pre>
+
+<hr>
+
+<p><strong>第二种解法和上面不同的是<code>dp[n][m]</code>数组。它的含义是：从石头n开始的长度m的区间的dp结果。而上面的<code>dp[n][m]</code>数组的含义是：从石头n到石头m这个闭区间的dp结果。</strong></p>
+
+<p>开这样一个数组效果和第一种是一样的，但对于我来说在思维上算是一种扩展。</p>
+
+<pre class="prettyprint"><code class=" hljs axapta"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+using namespace std;
+
+<span class="hljs-keyword">int</span> <span class="hljs-keyword">sum</span>[<span class="hljs-number">100</span>] = {<span class="hljs-number">0</span>}, ans = <span class="hljs-number">0x3f3f3f3f</span>;
+<span class="hljs-keyword">int</span> n, num[<span class="hljs-number">100</span>], dp[<span class="hljs-number">100</span>][<span class="hljs-number">100</span>];
+
+<span class="hljs-keyword">int</span> getsum(<span class="hljs-keyword">int</span> u, <span class="hljs-keyword">int</span> s)
+{
+    s--;
+    <span class="hljs-keyword">if</span> (u + s &gt; n) <span class="hljs-keyword">return</span> <span class="hljs-keyword">sum</span>[n] - <span class="hljs-keyword">sum</span>[u - <span class="hljs-number">1</span>] + <span class="hljs-keyword">sum</span>[(u + s)%n];
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-keyword">sum</span>[u + s] - <span class="hljs-keyword">sum</span>[u - <span class="hljs-number">1</span>];
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    cin &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        cin &gt;&gt; num[i];
+        <span class="hljs-keyword">sum</span>[i] = <span class="hljs-keyword">sum</span>[i - <span class="hljs-number">1</span>] + num[i];
+        dp[i][<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">2</span>; k &lt;= n; ++k) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+            dp[i][k] = <span class="hljs-number">0x3f3f3f3f</span>;
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> t = <span class="hljs-number">1</span>; t &lt; k; ++t) {
+                dp[i][k] = min(dp[i][k], dp[i][t] + dp[(i + t - <span class="hljs-number">1</span>) % n + <span class="hljs-number">1</span>][k - t] + getsum(i, k));
+            }
+        }
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        ans = min(ans, dp[i][n]);
+    }
+    cout &lt;&lt; ans;
+}
+<span class="hljs-comment">/*
+3
+1 2 3
+
+6
+3 5 7 3 4 2
+
+4
+3 5 2 3
+
+9
+1264 324 2344 23242 435 342 3243 6787 244 // 76328
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

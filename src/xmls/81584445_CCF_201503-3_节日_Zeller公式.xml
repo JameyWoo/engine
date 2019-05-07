@@ -1,0 +1,64 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81584445				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>CCF 201503-3 节日 <a href="http://118.190.20.162/view.page?gpid=T25" rel="nofollow">传送门</a></p>
+
+<p>一道日期相关的题目, 用Zeller公式可简化过程.</p>
+
+<p>思路就是<strong>通过Zeller公式获得某一年得m月1日的星期, 再根据这个星期获取该月份的第th个星期w的天数.</strong></p>
+
+<p>Zeller公式:  <strong><code>(c/4 - 2*c + y + y/4 + 13*(m + 1)/5 + d - 1)mod7</code></strong></p>
+
+<p>但要注意的是此公式有几个坑!  <strong>那就是1月2月要当作上一年的13月14月来看.但不是简单的<code>month +12</code>, 而是上一年! year要减一! 以为这就完了? 错, 如果遇到<code>2000</code>年这种情况, 世纪也要减一! 还有取模得结果可能是负数, 要做下特殊判断.</strong></p>
+
+<p>还有要注意的是: 每一次遍历年份的时候, 2月份的天数都要重置为<code>28</code>. 这个坑了我好久</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> Zeller(<span class="hljs-keyword">int</span> year, <span class="hljs-keyword">int</span> mon, <span class="hljs-keyword">int</span> day)
+{
+    <span class="hljs-keyword">if</span> (mon &lt;= <span class="hljs-number">2</span>)
+        year--, mon += <span class="hljs-number">12</span>;
+    <span class="hljs-keyword">int</span> cent = year / <span class="hljs-number">100</span>;
+    year %= <span class="hljs-number">100</span>;
+    <span class="hljs-keyword">int</span> week = (year/<span class="hljs-number">4</span> + year + cent/<span class="hljs-number">4</span> - <span class="hljs-number">2</span>*cent + <span class="hljs-number">13</span>*(mon + <span class="hljs-number">1</span>)/<span class="hljs-number">5</span> + day - <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> week % <span class="hljs-number">7</span>;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> mon, th, weekday, start, end;
+    <span class="hljs-built_in">cin</span> &gt;&gt; mon &gt;&gt; th &gt;&gt; weekday &gt;&gt; start &gt;&gt; end;
+    <span class="hljs-keyword">int</span> month[<span class="hljs-number">13</span>] = {<span class="hljs-number">0</span>, <span class="hljs-number">31</span>, <span class="hljs-number">28</span>, <span class="hljs-number">31</span>, <span class="hljs-number">30</span>, <span class="hljs-number">31</span>, <span class="hljs-number">30</span>, <span class="hljs-number">31</span>, <span class="hljs-number">31</span>, <span class="hljs-number">30</span>, <span class="hljs-number">31</span>, <span class="hljs-number">30</span>, <span class="hljs-number">31</span>};
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> year = start; year &lt;= end; ++year) {
+        month[<span class="hljs-number">2</span>] = <span class="hljs-number">28</span>; <span class="hljs-comment">// 靠, 前面是闰年之后还要回到不是闰年的!!!</span>
+        <span class="hljs-keyword">if</span> (year % <span class="hljs-number">400</span> == <span class="hljs-number">0</span> || (year % <span class="hljs-number">4</span> == <span class="hljs-number">0</span> &amp;&amp; year % <span class="hljs-number">100</span>))
+            month[<span class="hljs-number">2</span>] = <span class="hljs-number">29</span>;
+        <span class="hljs-keyword">int</span> wd = Zeller(year, mon, <span class="hljs-number">1</span>), day;
+        wd = wd &gt; <span class="hljs-number">0</span> ? wd : wd + <span class="hljs-number">7</span>;
+        <span class="hljs-keyword">if</span> (wd == weekday) {
+            day = (th - <span class="hljs-number">1</span>)*<span class="hljs-number">7</span>;
+        } <span class="hljs-keyword">else</span> {
+            wd = wd &lt; weekday ? wd : wd - <span class="hljs-number">7</span>;
+            day = (th - <span class="hljs-number">1</span>)*<span class="hljs-number">7</span> + weekday - wd;
+        }
+        <span class="hljs-keyword">if</span> (day + <span class="hljs-number">1</span> &lt;= month[mon]) {
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%04d/%02d/%02d\n"</span>, year, mon, day + <span class="hljs-number">1</span>);
+        } <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"none"</span> &lt;&lt; endl;
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

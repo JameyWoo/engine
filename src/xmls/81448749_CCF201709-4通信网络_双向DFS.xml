@@ -1,0 +1,108 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81448749				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>这题一看, 如果不考虑时间的话, <strong>用floyd算法求传递闭包和对称闭包</strong>是可以解决的, 但是题目的数据只够过60分, 正解显然不是这样.</p>
+
+<p>然后我又思考, 开始往复杂了想, 于是有了下面的不知对错的思路:</p>
+
+<blockquote>
+  <p>先判断图是否连通,否则结果为0  <br>
+  用tarjan算法缩点, 把环全都合成一个结点,他们的处境是一样的  <br>
+  找到一个入度为0的结点,(缩点之后一定存在), 它会指向好几个点, 找出它指向点的共同点, 不断找直到共同指向 <br>
+  一个点. 寻找过程中每个唯一的聚合点就是结果点</p>
+</blockquote>
+
+<p>不仅实现起来难, 而且思路是否正确还存疑. 毕竟我还没有掌握强连通分量缩点的算法.</p>
+
+<p>然后投降了, 找找博客吧, 找到的第一篇博客居然就用了缩点的算法! 然后看其他博客, <strong>发现他们的共同点都是用了DFS.</strong> WTF? 这题能用DFS? 不会超时吗? 于是我开始考虑DFS, 确实不会超时, <strong><em>时间复杂度是O(NM).</em></strong> </p>
+
+<p><strong>这里暴露出我的一个问题, 我的潜意识里面认为DFS就是递归嘛, 递归都是很慢的嘛, 所以直接用DFS很容易超时的嘛.</strong> 然而并不! 所以遇到问题还是应该<strong>具体分析下时间, 不要被自己的潜意识误导, 从而错过正确的思路. </strong></p>
+
+<dl>
+<dt>下面是DFS思路, 准确来说是双向DFS</dt>
+<dd>
+<ul>
+<li><strong>在有向图中, 对于一个点, 它的DFS遍历可达的点是它可传递信息的点.</strong></li>
+</ul>
+</dd>
+
+<dd>
+<ul>
+<li><strong>它的反向DFS遍历(边的方向反转)可达的点是可传递信息到它的点.</strong></li>
+</ul>
+</dd>
+
+<dd>
+<ul>
+<li><strong>那么我们获取这两种点, 如果这两种点集包含除自己以外的所有点, 那么答案+1.</strong></li>
+</ul>
+</dd>
+</dl>
+
+<p>就是这么简单的思路, 双向DFS, 找到可传递信息的所有点. 需要注意的是, <strong>这里不应该在遍历的过程中找到点就cnt++, 因为前后遍历可能会出现重复的点(双向), 就会出错. 正确方法应该是记录这些可达的点, 然后用hash的方法去统计.</strong></p>
+
+<p>最后此题学到的一个小经验就是<strong>存图的时候还是尽量用邻接表</strong>吧, 用起来也方便, 而且不容易超时! 不容易超时! 不容易超时!  <br>
+100分代码</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1005</span>;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> Gp[maxn], Gs[maxn], to[maxn];
+<span class="hljs-keyword">int</span> n, m, vis[maxn], ans = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">void</span> DFS(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> G[maxn], <span class="hljs-keyword">int</span> u, <span class="hljs-keyword">int</span> scr)
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; G[u].size(); ++i) {
+        <span class="hljs-keyword">if</span> (!vis[G[u][i]]) {
+            vis[G[u][i]] = <span class="hljs-keyword">true</span>;
+            DFS(G, G[u][i], scr);
+        }
+    }
+    to[scr].push_back(u);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>, u, v; i &lt; m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; u &gt;&gt; v;
+        Gp[u - <span class="hljs-number">1</span>].push_back(v - <span class="hljs-number">1</span>);
+        Gs[v - <span class="hljs-number">1</span>].push_back(u - <span class="hljs-number">1</span>);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">memset</span>(vis, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(vis));
+        DFS(Gp, i, i);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">memset</span>(vis, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(vis));
+        DFS(Gs, i, i);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">memset</span>(vis, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(vis));
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; to[i].size(); ++j) {
+            vis[to[i][j]] = <span class="hljs-number">1</span>;
+        }
+        <span class="hljs-keyword">bool</span> flag = <span class="hljs-keyword">false</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; ++j) {
+            <span class="hljs-keyword">if</span> (vis[j] == <span class="hljs-number">0</span>) flag = <span class="hljs-keyword">true</span>;
+        }
+        <span class="hljs-keyword">if</span> (flag == <span class="hljs-keyword">false</span>) ans++;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

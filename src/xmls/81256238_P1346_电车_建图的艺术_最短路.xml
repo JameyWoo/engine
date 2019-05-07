@@ -1,0 +1,109 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81256238				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>P1346 电车 <a href="https://www.luogu.org/problemnew/show/P1346" rel="nofollow">传送门</a></p>
+
+<blockquote>
+  <p>题目描述 <br>
+  在一个神奇的小镇上有着一个特别的电车网络，它由一些路口和轨道组成，每个路口都连接着若干个轨道，每个轨道都通向一个路口（不排除有的观光轨道转一圈后返回路口的可能）。在每个路口，都有一个开关决定着出去的轨道，每个开关都有一个默认的状态，每辆电车行驶到路口之后，只能从开关所指向的轨道出去，如果电车司机想走另一个轨道，他就必须下车切换开关的状态。</p>
+  
+  <p>为了行驶向目标地点，电车司机不得不经常下车来切换开关，于是，他们想请你写一个程序，计算一辆从路口A到路口B最少需要下车切换几次开关。</p>
+  
+  <p>输入输出格式 输入格式： 第一行有3个整数2&lt;=N&lt;=100，1&lt;=A，B&lt;=N，分别表示路口的数量，和电车的起点，终点。</p>
+  
+  <p>接下来有N行，每行的开头有一个数字Ki(0&lt;=Ki&lt;=N-1)，表示这个路口与Ki条轨道相连，接下来有Ki个数字表示每条轨道所通向的路口，开关默认指向第一个数字表示的轨道。</p>
+  
+  <p>输出格式： 输出文件只有一个数字，表示从A到B所需的最少的切换开关次数，若无法从A前往B，输出-1。</p>
+  
+  <p>输入输出样例 <br>
+  输入样例#1：  <br>
+  3 2 1 <br>
+  2 2 3 <br>
+  2 3 1 <br>
+  2 1 2 <br>
+  输出样例#1：  <br>
+  0</p>
+</blockquote>
+
+<p>这道题最关键的是建图</p>
+
+<p>如果不理解的话可能会觉得非常奇怪,感觉好难写,怎么判断开不开开关呢? 好像很复杂.</p>
+
+<p><strong>其实就是默认的边权为0,其他为1,然后求最短路径即可 </strong></p>
+
+<p>我打算用spfa写</p>
+
+<p>其实数据很水， 用floyd都可以过的。</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Edge {
+    <span class="hljs-keyword">int</span> to, cost;
+    Edge (<span class="hljs-keyword">int</span> t, <span class="hljs-keyword">int</span> c) : to(t), cost(c) {}
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">105</span>;
+<span class="hljs-keyword">int</span> n, start, end, dis[maxn];
+<span class="hljs-keyword">bool</span> in[maxn] = {};
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Edge&gt;</span> edge[maxn];
+
+<span class="hljs-keyword">void</span> spfa(<span class="hljs-keyword">int</span> start)
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> que;
+    dis[start] = <span class="hljs-number">0</span>;
+    que.push(start);
+    in[start] = <span class="hljs-keyword">true</span>;
+    <span class="hljs-keyword">while</span> (!que.empty()) {
+        <span class="hljs-keyword">int</span> node = que.front();
+        que.pop();
+        in[node] = <span class="hljs-keyword">false</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; edge[node].size(); ++i) {
+            <span class="hljs-keyword">int</span> v = edge[node][i].to;
+            <span class="hljs-keyword">int</span> cost = edge[node][i].cost;
+            <span class="hljs-keyword">if</span> (dis[v] &gt; dis[node] + cost) {
+                dis[v] = dis[node] + cost;
+                <span class="hljs-keyword">if</span> (!in[v]) {
+                    que.push(v);
+                    in[v] = <span class="hljs-keyword">true</span>;
+                }
+            }
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">memset</span>(dis, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span>(dis));
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; start &gt;&gt; end;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">int</span> k, x;
+        <span class="hljs-built_in">cin</span> &gt;&gt; k;
+        <span class="hljs-keyword">if</span> (k &gt; <span class="hljs-number">0</span>) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; x;
+            edge[i].push_back(Edge(x, <span class="hljs-number">0</span>));
+        }
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt; k; ++j) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; x;
+            edge[i].push_back(Edge(x, <span class="hljs-number">1</span>));
+        }
+    }
+    spfa(start);
+    <span class="hljs-keyword">if</span> (dis[end] == <span class="hljs-number">0x3f3f3f3f</span>) <span class="hljs-built_in">cout</span> &lt;&lt; -<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; dis[end];
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

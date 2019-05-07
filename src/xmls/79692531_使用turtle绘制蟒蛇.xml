@@ -1,0 +1,105 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79692531				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>效果图: <br>
+<img src="https://img-blog.csdn.net/20180325235145106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+<p>这是我绘制的第一个图形. 以后将会用python绘制很多图.</p>
+
+<p>解析:</p>
+
+
+
+<pre class="prettyprint"><code class="language-python hljs "> <span class="hljs-comment">#PythonDraw.py</span>
+<span class="hljs-keyword">import</span> turtle
+turtle.setup(<span class="hljs-number">650</span>, <span class="hljs-number">350</span>, <span class="hljs-number">200</span>, <span class="hljs-number">200</span>)
+turtle.penup()
+turtle.fd(-<span class="hljs-number">250</span>)
+turtle.pendown()
+turtle.pensize(<span class="hljs-number">25</span>)
+turtle.pencolor(<span class="hljs-string">'purple'</span>)
+turtle.seth(-<span class="hljs-number">40</span>)
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">4</span>):
+    turtle.circle(<span class="hljs-number">40</span>, <span class="hljs-number">80</span>)
+    turtle.circle(-<span class="hljs-number">40</span>, <span class="hljs-number">80</span>)
+turtle.circle(<span class="hljs-number">40</span>, <span class="hljs-number">80</span>/<span class="hljs-number">2</span>)
+turtle.fd(<span class="hljs-number">40</span>)
+turtle.circle(<span class="hljs-number">16</span>, <span class="hljs-number">180</span>)
+turtle.fd(<span class="hljs-number">40</span>*<span class="hljs-number">2</span>/<span class="hljs-number">3</span>)
+turtle.done()</code></pre>
+
+<p>setup()函数</p>
+
+<blockquote>
+  <p>建立一个窗口, 它有四个参数, 分别是 <br>
+  窗口的长, 宽(高), 窗口左上角起始位置x, y <br>
+  不给出3,4个参数默认窗口在正中央.</p>
+</blockquote>
+
+<p>penup()函数</p>
+
+<blockquote>
+  <p>将画笔抬起的函数,这种情况下,画笔移动不会有痕迹</p>
+</blockquote>
+
+<p>pendown()函数</p>
+
+<blockquote>
+  <p>将画笔落下的函数,画笔落下了,移动就会制图了</p>
+</blockquote>
+
+<p>pensize()函数</p>
+
+<blockquote>
+  <p>画笔大小的函数</p>
+</blockquote>
+
+<p>pencolor()函数</p>
+
+<blockquote>
+  <p>设置画笔颜色的函数</p>
+</blockquote>
+
+<p>forward()函数</p>
+
+<blockquote>
+  <p>向前移动函数, 别名为<em>fd()</em></p>
+</blockquote>
+
+<p>goto()函数</p>
+
+<blockquote>
+  <p>将画笔移动到坐标位置函数</p>
+</blockquote>
+
+<p>circle()函数</p>
+
+<blockquote>
+  <p>第一个参数为半径, 第二个参数为角度 <br>
+  如果不给第二个参数, 默认画一个半径为第一个参数的圆 <br>
+  角度正为逆时针, 角度负为顺时针</p>
+</blockquote>
+
+<p>done()函数</p>
+
+<blockquote>
+  <p>让窗口停下来的函数(不会闪退)</p>
+</blockquote>
+
+<p>值得注意的是, 在pycharm中, 我这个代码总是通不过, 百度一下得知, 原来我这个文件名叫做了turtle, 和库名重了. 所以总是提示过不了.</p>
+
+<p>参考资料: <br>
+<a href="https://www.zhihu.com/question/26708591" rel="nofollow">知乎turtle常用指令</a> <br>
+<a href="https://docs.python.org/2/library/turtle.html" rel="nofollow">官方教程</a></p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,455 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/80616528				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><div class="toc"><div class="toc">
+<ul>
+<li><ul>
+<li><a href="#希尔排序" rel="nofollow">希尔排序</a></li>
+<li><a href="#归并排序" rel="nofollow">归并排序</a><ul>
+<li><a href="#递归版本" rel="nofollow">递归版本</a></li>
+<li><a href="#非递归版本" rel="nofollow">非递归版本</a></li>
+</ul>
+</li>
+<li><a href="#堆排序" rel="nofollow">堆排序</a></li>
+<li><a href="#快速排序" rel="nofollow">快速排序</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</p>
+
+<h2 id="希尔排序">希尔排序</h2>
+
+<p>希尔排序(ShellSort) 的思路有点奇特, 或许是书上表述的不清或许是我理解歪了, 真正了解希尔排序是怎样一种排序方法花了了差不多一个小时. 现在理解透了, 觉得真是很妙. </p>
+
+<blockquote>
+  <p>按照所规定的步长, 覆盖全部元素, 跳跃着进行插入排序, 暂时忽略中间的元素. 这也许就是希尔排序的内涵.</p>
+</blockquote>
+
+<p>大概分为两个过程</p>
+
+<ol>
+<li>根据所给数据设定步长. (我用的是n不断除2向下取整的策略, 这个策略不是最优的)</li>
+<li>对每个步长, 从开始到数据尾部进行跳跃式的插入排序. (每个元素都会参与)</li>
+</ol>
+
+<p><a href="https://zh.wikipedia.org/wiki/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F" rel="nofollow">维基百科-希尔排序</a></p>
+
+<p>演示 <br>
+<img src="https://img-blog.csdn.net/20180607230646659?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+<p>注意:</p>
+
+<blockquote>
+  <p>步长的最后一个一定是1, 也就是说, 最后进行的是一个完整的常规的插入排序, 但是因为前面所做的工作, 在这一步中, 所需的操作已经很少了. 这对理解希尔排序有一定帮助. </p>
+</blockquote>
+
+<p>算法的复杂度在O(n^2)和O(nlog₂n)之间. 占用空间大概就是存储序列的空间+1.</p>
+
+<p>C++代码</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1005</span>;
+<span class="hljs-keyword">int</span> n;
+
+<span class="hljs-keyword">void</span> ShellInsert(<span class="hljs-keyword">int</span> *arr, <span class="hljs-keyword">int</span> dk)
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = dk + <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">int</span> j = i - dk;
+        arr[<span class="hljs-number">0</span>] = arr[i];
+        <span class="hljs-keyword">for</span> (; j &gt; <span class="hljs-number">0</span> &amp;&amp; arr[<span class="hljs-number">0</span>] &lt; arr[j]; j -= dk) {
+            arr[j + dk] = arr[j];
+        }
+        arr[j + dk] = arr[<span class="hljs-number">0</span>];
+    }
+}
+
+<span class="hljs-keyword">void</span> ShellSort(<span class="hljs-keyword">int</span> *arr, <span class="hljs-keyword">int</span> *dlta, <span class="hljs-keyword">int</span> size)
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; size; ++i) {
+        ShellInsert(arr, dlta[i]);
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\n第 "</span> &lt;&lt; i + <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-string">" 趟排序:\n"</span>; 
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; arr[j] &lt;&lt; <span class="hljs-string">' '</span>;
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> <span class="hljs-built_in">array</span>[maxn];
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; <span class="hljs-built_in">array</span>[i];
+    }
+    <span class="hljs-keyword">int</span> tmp = n, k = <span class="hljs-number">0</span>, dlta[maxn];
+    <span class="hljs-keyword">while</span> (tmp &gt; <span class="hljs-number">1</span>) {
+        dlta[k++] = tmp / <span class="hljs-number">2</span>;
+        tmp /= <span class="hljs-number">2</span>;
+    }
+    ShellSort(<span class="hljs-built_in">array</span>, dlta, k);
+}
+<span class="hljs-comment">/*
+8
+49 39 65 97 76 13 27 69
+
+7
+7 1 5 4 3 6 2
+
+10 
+49 38 65 97 76 13 27 49 55 04  // 5 3 1
+*/</span> </code></pre>
+
+
+
+<h2 id="归并排序">归并排序</h2>
+
+<p>这里介绍的归并排序是最基础的二路归并. 归并排序的思想很简单, 就是分治的思想. </p>
+
+<blockquote>
+  <p>分而治之, 把一个序列分成两段, 分别对这两个序列再排序. 不断地划分后, 最后的序列就是一个元素. 那么再依次往上合并. </p>
+</blockquote>
+
+<p>使用<strong>递归</strong>非常方便实现. 也可以用<strong>非递归</strong>实现.</p>
+
+<p><a href="https://zh.wikipedia.org/wiki/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F" rel="nofollow">维基百科-归并排序</a></p>
+
+<p>归并排序演示 <br>
+<img src="https://img-blog.csdn.net/20180607230927695?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+<p>以及 <br>
+<img src="https://img-blog.csdn.net/2018060723103811?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="" title=""></p>
+
+
+
+<h3 id="递归版本">递归版本</h3>
+
+<p>有两个重要函数</p>
+
+<blockquote>
+  <ol>
+  <li>MergeSort()函数, 这个是归并排序的主体, 它解决的问题是下标从left到right的排序. 在程序中将会调用自身.</li>
+  <li>Merge()函数, 这个函数被MergeSort()函数调用,  它解决的问题是将left和right的两个分别排好序的序列合并.</li>
+  </ol>
+</blockquote>
+
+<p>通过以上两个函数, 就可以实现归并排序了.</p>
+
+<p><strong>归并排序的时间复杂度最差是O(nlog₂n), 最优是O(n), 且是一种稳定排序</strong></p>
+
+<p>递归代码</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs vbscript">#include &lt;iostream&gt;
+using namespace std;
+
+<span class="hljs-keyword">const</span> <span class="hljs-built_in">int</span> maxn = <span class="hljs-number">1005</span>;
+
+void merge(<span class="hljs-built_in">int</span> *A, <span class="hljs-built_in">int</span> L1, <span class="hljs-built_in">int</span> R1, <span class="hljs-built_in">int</span> L2, <span class="hljs-built_in">int</span> R2)
+{
+    <span class="hljs-built_in">int</span> tmp[maxn], index = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">int</span> i = L1, j = L2;
+    <span class="hljs-keyword">while</span> (i &lt;= R1 &amp;&amp; j &lt;= R2) {
+        <span class="hljs-keyword">if</span> (A[i] &lt; A[j]) tmp[index++] = A[i++];
+        <span class="hljs-keyword">else</span> tmp[index++] = A[j++];
+    }
+    <span class="hljs-keyword">while</span> (i &lt;= R1) tmp[index++] = A[i++];
+    <span class="hljs-keyword">while</span> (j &lt;= R2) tmp[index++] = A[j++];
+    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> k = L1; k &lt;= R2; ++k) {
+        A[k] = tmp[k - L1];
+    }
+}
+
+void mergeSort(<span class="hljs-built_in">int</span> *A, <span class="hljs-built_in">int</span> <span class="hljs-built_in">left</span>, <span class="hljs-built_in">int</span> <span class="hljs-built_in">right</span>)
+{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">left</span> &lt; <span class="hljs-built_in">right</span>) {
+        <span class="hljs-built_in">int</span> <span class="hljs-built_in">mid</span> = (<span class="hljs-built_in">left</span> + <span class="hljs-built_in">right</span>) / <span class="hljs-number">2</span>;
+        mergeSort(A, <span class="hljs-built_in">left</span>, <span class="hljs-built_in">mid</span>);
+        mergeSort(A, <span class="hljs-built_in">mid</span> + <span class="hljs-number">1</span>, <span class="hljs-built_in">right</span>);
+        merge(A, <span class="hljs-built_in">left</span>, <span class="hljs-built_in">mid</span>, <span class="hljs-built_in">mid</span> + <span class="hljs-number">1</span>, <span class="hljs-built_in">right</span>);
+    }
+}
+
+<span class="hljs-built_in">int</span> main()
+{
+    <span class="hljs-built_in">int</span> A[maxn], n;
+    cin &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        cin &gt;&gt; A[i];
+    }
+    mergeSort(A, <span class="hljs-number">1</span>, n);
+
+    cout &lt;&lt; <span class="hljs-string">"排序结果:\n"</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        cout &lt;&lt; A[i] &lt;&lt; <span class="hljs-comment">' ';</span>
+    }
+    cout &lt;&lt; endl;
+}
+
+/*
+<span class="hljs-number">7</span>
+<span class="hljs-number">7</span> <span class="hljs-number">1</span> <span class="hljs-number">5</span> <span class="hljs-number">4</span> <span class="hljs-number">3</span> <span class="hljs-number">6</span> <span class="hljs-number">2</span>
+
+<span class="hljs-number">10</span> 
+<span class="hljs-number">49</span> <span class="hljs-number">38</span> <span class="hljs-number">65</span> <span class="hljs-number">97</span> <span class="hljs-number">76</span> <span class="hljs-number">13</span> <span class="hljs-number">27</span> <span class="hljs-number">49</span> <span class="hljs-number">55</span> <span class="hljs-number">04</span>
+*/ </code></pre>
+
+
+
+<h3 id="非递归版本">非递归版本</h3>
+
+<p>思路是基本一样的.</p>
+
+<p>非递归版本在选取的步长上做了些学问</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1005</span>;
+
+<span class="hljs-keyword">void</span> Merge(<span class="hljs-keyword">int</span> *A, <span class="hljs-keyword">int</span> L1, <span class="hljs-keyword">int</span> R1, <span class="hljs-keyword">int</span> L2, <span class="hljs-keyword">int</span> R2)
+{
+    <span class="hljs-keyword">int</span> i = L1, j = L2;
+    <span class="hljs-keyword">int</span> index = <span class="hljs-number">0</span>, tmp[maxn];
+    <span class="hljs-keyword">while</span> (i &lt;= R1 &amp;&amp; j &lt;= R2) {
+        <span class="hljs-keyword">if</span> (A[i] &lt; A[j]) tmp[index++] = A[i++];
+        <span class="hljs-keyword">else</span> tmp[index++] = A[j++];
+    }
+    <span class="hljs-keyword">while</span> (i &lt;= R1) tmp[index++] = A[i++];
+    <span class="hljs-keyword">while</span> (j &lt;= R2) tmp[index++] = A[j++];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = L1; k &lt;= R2; ++k) {
+        A[k] = tmp[k - L1];
+    }
+}
+
+<span class="hljs-keyword">void</span> MergeSort(<span class="hljs-keyword">int</span> *A, <span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> step = <span class="hljs-number">2</span>; step / <span class="hljs-number">2</span> &lt;= n; step *= <span class="hljs-number">2</span>) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; i += step) {
+            <span class="hljs-keyword">int</span> mid = i + step / <span class="hljs-number">2</span> - <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">if</span> (mid + <span class="hljs-number">1</span> &lt;= n)  <span class="hljs-comment">// 右边要存在才行, 不要漏掉= </span>
+                Merge(A, i, mid, mid + <span class="hljs-number">1</span>, min(n, i + step - <span class="hljs-number">1</span>)); <span class="hljs-comment">// 不能大于n</span>
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, A[maxn];
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; A[i];
+    }
+    MergeSort(A, n);
+
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"排序结果:\n"</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; A[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}
+
+<span class="hljs-comment">/*
+7
+7 1 5 4 3 6 2
+
+10 
+49 38 65 97 76 13 27 49 55 04
+*/</span> </code></pre>
+
+<h2 id="堆排序">堆排序</h2>
+
+<p>堆排序（英语：Heapsort）是指利用堆这种数据结构所设计的一种排序算法。<strong>堆积</strong>是一个<strong>近似完全二叉树</strong>的结构，并同时满足堆积的性质：即子结点的键值或索引总是小于（或者大于）它的父节点。</p>
+
+<blockquote>
+  <p>通常堆是通过<strong>一维数组</strong>来实现的。在数组起始位置为1的情形中： <br>
+  父节点<strong>i</strong>的左子节点在位置为 <strong>2i</strong> <br>
+  父节点<strong>i</strong>的右子节点在位置为 <strong>2i + 1</strong> <br>
+  子节点<strong>i</strong>的父节点在位置 <strong>i / 2</strong></p>
+</blockquote>
+
+<p>利用这个性质可以很方便的进行父亲节点和子结点之间的跳转.</p>
+
+<p><a href="https://zh.wikipedia.org/wiki/%E5%A0%86%E6%8E%92%E5%BA%8F" rel="nofollow">维基百科-堆排序</a> <br>
+<img src="https://img-blog.csdn.net/20180608130236629?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="堆排序" title=""></p>
+
+<p>堆排序可以简化为两个过程</p>
+
+<blockquote>
+  <ol>
+  <li>将一个序列堆化</li>
+  <li>输出堆顶元素, 然后交换堆顶元素和序列尾部元素, 总数-1, 再进行堆化.</li>
+  </ol>
+</blockquote>
+
+<p>可见, 随着不断输出堆顶元素，序列就已经排好序了．</p>
+
+<p>第一个过程中，要进行ｎ／２次向下调整，向下调整在代码中是用downAdjust函数实现． <br>
+第二个过程中，只要把交换上去的最后一个元素进行向下调整即可．</p>
+
+<p><strong>堆排序的时间复杂度是O(nlogn)</strong>，<strong>空间复杂度是O(n)</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1005</span>;
+
+<span class="hljs-keyword">void</span> downAdjust(<span class="hljs-keyword">int</span> *A, <span class="hljs-keyword">int</span> low, <span class="hljs-keyword">int</span> high)
+{
+    <span class="hljs-keyword">int</span> i = low, j = <span class="hljs-number">2</span> * low;
+    <span class="hljs-keyword">while</span> (j &lt;= high) {
+        <span class="hljs-keyword">if</span> (j + <span class="hljs-number">1</span> &lt;= high &amp;&amp; A[j] &lt; A[j + <span class="hljs-number">1</span>]) {
+            j += <span class="hljs-number">1</span>;
+        }
+        <span class="hljs-keyword">if</span> (A[i] &lt; A[j]) {
+            swap(A[i], A[j]);
+            i = j;
+            j *= <span class="hljs-number">2</span>;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">break</span>;
+    }
+}
+
+<span class="hljs-keyword">void</span> HeapSort(<span class="hljs-keyword">int</span> *A, <span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n / <span class="hljs-number">2</span>; i &gt;= <span class="hljs-number">1</span>; --i) {
+        downAdjust(A, i, n);
+    }
+
+    <span class="hljs-keyword">int</span> m = n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= m; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; A[<span class="hljs-number">1</span>] &lt;&lt; <span class="hljs-string">' '</span>;
+        swap(A[<span class="hljs-number">1</span>], A[n--]);
+        downAdjust(A, <span class="hljs-number">1</span>, n);
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, A[maxn];
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; A[i];
+    }
+    HeapSort(A, n);
+}
+<span class="hljs-comment">/*
+7
+4 3 6 7 2 5 1 
+
+10 
+49 38 65 97 76 13 27 49 55 04
+*/</span></code></pre>
+
+<p>如果需要插入新的元素的话, 可以使用upAdjust函数, 即向上调整. 时间复杂度为<strong>O(logn)</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cs"><span class="hljs-keyword">void</span> upAdjust(<span class="hljs-keyword">int</span> low, <span class="hljs-keyword">int</span> high)
+{
+    <span class="hljs-keyword">int</span> i = high, j = i / <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">while</span> (j &gt;= low) {
+        <span class="hljs-keyword">if</span> (heap[j] &lt; heap[i]) {
+            swap(heap[j], heap[i]);
+            i = j;
+            j = i / <span class="hljs-number">2</span>;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">break</span>;
+    }
+} </code></pre>
+
+<h2 id="快速排序">快速排序</h2>
+
+<p>快速排序（英语：Quicksort），又称划分交换排序（partition-exchange sort），简称快排，一种排序算法，最早由东尼·霍尔提出。快速排序通常明显比其他算法更快，因为它的内部循环（inner loop）可以在大部分的架构上很有效率地达成。</p>
+
+<p>快速排序平均时间复杂度是<strong>O(nlogn), 最差是O(n²)</strong>.</p>
+
+<p><a href="https://zh.wikipedia.org/wiki/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F" rel="nofollow">维基百科-快速排序</a> <br>
+<img src="https://img-blog.csdn.net/20180608175256336?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""> <br>
+<img src="https://img-blog.csdn.net/2018060817534176?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""> <br>
+<img src="https://img-blog.csdn.net/20180608175547366?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+<p>按照我的经历, 快速排序比较难写. 虽然代码简洁, 但是写出的代码<strong>非常非常容易出bug!</strong>里面有很多&lt;, &lt;= 等边界控制, 很容易出错的. 一般来说, 隔一段时间再写快排, 常常要参照以前的代码debug.</p>
+
+<p>快排被研究得比较多, 有很多的优化, 感兴趣的可以做深入了解.</p>
+
+<p>示例代码, 此代码是以中间数为基准点, <strong>平均来说似乎比以区间第一个或最后一个为基准要快</strong>(根据做题的经验)</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1005</span>;
+<span class="hljs-keyword">int</span> n, A[maxn];
+
+<span class="hljs-keyword">void</span> QuickSort(<span class="hljs-keyword">int</span> *A, <span class="hljs-keyword">int</span> l, <span class="hljs-keyword">int</span> r)
+{
+    <span class="hljs-keyword">if</span> (l &gt;= r) <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">int</span> mid = A[(l + r) &gt;&gt; <span class="hljs-number">1</span>];
+    <span class="hljs-keyword">int</span> i = l, j = r;
+    <span class="hljs-keyword">while</span>(i &lt;= j) {
+        <span class="hljs-keyword">while</span> (A[i] &lt; mid) i++;
+        <span class="hljs-keyword">while</span> (A[j] &gt; mid) j--;
+        <span class="hljs-keyword">if</span> (i &lt;= j) swap(A[i++], A[j--]);
+    }
+    <span class="hljs-keyword">if</span> (j &gt; l) QuickSort(A, l, j);
+    <span class="hljs-keyword">if</span> (i &lt; r) QuickSort(A, i, r);
+}
+
+<span class="hljs-keyword">void</span> show(<span class="hljs-keyword">int</span> *A, <span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i)
+        <span class="hljs-built_in">cout</span> &lt;&lt; A[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; A[i];
+    }
+    QuickSort(A, <span class="hljs-number">0</span>, n - <span class="hljs-number">1</span>);
+    show(A, n);
+}
+
+<span class="hljs-comment">/*
+10
+85 55 82 57 68 92 99 98 66 56
+4
+43 101 96 -1
+5
+3 2 5 1 4 
+*/</span></code></pre>
+
+<p>以上就是四种基础的排序算法</p>
+
+<blockquote>
+  <p>希尔排序 <br>
+  归并排序 <br>
+  堆排序 <br>
+  快速排序</p>
+</blockquote>
+
+<p>至于更基础的, 或者更复杂度, 都不在此博客讨论范围之内.</p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

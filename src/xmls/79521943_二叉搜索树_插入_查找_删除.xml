@@ -1,0 +1,293 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79521943				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<blockquote>
+  <p>声明: 第一次写二叉搜索树, 可能会有bug</p>
+</blockquote>
+
+<p>这棵二叉搜索树以中序遍历的方式输出, 所以插入(存储的规则也是按照中序遍历的规则)</p>
+
+<pre class="prettyprint"><code class=" hljs lasso"><span class="hljs-variable">#include</span> <span class="hljs-subst">&lt;</span>iostream<span class="hljs-subst">&gt;</span>
+using namespace std;
+
+struct Node {
+    int key;
+    Node <span class="hljs-subst">*</span><span class="hljs-keyword">parent</span>, <span class="hljs-subst">*</span>left, <span class="hljs-subst">*</span>right;
+};
+
+Node <span class="hljs-subst">*</span>root, <span class="hljs-subst">*</span>NIL;  <span class="hljs-comment">//根节点和一个空结点 </span>
+
+<span class="hljs-literal">void</span> insert(int key)
+{
+    Node <span class="hljs-subst">*</span>z <span class="hljs-subst">=</span> <span class="hljs-literal">new</span> Node;  <span class="hljs-comment">//z就是新插入的结点 </span>
+    z<span class="hljs-subst">-&gt;</span>key <span class="hljs-subst">=</span> key;
+    z<span class="hljs-subst">-&gt;</span>left <span class="hljs-subst">=</span> z<span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">=</span> NIL;
+    Node <span class="hljs-subst">*</span>y <span class="hljs-subst">=</span> NIL;  <span class="hljs-comment">//y将是z的上一个结点,更新z的parent</span>
+    Node <span class="hljs-subst">*</span>x <span class="hljs-subst">=</span> root;  <span class="hljs-comment">//x指向root, 因为要从root开始遍历</span>
+
+    <span class="hljs-keyword">while</span>(x <span class="hljs-subst">!=</span> NIL) {
+        y <span class="hljs-subst">=</span> x; <span class="hljs-comment">//不断更新y, y从上一个x变成当前x </span>
+        <span class="hljs-keyword">if</span>(key <span class="hljs-subst">&lt;</span> x<span class="hljs-subst">-&gt;</span>key) {  <span class="hljs-comment">//小的向左遍历</span>
+            x <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>left;
+        } <span class="hljs-keyword">else</span> x <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>right; <span class="hljs-comment">//大于等于的向右遍历</span>
+    }
+
+    z<span class="hljs-subst">-&gt;</span><span class="hljs-keyword">parent</span> <span class="hljs-subst">=</span> y;  <span class="hljs-comment">//确立了z的父节点</span>
+    <span class="hljs-keyword">if</span>(y <span class="hljs-subst">==</span> NIL) root <span class="hljs-subst">=</span> z;
+    <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">if</span>(key <span class="hljs-subst">&lt;</span> y<span class="hljs-subst">-&gt;</span>key) y<span class="hljs-subst">-&gt;</span>left <span class="hljs-subst">=</span> z;
+        <span class="hljs-keyword">else</span> y<span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">=</span> z; 
+    }
+}
+
+<span class="hljs-literal">void</span> inOrder(Node <span class="hljs-subst">*</span>u)
+{
+    <span class="hljs-keyword">if</span>(u <span class="hljs-subst">==</span> NIL) <span class="hljs-keyword">return</span>;
+    inOrder(u<span class="hljs-subst">-&gt;</span>left);
+    cout <span class="hljs-subst">&lt;&lt;</span> u<span class="hljs-subst">-&gt;</span>key <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">' '</span>;
+    inOrder(u<span class="hljs-subst">-&gt;</span>right);
+}
+
+<span class="hljs-literal">void</span> preOrder(Node <span class="hljs-subst">*</span>u)
+{
+    <span class="hljs-keyword">if</span>(u <span class="hljs-subst">==</span> NIL) <span class="hljs-keyword">return</span>;
+    cout <span class="hljs-subst">&lt;&lt;</span> u<span class="hljs-subst">-&gt;</span>key <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">' '</span>;
+    preOrder(u<span class="hljs-subst">-&gt;</span>left);
+    preOrder(u<span class="hljs-subst">-&gt;</span>right);
+}
+
+int main()
+{
+    int n, x;
+    cin <span class="hljs-subst">&gt;&gt;</span> n;
+    for(int i <span class="hljs-subst">=</span> <span class="hljs-number">0</span>; i <span class="hljs-subst">&lt;</span> n; <span class="hljs-subst">++</span>i) {
+        cin <span class="hljs-subst">&gt;&gt;</span> x;
+        insert(x);
+    }
+    inOrder(root); <span class="hljs-comment">//中序遍历</span>
+    cout <span class="hljs-subst">&lt;&lt;</span> endl;
+    preOrder(root);
+}
+
+<span class="hljs-comment">/*
+8
+30 88 12 1 20 17 25 66
+*/</span></code></pre>
+
+<p>下面多了一个查找</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs lasso"><span class="hljs-variable">#include</span> <span class="hljs-subst">&lt;</span>iostream<span class="hljs-subst">&gt;</span>
+using namespace std;
+
+struct Node {
+    int key;
+    Node <span class="hljs-subst">*</span><span class="hljs-keyword">parent</span>, <span class="hljs-subst">*</span>left, <span class="hljs-subst">*</span>right;
+};
+
+Node <span class="hljs-subst">*</span>root, <span class="hljs-subst">*</span>NIL;  <span class="hljs-comment">//根节点和一个空结点 </span>
+
+<span class="hljs-literal">void</span> insert(int key)
+{
+    Node <span class="hljs-subst">*</span>z <span class="hljs-subst">=</span> <span class="hljs-literal">new</span> Node;  <span class="hljs-comment">//z就是新插入的结点 </span>
+    z<span class="hljs-subst">-&gt;</span>key <span class="hljs-subst">=</span> key;
+    z<span class="hljs-subst">-&gt;</span>left <span class="hljs-subst">=</span> z<span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">=</span> NIL;
+    Node <span class="hljs-subst">*</span>y <span class="hljs-subst">=</span> NIL;  <span class="hljs-comment">//y将是上一个z的上一个结点,更新z的parent</span>
+    Node <span class="hljs-subst">*</span>x <span class="hljs-subst">=</span> root;  <span class="hljs-comment">//x存储root, 因为要从root开始遍历</span>
+
+    <span class="hljs-keyword">while</span>(x <span class="hljs-subst">!=</span> NIL) {
+        y <span class="hljs-subst">=</span> x; <span class="hljs-comment">//不断更新y, y从上一个x变成当前x </span>
+        <span class="hljs-keyword">if</span>(key <span class="hljs-subst">&lt;</span> x<span class="hljs-subst">-&gt;</span>key) {  <span class="hljs-comment">//小的向左遍历</span>
+            x <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>left;
+        } <span class="hljs-keyword">else</span> x <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>right; <span class="hljs-comment">//大于等于的向右遍历</span>
+    }
+
+    z<span class="hljs-subst">-&gt;</span><span class="hljs-keyword">parent</span> <span class="hljs-subst">=</span> y;  <span class="hljs-comment">//确立了z的父节点</span>
+    <span class="hljs-keyword">if</span>(y <span class="hljs-subst">==</span> NIL) root <span class="hljs-subst">=</span> z;
+    <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">if</span>(key <span class="hljs-subst">&lt;</span> y<span class="hljs-subst">-&gt;</span>key) y<span class="hljs-subst">-&gt;</span>left <span class="hljs-subst">=</span> z;
+        <span class="hljs-keyword">else</span> y<span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">=</span> z; 
+    }
+}
+
+<span class="hljs-literal">void</span> inOrder(Node <span class="hljs-subst">*</span>u)
+{
+    <span class="hljs-keyword">if</span>(u <span class="hljs-subst">==</span> NIL) <span class="hljs-keyword">return</span>;
+    inOrder(u<span class="hljs-subst">-&gt;</span>left);
+    cout <span class="hljs-subst">&lt;&lt;</span> u<span class="hljs-subst">-&gt;</span>key <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">' '</span>;
+    inOrder(u<span class="hljs-subst">-&gt;</span>right);
+}
+
+<span class="hljs-literal">void</span> preOrder(Node <span class="hljs-subst">*</span>u)
+{
+    <span class="hljs-keyword">if</span>(u <span class="hljs-subst">==</span> NIL) <span class="hljs-keyword">return</span>;
+    cout <span class="hljs-subst">&lt;&lt;</span> u<span class="hljs-subst">-&gt;</span>key <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">' '</span>;
+    preOrder(u<span class="hljs-subst">-&gt;</span>left);
+    preOrder(u<span class="hljs-subst">-&gt;</span>right);
+}
+
+Node <span class="hljs-subst">*</span> find(int key)
+{
+    Node <span class="hljs-subst">*</span>x <span class="hljs-subst">=</span> root;
+    <span class="hljs-keyword">while</span>(x <span class="hljs-subst">!=</span> NIL) {
+        <span class="hljs-keyword">if</span>(x<span class="hljs-subst">-&gt;</span>key <span class="hljs-subst">==</span> key) <span class="hljs-keyword">return</span> x;
+        <span class="hljs-keyword">if</span>(key <span class="hljs-subst">&lt;</span> x<span class="hljs-subst">-&gt;</span>key) x <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>left;
+        <span class="hljs-keyword">else</span> x <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>right;
+    }
+    <span class="hljs-keyword">return</span> NIL;
+}
+
+int main()
+{
+    int n, x;
+    cin <span class="hljs-subst">&gt;&gt;</span> n;
+    for(int i <span class="hljs-subst">=</span> <span class="hljs-number">0</span>; i <span class="hljs-subst">&lt;</span> n; <span class="hljs-subst">++</span>i) {
+        cin <span class="hljs-subst">&gt;&gt;</span> x;
+        insert(x);
+    }
+    inOrder(root); <span class="hljs-comment">//中序遍历</span>
+    cout <span class="hljs-subst">&lt;&lt;</span> endl;
+    preOrder(root);
+    cout <span class="hljs-subst">&lt;&lt;</span> endl;
+    for(int i <span class="hljs-subst">=</span> <span class="hljs-number">0</span>; i <span class="hljs-subst">&lt;</span> <span class="hljs-number">7</span>; <span class="hljs-subst">++</span>i) {
+        cin <span class="hljs-subst">&gt;&gt;</span> x;
+        Node <span class="hljs-subst">*</span>y <span class="hljs-subst">=</span> find(x);
+        <span class="hljs-keyword">if</span>(y <span class="hljs-subst">!=</span> NIL) {
+            cout <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">"find it\n"</span>;
+            cout <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">"it's parent is "</span> <span class="hljs-subst">&lt;&lt;</span> y<span class="hljs-subst">-&gt;</span><span class="hljs-keyword">parent</span><span class="hljs-subst">-&gt;</span>key <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">'\n'</span>;
+            cout <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">"it's left is "</span> <span class="hljs-subst">&lt;&lt;</span> y<span class="hljs-subst">-&gt;</span>left <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">'\n'</span>;
+            cout <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">"it's right is "</span> <span class="hljs-subst">&lt;&lt;</span> y<span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">'\n'</span> <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">'\n'</span>;
+        } <span class="hljs-keyword">else</span> cout <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">"didn't find it\n\n"</span>;
+    } 
+}
+
+<span class="hljs-comment">/*
+8
+30 88 12 1 20 17 25 66
+
+1 2 11 12 34 33 66 
+*/</span></code></pre>
+
+<p>二叉搜索树的删除操作</p>
+
+<pre class="prettyprint"><code class=" hljs lasso"><span class="hljs-variable">#include</span> <span class="hljs-subst">&lt;</span>iostream<span class="hljs-subst">&gt;</span>
+using namespace std;
+
+struct Node {
+    int key;
+    Node <span class="hljs-subst">*</span><span class="hljs-keyword">parent</span>, <span class="hljs-subst">*</span>left, <span class="hljs-subst">*</span>right;
+};
+
+Node <span class="hljs-subst">*</span>root, <span class="hljs-subst">*</span>NIL;  <span class="hljs-comment">//根节点和一个空结点 </span>
+
+<span class="hljs-literal">void</span> insert(int key)
+{
+    Node <span class="hljs-subst">*</span>z <span class="hljs-subst">=</span> <span class="hljs-literal">new</span> Node;  <span class="hljs-comment">//z就是新插入的结点 </span>
+    z<span class="hljs-subst">-&gt;</span>key <span class="hljs-subst">=</span> key;
+    z<span class="hljs-subst">-&gt;</span>left <span class="hljs-subst">=</span> z<span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">=</span> NIL;
+    Node <span class="hljs-subst">*</span>y <span class="hljs-subst">=</span> NIL;  <span class="hljs-comment">//y将是上一个z的上一个结点,更新z的parent</span>
+    Node <span class="hljs-subst">*</span>x <span class="hljs-subst">=</span> root;  <span class="hljs-comment">//x存储root, 因为要从root开始遍历</span>
+
+    <span class="hljs-keyword">while</span>(x <span class="hljs-subst">!=</span> NIL) {
+        y <span class="hljs-subst">=</span> x; <span class="hljs-comment">//不断更新y, y从上一个x变成当前x </span>
+        <span class="hljs-keyword">if</span>(key <span class="hljs-subst">&lt;</span> x<span class="hljs-subst">-&gt;</span>key) {  <span class="hljs-comment">//小的向左遍历</span>
+            x <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>left;
+        } <span class="hljs-keyword">else</span> x <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>right; <span class="hljs-comment">//大于等于的向右遍历</span>
+    }
+
+    z<span class="hljs-subst">-&gt;</span><span class="hljs-keyword">parent</span> <span class="hljs-subst">=</span> y;  <span class="hljs-comment">//确立了z的父节点</span>
+    <span class="hljs-keyword">if</span>(y <span class="hljs-subst">==</span> NIL) root <span class="hljs-subst">=</span> z;
+    <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">if</span>(key <span class="hljs-subst">&lt;</span> y<span class="hljs-subst">-&gt;</span>key) y<span class="hljs-subst">-&gt;</span>left <span class="hljs-subst">=</span> z;
+        <span class="hljs-keyword">else</span> y<span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">=</span> z; 
+    }
+}
+
+<span class="hljs-literal">void</span> inOrder(Node <span class="hljs-subst">*</span>u)
+{
+    <span class="hljs-keyword">if</span>(u <span class="hljs-subst">==</span> NIL) <span class="hljs-keyword">return</span>;
+    inOrder(u<span class="hljs-subst">-&gt;</span>left);
+    cout <span class="hljs-subst">&lt;&lt;</span> u<span class="hljs-subst">-&gt;</span>key <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">' '</span>;
+    inOrder(u<span class="hljs-subst">-&gt;</span>right);
+}
+
+<span class="hljs-literal">void</span> preOrder(Node <span class="hljs-subst">*</span>u)
+{
+    <span class="hljs-keyword">if</span>(u <span class="hljs-subst">==</span> NIL) <span class="hljs-keyword">return</span>;
+    cout <span class="hljs-subst">&lt;&lt;</span> u<span class="hljs-subst">-&gt;</span>key <span class="hljs-subst">&lt;&lt;</span> <span class="hljs-string">' '</span>;
+    preOrder(u<span class="hljs-subst">-&gt;</span>left);
+    preOrder(u<span class="hljs-subst">-&gt;</span>right);
+}
+
+Node <span class="hljs-subst">*</span> find(int key)
+{
+    Node <span class="hljs-subst">*</span>x <span class="hljs-subst">=</span> root;
+    <span class="hljs-keyword">while</span>(x <span class="hljs-subst">!=</span> NIL) {
+        <span class="hljs-keyword">if</span>(x<span class="hljs-subst">-&gt;</span>key <span class="hljs-subst">==</span> key) <span class="hljs-keyword">return</span> x;
+        <span class="hljs-keyword">if</span>(key <span class="hljs-subst">&lt;</span> x<span class="hljs-subst">-&gt;</span>key) x <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>left;
+        <span class="hljs-keyword">else</span> x <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>right;
+    }
+    <span class="hljs-keyword">return</span> NIL;
+}
+
+<span class="hljs-literal">void</span> Delete(int key)
+{
+    Node <span class="hljs-subst">*</span>x <span class="hljs-subst">=</span> root;
+    <span class="hljs-keyword">while</span>(x <span class="hljs-subst">!=</span> NIL) {
+        <span class="hljs-keyword">if</span>(x<span class="hljs-subst">-&gt;</span>key <span class="hljs-subst">==</span> key) {
+            <span class="hljs-keyword">if</span>(x<span class="hljs-subst">-&gt;</span>left <span class="hljs-subst">==</span> NIL) {
+                x<span class="hljs-subst">-&gt;</span><span class="hljs-keyword">parent</span><span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>right;
+                x<span class="hljs-subst">-&gt;</span>right<span class="hljs-subst">-&gt;</span><span class="hljs-keyword">parent</span> <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span><span class="hljs-keyword">parent</span>;
+            }
+            <span class="hljs-keyword">else</span> {
+                x<span class="hljs-subst">-&gt;</span><span class="hljs-keyword">parent</span><span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>left;
+                x<span class="hljs-subst">-&gt;</span>left<span class="hljs-subst">-&gt;</span><span class="hljs-keyword">parent</span> <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span><span class="hljs-keyword">parent</span>;
+                x<span class="hljs-subst">-&gt;</span>right<span class="hljs-subst">-&gt;</span><span class="hljs-keyword">parent</span> <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>left;
+                x<span class="hljs-subst">-&gt;</span>left<span class="hljs-subst">-&gt;</span>right <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>right;
+            }
+            <span class="hljs-keyword">return</span>;
+        }
+        <span class="hljs-keyword">if</span>(key <span class="hljs-subst">&lt;</span> x<span class="hljs-subst">-&gt;</span>key) x <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>left;
+        <span class="hljs-keyword">else</span> x <span class="hljs-subst">=</span> x<span class="hljs-subst">-&gt;</span>right;
+    }
+}
+
+int main()
+{
+    int n, x;
+    cin <span class="hljs-subst">&gt;&gt;</span> n;
+    for(int i <span class="hljs-subst">=</span> <span class="hljs-number">0</span>; i <span class="hljs-subst">&lt;</span> n; <span class="hljs-subst">++</span>i) {
+        cin <span class="hljs-subst">&gt;&gt;</span> x;
+        insert(x);
+    }
+    inOrder(root); <span class="hljs-comment">//中序遍历</span>
+    cout <span class="hljs-subst">&lt;&lt;</span> endl;
+    preOrder(root);
+    cout <span class="hljs-subst">&lt;&lt;</span> endl;
+    Delete(<span class="hljs-number">20</span>);
+    cout <span class="hljs-subst">&lt;&lt;</span> endl;
+    inOrder(root); <span class="hljs-comment">//中序遍历</span>
+    cout <span class="hljs-subst">&lt;&lt;</span> endl;
+    preOrder(root);
+    cout <span class="hljs-subst">&lt;&lt;</span> endl;
+}
+
+<span class="hljs-comment">/*
+8
+30 88 12 1 20 17 25 66
+
+1 2 11 12 34 33 66 
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

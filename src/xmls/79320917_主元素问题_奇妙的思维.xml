@@ -1,0 +1,212 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79320917				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><div class="toc">
+<ul>
+<li><a href="#主元素问题" rel="nofollow">主元素问题</a><ul>
+<li><a href="#什么是主元素问题" rel="nofollow">什么是主元素问题</a></li>
+<li><a href="#先排序比较排序后计数的方法" rel="nofollow">先排序比较排序后计数的方法</a><ul>
+<li><a href="#一个简单优化" rel="nofollow">一个简单优化</a></li>
+</ul>
+</li>
+<li><a href="#计数排序的方法" rel="nofollow">计数排序的方法</a></li>
+<li><a href="#用stl中的nthelement函数" rel="nofollow">用STL中的nth_element函数</a></li>
+<li><a href="#豆瓣里一种巧妙地方法" rel="nofollow">豆瓣里一种巧妙地方法</a><ul>
+<li><a href="#总而言之-主元素问题是一种很简单的思维启发问题-方法有很多-可是你想到了最简单的方法吗" rel="nofollow">总而言之 主元素问题是一种很简单的思维启发问题 方法有很多 可是你想到了最简单的方法吗</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</p>
+
+
+
+<h1 id="主元素问题">主元素问题</h1>
+
+
+
+<h2 id="什么是主元素问题">什么是主元素问题?</h2>
+
+<blockquote>
+  <p>已知一个数组的大小，并且其中存在一个数，出现的频率大于50%，则称其为该数组的主元素。用一个算法找出这个数，要求其时间复杂度尽可能低。</p>
+</blockquote>
+
+<p>这是一个很简单的问题, 解决的方法有很多, 思考这样一道问题的意义不在于只是把它解决, 而是找出多种解决它的方法, 感受算法的神奇.</p>
+
+<p>衡量一个算法优劣的一个非常重要的尺度是<strong>时间复杂度</strong>, 我们如何让计算机用最短的时间, 解决这个问题呢?</p>
+
+
+
+<h2 id="先排序比较排序后计数的方法">先排序(比较排序)后计数的方法</h2>
+
+<p>先排序后后比较, 这种方法是比较常规的思维. <br>
+排序之后将每个相同的元素计数, 再根据数量判断是哪一个元素</p>
+
+<p>比较排序最快的平均时间复杂度是O(nlogn), 所以这个方法最快的时间按复杂度是O(nlogn)</p>
+
+<blockquote>
+  <p><strong>这种排序方式在所有方式中效率较低, 但它适合各种数据类型(如浮点型), 且在某些情况下空间复杂度比计数排序的方法小很多. </strong></p>
+</blockquote>
+
+<p><strong>还可以判断是否存在这样一个主元素.</strong></p>
+
+<p>代码比较简单且常规, 不写出(实际上用STL的sort()很简单, 但手写快排, 还是算了吧……)</p>
+
+
+
+<h3 id="一个简单优化">一个简单优化</h3>
+
+<p>对于一个已经排序好了的序列, 其实不需要给每个元素计数.</p>
+
+<blockquote>
+  <p><strong>因为它是主元素(&gt;50%), 所以只要取中值就可以知道它是哪个(它的值).</strong></p>
+</blockquote>
+
+
+
+<h2 id="计数排序的方法">计数排序的方法</h2>
+
+<p>计数排序也叫桶排序, 是一种非比较型排序.</p>
+
+<p>时间复杂度位O(N) (N取决于数据范围)</p>
+
+<p>鉴于计数排序对数据类型的限制很大, 所以比较各种排序方法的优劣时通常不把计数排序和快排这种比较排序相比较(事实上没有意义)</p>
+
+<p><strong>如果数据稀松或者范围很大, 计数排序将会非常浪费空间(空间复杂度非常大)</strong></p>
+
+<p>但在某些特定的条件下, 计数排序确实是一种时间复杂度位O(n)的排序算法 <br>
+如: 数据是1-1e6之间的整数</p>
+
+<p><strong>同样可以判断是否存在这样一个主元素</strong></p>
+
+<p>而使用计数排序的方法觉得这道题, 不需要排序, 事实上它可以看作计数排序的一个子过程</p>
+
+
+
+<h2 id="用stl中的nthelement函数">用STL中的nth_element()函数</h2>
+
+<p>刚认识nth_element()函数没几天, 写这个问题的时候突然觉得可以用这个函数解决主元素问题.</p>
+
+<p>思路是: </p>
+
+<blockquote>
+  <p>对N个数的序列用nth_element()找到第<strong>N/2+1</strong>个元素的值. <br>
+  这个值就是<strong>主元素的值</strong></p>
+</blockquote>
+
+<p>缺陷是:</p>
+
+<blockquote>
+  <p>无法判断是否存在主元素</p>
+</blockquote>
+
+<p>这是奇数的情况:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#define N 7</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> a[] = {<span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>}; <span class="hljs-comment">//N为奇数, 从0开始 </span>
+    nth_element(a, a + N/<span class="hljs-number">2</span>, a + N);
+    <span class="hljs-built_in">cout</span> &lt;&lt; a[N/<span class="hljs-number">2</span>];
+}</code></pre>
+
+<p>这是偶数的情况:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#define N 6 </span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> a[] = {<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>}; <span class="hljs-comment">//N为偶数, 从0开始 </span>
+    nth_element(a, a + N/<span class="hljs-number">2</span>, a + N);
+    <span class="hljs-built_in">cout</span> &lt;&lt; a[N/<span class="hljs-number">3</span>];
+}</code></pre>
+
+<p><strong>时间复杂度为O(N)</strong> <br>
+<strong>nth_element()是STL算法库中一种O(N)的单元素排序算法函数</strong></p>
+
+
+
+<h2 id="豆瓣里一种巧妙地方法"><a href="https://www.douban.com/note/505717075/" rel="nofollow">豆瓣里一种巧妙地方法</a></h2>
+
+<p>最后介绍的是一种豆瓣网友分享的巧妙算法</p>
+
+<blockquote>
+  <p>其核心思想在于：<strong>对于这样一个数组，去除掉任意两个不相等的数，剩下的数中，主元素的出现频率仍然大于50%。</strong></p>
+</blockquote>
+
+<p>但又缺陷:</p>
+
+<blockquote>
+  <p><strong>只能在确定存在主元素的序列中找到这个主元素.</strong> <br>
+  即无法判断是否存在主元素 </p>
+  
+  <p>引自豆瓣: <br>
+  解法： <br>
+  声明一个变量count = 0，声明一个常量size等于数组大小。 <br>
+  假设该数组的第一个元素a(1)为主元素，让其与a(2)进行比较，若相同，则使变量count+1，若不同，则count-1。然后继续比较a(3)。以此类推。</p>
+  
+  <p>当与a(n)比较后，count = -1时，将count重新归为0，并重新假设a(n+1)为主元素，并继续与a(n+2)作比较。</p>
+  
+  <p>当count&gt;=(size-m)/2时，此时假设的主元素a(m)即为实际的主元素。 或遍历完整个数组后，当前假设的主元素为实际主元素。</p>
+  
+  <p>这个算法的时间复杂度最大才O(N)，看书看到这一段时令我顿时拍案叫绝啊。其核心思想在于：对于这样一个数组，去除掉任意两个不相等的数，剩下的数中，主元素的出现频率仍然大于50%。而使用count来进行加减计数，当count=0时，必然是偶数个数与假设的主元素进行了比较，且其中有一半与假设数相同一半与假设数不同（当count=-1时，加上假设数的集合，也满足该条件）。</p>
+</blockquote>
+
+<p>下面是我写的简单代码(<strong>可能又bug</strong>)</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#define N 7</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+<span class="hljs-comment">//  int a[] = {1, 4, 3, 1, 1, 2, 1};</span>
+    <span class="hljs-keyword">int</span> a[] = {<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">4</span>};
+<span class="hljs-comment">//  int a[] = {1 ,5 ,6 ,8 ,7 ,9 ,4 ,2 ,7 ,5 ,2 ,2 ,2 ,2};</span>
+    <span class="hljs-keyword">int</span> cnt = <span class="hljs-number">0</span>, tmp = a[<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; N; ++i) {
+        <span class="hljs-keyword">if</span>(tmp == a[i]) cnt++;
+        <span class="hljs-keyword">else</span> cnt--;
+        <span class="hljs-keyword">if</span>(cnt &lt; <span class="hljs-number">0</span>) {
+            tmp = a[i];
+            cnt = <span class="hljs-number">0</span>;
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"cnt == "</span> &lt;&lt; cnt &lt;&lt; endl;
+    <span class="hljs-keyword">if</span> (cnt &gt; <span class="hljs-number">0</span>) <span class="hljs-built_in">cout</span> &lt;&lt; tmp &lt;&lt; endl; 
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"There is no such a number !\n"</span>;
+}</code></pre>
+
+
+
+<h3 id="总而言之-主元素问题是一种很简单的思维启发问题-方法有很多-可是你想到了最简单的方法吗">总而言之, 主元素问题是一种很简单的思维启发问题, 方法有很多, 可是你想到了最简单的方法吗?</h3>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

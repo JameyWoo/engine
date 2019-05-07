@@ -1,0 +1,30 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/82990367				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>草, 写了那么长的博客, 没保存, 手贱重新点开一个写文章, 啥都没了…<br>
+没了…<br>
+没了…</p>
+<hr>
+<p>一切从简, 只说该说的.</p>
+<hr>
+<p>朋友, 相信你能找到我的文章, 应该是看了不少markdown转PDF主题的文章吧, 我也不废话了, 就说我的方法.</p>
+<p>写好markdown文件, 进入csdn写文章界面, 有个导出的选项,</p>
+<p>选择导出为HTML文件, 然后选Styled Html就ok.</p>
+<p>打开导出的HTML文件, 在chrome菜单中找到打印, 将其打印为PDF即可.</p>
+<hr>
+<p>同样思路可以使用的有<code>Jupyter Notebook</code>, 写好markdown导出为html即可, 然后打印.  不过界面不是很美观.</p>
+<p>或者进入<a href="dillinger.io" rel="nofollow">dillinger.io</a>这个网站, 也是可以导出为HTML的. 网站上有导出为PDF的选项, 不过提示<code>Missing PDF file.</code> 我也没辙. 这个网站导出的还是比较美观的.</p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

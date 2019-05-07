@@ -1,0 +1,133 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81463435				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>自己独立思考出这道题, 而且正解思路是一遍过, so 嗨皮.</p>
+
+<p>贴一下思路历程, 思考的过程是很珍贵的. 对一个问题, 从陌生到有一个大致的了解, 其中会有错误的思路, 发现错误然后及时回头去想其他的方法. 有时有能做出结果的思路但不是最好的思路, 从差方法上进行横向拓展, 突然灵机一动, 想到另一种方法, 最后解答出来.</p>
+
+<p>以下</p>
+
+<hr>
+
+<p>初印象: 这像是一道<strong>DAG最长路或者说关键路径题目,但是又很大的不同.</strong></p>
+
+<p>因为不用修建所有隧道,所以<strong>正确的路径肯定是一条能够通往终点的无分支路径,答案就是所有这样路径里面需要时间最短的</strong></p>
+
+<dl>
+<dt>那么有两种情况</dt>
+<dd>
+<ol>
+<li>这条路径可以根据某种规则直接选出来,然后求它的最短时间即可</li>
+<li>不选出这条路径,而是遍历所有的这样的路径,求出其中的最短时间的最短的</li>
+</ol>
+</dd>
+</dl>
+
+<p>看题目数据正解大概O(nlogn)一级别的复杂度 <br>
+其中60%的数据可以是O(n^2)的时间复杂度.</p>
+
+<p><del>先来考虑这个问题:有这样一条路径,如何确定修建它的最短时间?</del></p>
+
+<p>—等等,似乎上面全错.一个公司只能修建一条隧道, 而且有n个公司那么足够修一条路了. <strong>公司是不用选的. </strong></p>
+
+<p><strong>只需要选择路径,并且路径里面边长最大的就是结果. </strong></p>
+
+<p>那么岂不是很简单?只要比较所有可达路径里面边数&lt;=n的,其中最大耗时最小的就是结果了.</p>
+
+<p>那么最优解可能是有一条边数&gt;=n的路径嘛? <strong>可以证明是不会的.因为会成环,成环就没有意义了. </strong> 所以不用担心人手不够</p>
+
+<p>那么这些路, 每个顶点只会经过一次,可以方便地<strong>用dfs去遍历了. 每次步进到新的点,比较一下最大边,找出最小就ok </strong></p>
+
+<p>暴力DFS的程序提交了,TLE20分, <strong>这果然不像单纯地一张图上对所有边进行遍历, 毕竟是会恢复状态的</strong>,这就是我之前潜意识里面认为的那种DFS是时间复杂度很高的情况.</p>
+
+<p>不过思路应该没错,那么,<strong>是不是记忆化搜索呢? </strong></p>
+
+<p><strong><em>是不是记忆化搜索我不知道,但我发现它可能是最小生成树!!!</em></strong></p>
+
+<p><strong>先找到最小生成树路径, 然后依次把大的边删掉,看1是否还和n连通,当遇到第一个不能删的边时,这个就是答案了.</strong></p>
+
+<p>amazing, 因为它可以修n条路,那么铁定的最小生成树的n - 1条边都可以修好,那么1-n肯定是联通的.</p>
+
+<p><strong>既然如此,那就从树里面找出满足连通性质的最小最大边,根据贪心的思想,当然是从最大边开始删,而且他的短边</strong></p>
+
+<p>对结果是没有影响的,反正人手充足.那么用Kruskal的话,<strong>这部分是O(MlogM). </strong></p>
+
+<p>接下来的问题是: <strong>如何删边. </strong></p>
+
+<p>又思考一下,<strong>发现与其删边,不如加边,直到加到第一个满足1和n连通的边.</strong></p>
+
+<p><strong>perfect. </strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Edge {
+    <span class="hljs-keyword">int</span> from, to, w;
+    Edge(<span class="hljs-keyword">int</span> f, <span class="hljs-keyword">int</span> t, <span class="hljs-keyword">int</span> w) : from(f), to(t), w(w) {}
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">100000</span> + <span class="hljs-number">5</span>;
+<span class="hljs-keyword">int</span> n, m, father[maxn];
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Edge&gt;</span> edge, edg;
+
+<span class="hljs-keyword">bool</span> cmp(Edge x, Edge y)
+{
+    <span class="hljs-keyword">return</span> x.w &lt; y.w;
+}
+
+<span class="hljs-keyword">int</span> find(<span class="hljs-keyword">int</span> x)
+{
+    <span class="hljs-keyword">return</span> x == father[x] ? x : father[x] = find(father[x]);
+}
+
+<span class="hljs-keyword">void</span> Kruskal()
+{
+    sort(edge.begin(), edge.end(), cmp);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; edge.size(); ++i) {
+        <span class="hljs-keyword">int</span> x = find(edge[i].from), y = find(edge[i].to);
+        <span class="hljs-keyword">if</span> (x != y) {
+            father[x] = y;
+            edg.push_back(edge[i]);
+            <span class="hljs-keyword">if</span> (edg.size() == n - <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span>;
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    ios::sync_with_stdio(<span class="hljs-keyword">false</span>);
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        father[i] = i;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>, from, to, w; i &lt; m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; from &gt;&gt; to &gt;&gt; w;
+        edge.push_back(Edge(from, to, w));
+    }
+    Kruskal();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        father[i] = i;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; edg.size(); ++i) {
+        <span class="hljs-keyword">int</span> x = find(edg[i].from), y = find(edg[i].to);
+        <span class="hljs-keyword">if</span> (x != y) {
+            father[x] = y;
+        }
+        <span class="hljs-keyword">if</span> (find(<span class="hljs-number">1</span>) == find(n)) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; edg[i].w;
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        }
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

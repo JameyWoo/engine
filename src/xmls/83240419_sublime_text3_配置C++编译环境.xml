@@ -1,0 +1,47 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/83240419				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>之前尝试了那么多次, 都失败了, 这次终于成功了.</p>
+<p><a href="https://blog.qiujinfeng.com/archives/making-Sublime-Text-cplusplus-IDE.html" rel="nofollow">非常感谢这篇博客的作者</a></p>
+<p>环境: win10</p>
+<p>开发环境: MinGW</p>
+<p>添加系统环境变量: <code>C:/MinGW/bin</code></p>
+<blockquote>
+<p>运行CMD(开始-&gt; 运行-&gt; Cmd)，输入：mingw-get后则会运行MinGW界面，这里说明变量设置成功。然后输入：g++ -v，用于检测安装g++有没有成功。</p>
+</blockquote>
+<p>如果上面的成功了, 就可以在sublime里建立新的编译环境了.</p>
+<p><code>Tools –&gt; Build System –&gt; New Build System</code> 在打开的页面中粘贴以下代码</p>
+<pre><code>{
+ "cmd": ["g++", "${file}", "-std=c++11", "-o", "${file_path}/${file_base_name}", "&amp;", "start", "cmd", "/c", "${file_base_name} &amp; echo. &amp; pause"],
+ "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
+ "working_dir": "${file_path}",
+ "selector": "source.c, source.c++",
+ "shell": true,
+ "encoding":"cp936",
+}
+</code></pre>
+<p>然后保存, 自己写个名字.</p>
+<p>在<code>Tools-&gt;Build System</code> 中选择此编译系统编译运行.</p>
+<hr>
+<p>但是遇到了两个问题:</p>
+<h3><a id="___34"></a>一. 只能编译运行, 不能只编译不运行.</h3>
+<p>罢了, 这个就不折腾了.</p>
+<p>因为我这个是自定义的编译系统来编译的, 那么如果要只编译不运行, 就需要再写一个文件. 且不说我尚且不会写, 就算写了好了用了, 还要不断切换编译系统, 很麻烦.</p>
+<p>最好的是在编译出错的情况下自动不弹出运行窗口, 只是显示错误. 我估计又这样的语法, 但我现在还不会…</p>
+<h3><a id="__42"></a>二. 弹出的命令行窗口中文显示乱码.</h3>
+<p><a href="https://www.zhihu.com/question/58501164" rel="nofollow">原因似乎是这样</a></p>
+<p>解决起来有点复杂, 在网上找到的一些资料是用插件将文件转化为GDB编码, 然后运行. 但每写一个文件都要转化一次, 所以觉得很麻烦. 而且好像是要先转化, 再写中文, 而一个代码里用中文的次数比较少, 很麻烦.</p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

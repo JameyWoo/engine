@@ -1,0 +1,84 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81543507				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>CCF 201512-4 送货 <a href="http://118.190.20.162/view.page?gpid=T34" rel="nofollow">传送门</a></p>
+
+<p>此题只得了80分, 说是运行错误, 找了好久的bug, 都找不出哪里出错. 然后找了其他博客代码, 提交了三四个, 都是80分(他们博客上说是100分代码). </p>
+
+<p>然后我想, 这应该是CCF的问题吧.</p>
+
+<p>这道题就是求欧拉路径.</p>
+
+<dl>
+<dt>注意几点:</dt>
+<dd><strong>1.一定要判断是否是连通图, 不然是错的.(判断输出点数是否为m + 1即可)</strong> <br>
+<strong>2.bool类型可以开boo[10000][10000]的, 大约100M的内存, 但是int不可以(256M限制)</strong> <br>
+<strong>3. 欧拉路径倒着存, 倒着输出. 如果遇到了就push的话, 孤立点会出错</strong></dd>
+</dl>
+
+<p>80分代码<del>在我心中它是100分. 哦耶</del></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;map&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10010</span>;
+<span class="hljs-keyword">int</span> n, m, degree[maxn] = {}, odd = <span class="hljs-number">0</span>;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> G[maxn], ans;
+<span class="hljs-keyword">bool</span> Gra[maxn][maxn] = {};
+
+<span class="hljs-keyword">void</span> Euler(<span class="hljs-keyword">int</span> u)
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; G[u].size(); ++i) {
+        <span class="hljs-keyword">int</span> v = G[u][i];
+        <span class="hljs-keyword">if</span> (Gra[u][v]) {
+            Gra[u][v] = Gra[v][u] = <span class="hljs-keyword">false</span>;
+            Euler(v);
+        }
+    }
+    ans.push_back(u);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-keyword">int</span> u, v;
+        <span class="hljs-built_in">cin</span> &gt;&gt; u &gt;&gt; v;
+        degree[u]++, degree[v]++;
+        G[u].push_back(v), G[v].push_back(u);
+        Gra[u][v] = Gra[v][u] = <span class="hljs-keyword">true</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (degree[i] % <span class="hljs-number">2</span> == <span class="hljs-number">1</span>) odd++;
+    }
+    <span class="hljs-keyword">if</span> (!(odd == <span class="hljs-number">0</span> || (odd == <span class="hljs-number">2</span> &amp;&amp; degree[<span class="hljs-number">1</span>] % <span class="hljs-number">2</span>))) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; -<span class="hljs-number">1</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        sort(G[i].begin(), G[i].end());
+    }
+    Euler(<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">if</span> (ans.size() != m + <span class="hljs-number">1</span>) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; -<span class="hljs-number">1</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = ans.size() - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; --i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; ans[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

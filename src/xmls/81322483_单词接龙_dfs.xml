@@ -1,0 +1,127 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81322483				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>P1019 <a href="https://www.luogu.org/problemnew/show/P1019" rel="nofollow">单词接龙</a></p>
+
+<dl>
+<dt>题目描述</dt>
+<dd>单词接龙是一个与我们经常玩的成语接龙相类似的游戏，现在我们已知一组单词，且给定一个开头的字母，要求出以这个字母开头的最长的“龙”（每个单词都最多在“龙”中出现两次），在两个单词相连时，其重合部分合为一部分，例如 beastbeast 和 astonishastonish ，如果接成一条龙则变为 beastonishbeastonish ，另外相邻的两部分不能存在包含关系，例如 atat 和 atideatide 间不能相连。</dd>
+
+<dt>输入输出格式</dt>
+<dd>输入格式： <br>
+输入的第一行为一个单独的整数 nn ( n \le 20n≤20 )表示单词数，以下 nn 行每行有一个单词，输入的最后一行为一个单个字符，表示“龙”开头的字母。你可以假定以此字母开头的“龙”一定存在.</dd>
+
+<dd>
+<p>输出格式： <br>
+只需输出以此字母开头的最长的“龙”的长度</p>
+</dd>
+
+<dt>输入输出样例</dt>
+<dd>输入样例#1：  <br>
+5 <br>
+at <br>
+touch <br>
+cheat <br>
+choose <br>
+tact <br>
+a <br>
+输出样例#1：  <br>
+23</dd>
+</dl>
+
+<p>一道比较中规中矩的dfs吧. 数据有点小, 不然像我这样子暴力求前缀后缀什么的太慢了.</p>
+
+<p><strong>总的来说思路就是统计各个单词之间是否有前后缀关系, 如果有, 那么求出最短的重复序列长度, 如果没有, 设为0. 重点是建立这样的一个数组.</strong></p>
+
+<p><strong>那么我们就可以根据这个进行dfs求结果了, 一个visit数组, 经典的dfs前+1, dfs后-1恢复状态.</strong></p>
+
+<p>关键是要理解题意, 比如说<strong>它每个字母最多可以出现两次.</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;
+<span class="hljs-keyword">int</span> visit[<span class="hljs-number">22</span>] = {}, ans = <span class="hljs-number">0</span>, n;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> &gt;</span> les(<span class="hljs-number">22</span>, <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span>(<span class="hljs-number">22</span>));
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt;</span> str(<span class="hljs-number">22</span>);
+
+<span class="hljs-keyword">int</span> get(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt;</span> str, <span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)
+{
+    <span class="hljs-keyword">int</span> ans = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = str[x].size() - <span class="hljs-number">1</span>; j &gt;= <span class="hljs-number">1</span>; --j) {
+        <span class="hljs-keyword">bool</span> flag = <span class="hljs-keyword">true</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = j; i &lt; str[x].size(); ++i) {
+            <span class="hljs-keyword">if</span> (str[x].size() - j == str[y].size()) {
+                flag = <span class="hljs-keyword">false</span>;
+                <span class="hljs-keyword">break</span>;
+            }
+            <span class="hljs-keyword">if</span> (str[x][i] != str[y][i - j]) {
+                flag = <span class="hljs-keyword">false</span>;
+                <span class="hljs-keyword">break</span>;
+            }
+        }
+        <span class="hljs-keyword">if</span> (flag) {
+            ans = str[x].size() - j;
+            <span class="hljs-keyword">break</span>;
+        }
+    }
+    <span class="hljs-keyword">return</span> ans;
+}
+
+<span class="hljs-keyword">void</span> dfs(<span class="hljs-keyword">int</span> k, <span class="hljs-keyword">int</span> cnt)
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">if</span> (les[k][i] != <span class="hljs-number">0</span> &amp;&amp; visit[i] &lt;= <span class="hljs-number">1</span>) {
+            visit[i]++;
+            dfs(i, cnt + str[i].size() - les[k][i]);
+            visit[i]--;
+        }
+    }
+    ans = max(ans, cnt);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; str[i];
+    }
+    <span class="hljs-keyword">char</span> ch;
+    <span class="hljs-built_in">cin</span> &gt;&gt; ch;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; ++j) {
+            les[i][j] = get(str, i, j);
+        }
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">if</span> (str[i][<span class="hljs-number">0</span>] == ch &amp;&amp; str[i].size() != <span class="hljs-number">1</span>) {
+            visit[i]++;
+            dfs(i, str[i].size());
+            visit[i]--;
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+}
+<span class="hljs-comment">/*
+5
+at
+touch
+cheat
+choose
+tact
+a
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

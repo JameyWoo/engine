@@ -1,0 +1,100 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81456799				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>201709-5 除法 <a href="http://118.190.20.162/view.page?gpid=T59" rel="nofollow">传送门</a></p>
+
+<p>这是一道描述相比于其他第五题来说比较简单的题目, 那么, 这道题真的简单吗?</p>
+
+<p>答案是: <em>是的, 或者说想出正确解法不难.</em></p>
+
+<p>了解这道题后会发现, <strong>这不就是一道树状数组的题目么? 区间数的和, 某个数的更新, 很典型的树状数组. 确实是这样, 不过此题有几个坑.</strong></p>
+
+<p>首先是暴力解法, 按照题目的描述一步一步来即可, 当然的高分是不可能的, 只有30分. 不过这也启发我们, <strong>即使你觉得第五题会做不出, 还是看一下的好, 没准就像这道题一样可以很轻松的拿到这30分.</strong></p>
+
+<p>然后用树状数组吧. 规规矩矩地写了个树状数组, 测试样例也通过了, 提交, 结果0分.原来是进行除法地时候忘记了改变num元素的值. 即<code>num[j] /= w;</code><strong>这种小错误在没有反馈的情况下是很难自己找出来的, 所以让我冷汗直流.</strong></p>
+
+<p>改正错误之后再提交, 结果只有50分, 依然是TLE. 为什么? 整整10s的时间, 依然是超时了. 我就在思考, 是不是跟输入输出有关? </p>
+
+<p>于是我尝试着关掉同步<strong><code>ios::sync_with_stdio(false)</code></strong>, 尝试着全写成<code>scanf</code>和<code>printf</code>, 结果依然是这样.</p>
+
+<p>于是我对照着别人的AC代码, 发现有这样一个优化, <code>if (w == 1) continue;</code>. 在这种情况下直接<code>continue</code>了, 不然由于程序的特殊性, 会浪费大量的时间, <strong>而此题恰恰就卡了这个优化</strong>. 虽然不写这句对结果毫无影响.</p>
+
+<p>改了后提交, 现在是80分了. <strong>看来这一个优化值30分!</strong></p>
+
+<p>然后又是艰难地找不同, 发现了另一个可能的优化.</p>
+
+<p>那就是<code>if (w &lt;= num[j] &amp;&amp; num[j] % w == 0)</code>中的<code>w &lt;= num[j]</code>. 修改后提交, 100分了. 可是为什么呢? 我尝试将<code>w &lt;= num[j]</code>改为<code>num[j] != 0</code>, 结果还是80分. </p>
+
+<p>我的猜想是: <strong>由于程序会进行大量的此条件的判断, 而判断取模的速度远比比较大小的速度慢(注意<code>num[j] != 0</code>的情况比w小而不为零的数还是会进行取模运算</strong>. 这道题也卡了这个优化. <strong>而这个优化值20分, 非常关键的20分</strong></p>
+
+<p>还有要注意的一点是, 前面讨论的情况都是把int改成long long了的. 如果都是int, 只有30分! <strong>所以注意程序不要溢出这个细节值整整70分!!!</strong></p>
+
+<p>还有要注意的是: <strong>long long的速度比int慢很多</strong>. 所以尽量不要把可以是int的数据弄成long long, 比如此题, 差距是两秒(7秒到5秒的差距). </p>
+
+<p><strong>还有合理的使用<code>register</code>, 也可以提升1-2s的时间效率.</strong> 大约20%-30%的效率提升吧.</p>
+
+<p><strong>这道题给我的启发是: 平时code的时候一定要养成关注细节优化的好习惯, 此题卡的几个细节都是平常很容易忽略的, 然而确实考试中拿高分的关键.</strong> <strong><em>看似随意的细节, 如果我们去思考本质的效率, 可能会发现大有不同</em></strong></p>
+
+<p>满分代码, 不到50行.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">100000</span> + <span class="hljs-number">5</span>;
+<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> C[maxn] = {};
+<span class="hljs-keyword">int</span> n, m, num[maxn];
+
+<span class="hljs-keyword">inline</span> <span class="hljs-keyword">void</span> update(<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> pos, <span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> val)
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">register</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> i = pos; i &lt;= n; i += (i &amp; -i))
+        C[i] += val;
+}
+
+<span class="hljs-keyword">inline</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> getSum(<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> x)
+{
+    <span class="hljs-keyword">register</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> sum = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> i = x; i &gt;= <span class="hljs-number">1</span>; i -= (i &amp; -i))
+        sum += C[i];
+    <span class="hljs-keyword">return</span> sum;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    ios::sync_with_stdio(<span class="hljs-keyword">false</span>);
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; num[i];
+        update(i, num[i]);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>, ops, u, v, w; i &lt;= m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; ops &gt;&gt; u &gt;&gt; v;
+        <span class="hljs-keyword">if</span> (ops == <span class="hljs-number">1</span>) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; w;
+            <span class="hljs-keyword">if</span> (w == <span class="hljs-number">1</span>) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">register</span> <span class="hljs-keyword">int</span> j = u; j &lt;= v; ++j) {
+                <span class="hljs-keyword">if</span> (w &lt;= num[j] &amp;&amp; num[j] % w == <span class="hljs-number">0</span>) {
+                    update(j, num[j] / w - num[j]);
+                    num[j] /= w;
+                }
+            }
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-built_in">cout</span> &lt;&lt; getSum(v) - getSum(u - <span class="hljs-number">1</span>) &lt;&lt; endl;
+        }
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

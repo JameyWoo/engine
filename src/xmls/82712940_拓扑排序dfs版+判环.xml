@@ -1,0 +1,178 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/82712940				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>以前就听说拓扑排序可以用dfs来写了，只是一直没有去尝试，想一想的话会觉得很复杂，dfs怎么排？</p>
+
+<p><strong><em>要从入度为0的点出发吗？</em></strong> <br>
+<strong><em>如果有多个入度为0的点，每个都dfs一遍吗？那他们不是会有重复不是会乱套？</em></strong></p>
+
+<p>总之，对于从来都是用bfs写拓扑的我来说，觉得用dfs简直不可思议。但是了解之后，买毛病！精彩！而且还学会了一张图如何判环（因为有环的图是不能拓扑排序的）。</p>
+
+<p>总体思路就是：<strong>dfs + 栈。</strong></p>
+
+<hr>
+
+<p>首先我们讨论一下拓扑排序的性质，对于一个图，它可能会有好几种拓扑排序，但他们同时满足一个规律，那就是<strong>如果存在有向边<code>u-&gt;v</code>, 那么结点<code>u</code>必须排在<code>v</code>之前（前驱）</strong>。同时这种性质<strong>具有传递性</strong>，也就是说如果同时存在<code>v-&gt;t</code>, 那么满足<code>u</code>在<code>t</code>之前。同样的，<strong>如果<code>u</code>和<code>v</code>两个结点在图中并不满足这种性质，那么谁在前谁在后就无所谓了</strong>。正是利用这个规则，<strong>我们进行dfs的顺序是无所谓的。</strong></p>
+
+<p>为何？因为我们从<code>root</code>结点开始dfs一遍，可以找到所有的必须在这个<code>root</code>结点之后的点，那么<strong>我们就满足了拓扑序的规则了</strong>，那么我们无论先<code>dfs(u)</code>还是先<code>dfs(v)</code>, 都不会违背这个规则（除非有环），那么同时我们只要<strong>按照某种合理的方式存储</strong>所有这些点，那么他们就是拓扑序了。</p>
+
+<p>什么是合理的方式？<strong>栈！</strong>考量一个<code>dfs(u)</code>, 在它结束该退出时，它代表它的结点u。在dfs递归中，<strong>什么点会最先exit？没有后继结点的点（或者后继已入栈的点）！</strong>那么把所有点分成两个集合，一个是待处理的点集D，一个是已拓扑排序后的点集A，<strong>当且仅当D中某个点没有后继结点（或该后继结点已经加入了点集A中）时，它可以从D转移到A，而dfs的回溯方式，恰恰就自动实现了这样的功能。</strong> 结合代码更容易体会。</p>
+
+<p>不判环拓扑排序代码，如果你已知图是DAG的话。</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;stack&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Edge {
+    <span class="hljs-keyword">int</span> to, next;
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10010</span>;
+<span class="hljs-keyword">int</span> head[maxn] = {};
+<span class="hljs-keyword">int</span> n, m, cnt = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">bool</span> vis[maxn] = {};
+Edge edge[maxn];
+<span class="hljs-stl_container"><span class="hljs-built_in">stack</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> S;
+
+<span class="hljs-keyword">void</span> add(<span class="hljs-keyword">int</span> u, <span class="hljs-keyword">int</span> v)
+{
+    edge[cnt].to = v;
+    edge[cnt].next = head[u];
+    head[u] = cnt++;
+}
+
+<span class="hljs-keyword">void</span> dfs(<span class="hljs-keyword">int</span> u)
+{
+    vis[u] = <span class="hljs-keyword">true</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = head[u]; i; i = edge[i].next) {
+        <span class="hljs-keyword">int</span> v = edge[i].to;
+        <span class="hljs-keyword">if</span> (!vis[v]) dfs(v);
+    }
+    S.push(u);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= m; ++i) {
+        <span class="hljs-keyword">int</span> u, v;
+        <span class="hljs-built_in">cin</span> &gt;&gt; u &gt;&gt; v;
+        add(u, v);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (vis[i] == <span class="hljs-number">0</span>) dfs(i);
+    }
+    <span class="hljs-keyword">while</span> (!S.empty()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; S.top() &lt;&lt; <span class="hljs-string">' '</span>;
+        S.pop();
+    }
+}</code></pre>
+
+<hr>
+
+<p>那么，如何判环呢？判环只是在dfs函数上稍做些修改，其中最主要的是<code>vis数组</code>的含义有所扩展，以及对下一结点进行dfs的条件判断。</p>
+
+<p>不判环的拓扑排序，<code>vis</code>只代表某一结点有没有被放问过，<strong>而现在，vis有三个值，<code>-1，0，1</code>。-1代表已访问过，但不是从当前系列dfs访问来的，0代表未访问过，1代表访问国，且是当前系列访问过的（意味着有环，如<code>u-&gt;v, v-&gt;t, t-&gt;u</code>）</strong></p>
+
+<p>核心代码如下</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cs"><span class="hljs-keyword">bool</span> dfs(<span class="hljs-keyword">int</span> u)
+{
+    vis[u] = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = head[u]; i; i = edge[i].next) {
+        <span class="hljs-keyword">int</span> v = edge[i].to;
+        <span class="hljs-keyword">if</span> (vis[v] == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+        <span class="hljs-keyword">if</span> (vis[v] == <span class="hljs-number">0</span> &amp;&amp; !dfs(v)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    }
+    vis[u] = -<span class="hljs-number">1</span>;
+    S.push(u);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+}</code></pre>
+
+<p>dfs（）函数的值意味着是否有环。</p>
+
+<p>可以看到，如果发现将要访问的节点在这个dfs圈子里（为1），那么直接返回false，否则如果没访问过（为0），那么就进去访问吧，不过因为我们要维护是否有环的性质，所以对其返回值进行判断。如果为<code>false</code>，对不起，有环，拓扑排序直接终止了。</p>
+
+<p>完整代码：</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;stack&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Edge {
+    <span class="hljs-keyword">int</span> to, next;
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10010</span>;
+<span class="hljs-keyword">int</span> n, m, cnt = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">int</span> head[maxn] = {};
+<span class="hljs-keyword">int</span> vis[maxn] = {};
+Edge edge[maxn];
+<span class="hljs-stl_container"><span class="hljs-built_in">stack</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> S;
+
+<span class="hljs-keyword">void</span> add(<span class="hljs-keyword">int</span> u, <span class="hljs-keyword">int</span> v)
+{
+    edge[cnt].to = v;
+    edge[cnt].next = head[u];
+    head[u] = cnt++;
+}
+
+<span class="hljs-keyword">bool</span> dfs(<span class="hljs-keyword">int</span> u)
+{
+    vis[u] = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = head[u]; i; i = edge[i].next) {
+        <span class="hljs-keyword">int</span> v = edge[i].to;
+        <span class="hljs-keyword">if</span> (vis[v] == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+        <span class="hljs-keyword">if</span> (vis[v] == <span class="hljs-number">0</span> &amp;&amp; !dfs(v)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    }
+    vis[u] = -<span class="hljs-number">1</span>;
+    S.push(u);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+}
+
+<span class="hljs-keyword">bool</span> topsort()
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (!vis[i]) <span class="hljs-keyword">if</span> (!dfs(i)) {
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+        }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= m; ++i) {
+        <span class="hljs-keyword">int</span> u, v;
+        <span class="hljs-built_in">cin</span> &gt;&gt; u &gt;&gt; v;
+        add(u, v);
+    }
+    <span class="hljs-keyword">bool</span> ans = topsort();
+    <span class="hljs-keyword">if</span> (ans == <span class="hljs-keyword">false</span>) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"图中存在环，不能进行拓扑排序"</span> &lt;&lt; endl;
+    <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">while</span> (!S.empty()) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; S.top() &lt;&lt; <span class="hljs-string">' '</span>;
+            S.pop();
+        }
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

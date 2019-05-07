@@ -1,0 +1,149 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81220126				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><strong>学过矩阵学了矩阵再看斐波那契数列, 秒懂, 结合矩阵快速幂, 加深了一个概念的理解: 矩阵也就是一个基本的计算单位.</strong></p>
+
+<p>矩阵快速幂解法其实就是<strong>快速幂+矩阵.</strong> </p>
+
+<p>和普通的快速幂有什么不同? 不同的是<strong>基数的类型</strong>,快速幂的过程还是一样的. 同样的,快速幂结果一般取模, 因为数据实在是太大了. 那么矩阵快速幂是否也应该取模?</p>
+
+<p>那么推导一下似乎可以发现,<strong>矩阵的每个数都取模p,因为结果其实就是矩阵的某个元素</strong> </p>
+
+<p>以[[1, 1], [1, 0]]的幂为n, n = 0时, 结果0, 如果我们取f0 = 0, f1 = 1, 以此类推,那么<strong>n次幂的结果就是右下角的那个数.</strong> </p>
+
+<p>同时<strong>时间复杂度为O(n log n).</strong> </p>
+
+<p>我们来回顾一下快速幂, <strong><em>是从一次不断进行倍增, 如果数n 的二进制形式在某一位上为1,那么就乘以这一位,否则不乘</em></strong> </p>
+
+<p>先写一下快速幂代码. </p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, p, ans = <span class="hljs-number">1</span>, val = <span class="hljs-number">2</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; p;
+    <span class="hljs-keyword">while</span> (n) {
+        <span class="hljs-keyword">if</span> (n &amp; <span class="hljs-number">1</span>) ans = ans * val % p;
+        val *= val;
+        n /= <span class="hljs-number">2</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+}
+<span class="hljs-comment">// OK, 就是这么简单.</span></code></pre>
+
+<hr>
+
+<p>那么矩阵快速幂也呼之欲出了. </p>
+
+<p>然而写了代码发现计算过程有误.(划掉, 应该是推导有误,睡个午觉再来看看).  <br>
+OK, 找出bug来了, 推导没有错误, <strong>是做矩阵乘法的时候几个下标写错了. 需要特别小心</strong></p>
+
+<p>但是发现答案稍微有点问题<strong>,看出其实now矩阵不用设置为二维单位矩阵,直接是[1, 0], 他就是答案. </strong></p>
+
+<p>但是非常悲剧的是洛谷上没有这么简单的模板题, 都<strong>不给我辛苦学习AC一下的快感. </strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs mel">#include &lt;iostream&gt;
+using <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, p = (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">31</span>);
+    cin &gt;&gt; n;
+    <span class="hljs-keyword">int</span> now[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>] = {{<span class="hljs-number">1</span>}, {<span class="hljs-number">0</span>}}, <span class="hljs-keyword">matrix</span>[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>] = {{<span class="hljs-number">1</span>, <span class="hljs-number">1</span>}, {<span class="hljs-number">1</span>, <span class="hljs-number">0</span>}};
+    <span class="hljs-keyword">while</span> (n) {
+        <span class="hljs-keyword">int</span> a, b, c, d;
+        <span class="hljs-keyword">if</span> (n &amp; <span class="hljs-number">1</span>) { <span class="hljs-comment">// 矩阵相乘. </span>
+            a = <span class="hljs-keyword">matrix</span>[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] * now[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] + <span class="hljs-keyword">matrix</span>[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] * now[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>];
+            b = <span class="hljs-keyword">matrix</span>[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] * now[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] + <span class="hljs-keyword">matrix</span>[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] * now[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>];
+            now[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] = a % p, now[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] = b % p;
+        }
+        <span class="hljs-comment">// 下面是矩阵平方, 有点麻烦. </span>
+        a = <span class="hljs-keyword">matrix</span>[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] * <span class="hljs-keyword">matrix</span>[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] + <span class="hljs-keyword">matrix</span>[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] * <span class="hljs-keyword">matrix</span>[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>];
+        b = <span class="hljs-keyword">matrix</span>[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] * <span class="hljs-keyword">matrix</span>[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] + <span class="hljs-keyword">matrix</span>[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] * <span class="hljs-keyword">matrix</span>[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>];
+        c = <span class="hljs-keyword">matrix</span>[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] * <span class="hljs-keyword">matrix</span>[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] + <span class="hljs-keyword">matrix</span>[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] * <span class="hljs-keyword">matrix</span>[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>];
+        d = <span class="hljs-keyword">matrix</span>[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] * <span class="hljs-keyword">matrix</span>[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] + <span class="hljs-keyword">matrix</span>[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] * <span class="hljs-keyword">matrix</span>[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>];
+        <span class="hljs-comment">//cout &lt;&lt; "c = " &lt;&lt; c &lt;&lt; endl; </span>
+        <span class="hljs-keyword">matrix</span>[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] = a % p, <span class="hljs-keyword">matrix</span>[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] = b % p, <span class="hljs-keyword">matrix</span>[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] = c % p, <span class="hljs-keyword">matrix</span>[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] = d % p;
+        n /= <span class="hljs-number">2</span>;
+        <span class="hljs-comment">//cout &lt;&lt; "----------" &lt;&lt; endl;</span>
+        <span class="hljs-comment">//cout &lt;&lt; matrix[0][0] &lt;&lt; ' ' &lt;&lt; matrix[0][1] &lt;&lt; endl &lt;&lt; matrix[1][0] &lt;&lt; ' ' &lt;&lt; matrix[1][1] &lt;&lt; endl;</span>
+    }
+    cout &lt;&lt; now[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>];
+}</code></pre>
+
+<p>再来串矩阵快速幂模板(不只是斐波那契矩阵)</p>
+
+<p>也就是<strong>矩阵计算 + 快速幂</strong>的组合. <strong>O(n**3 + log k)</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> LL;
+
+<span class="hljs-keyword">const</span> LL mode = <span class="hljs-number">1000000007</span>;
+
+<span class="hljs-keyword">void</span> calc(LL ans[<span class="hljs-number">105</span>][<span class="hljs-number">105</span>], LL matrix[<span class="hljs-number">105</span>][<span class="hljs-number">105</span>], LL n)
+{
+    LL tmp[<span class="hljs-number">105</span>][<span class="hljs-number">105</span>];
+    <span class="hljs-built_in">memset</span>(tmp, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(tmp));
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">1</span>; k &lt;= n; ++k) {
+                tmp[i][j] += ans[i][k] * matrix[k][j];
+                tmp[i][j] %= mode;
+            }
+        }
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            ans[i][j] = tmp[i][j];
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    LL n, k, matrix[<span class="hljs-number">105</span>][<span class="hljs-number">105</span>], ans[<span class="hljs-number">105</span>][<span class="hljs-number">105</span>];
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; k;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; matrix[i][j];
+        }
+    }
+    <span class="hljs-comment">// 初始化为单位矩阵. </span>
+    <span class="hljs-built_in">memset</span>(ans, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(ans));
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        ans[i][i] = <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">while</span> (k) {
+        <span class="hljs-keyword">if</span> (k &amp; <span class="hljs-number">1</span>) {
+            calc(ans, matrix, n);
+        }
+        calc(matrix, matrix, n);
+        k /= <span class="hljs-number">2</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; ans[i][j] &lt;&lt; <span class="hljs-string">' '</span>;
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+}
+<span class="hljs-comment">/*
+矩阵计算 + 快速幂
+*/</span> </code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,33 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/88145373				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>0、我的vps版本：Ubuntu 18.10 x64。 地点：东京。</p>
+<p>1、v2ray官方给出了一键安装脚本<br>
+<code>bash &lt;(curl -L -s https://install.direct/go.sh)</code></p>
+<p>2、很快就可以安装好了，可以用这个命令来查看状态<br>
+<code>service v2ray status</code></p>
+<p>3、有以下这些命令，刚开始需要启动服务<br>
+<code>service v2ray start|stop|status|reload|restart|force-reload</code></p>
+<p>4、由于是一键安装，于是那些设置都是默认的，可以到<code>/etc/v2ray/config.json</code>来配置自己的服务器，也是到这里找到设置然后给我们的客户端进行设置。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190304230940550.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+5、延迟在90ms左右<br>
+<img src="https://img-blog.csdnimg.cn/20190304234620995.png" alt="在这里插入图片描述"><br>
+6、一键进行BBR加速</p>
+<p><code>wget -N --no-check-certificate "https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh" &amp;&amp; chmod +x tcp.sh &amp;&amp; ./tcp.sh</code></p>
+<p>7、我选择的是6<br>
+<img src="https://img-blog.csdnimg.cn/20190304234417194.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>8、测试了一下延迟，最低居然达到了31ms，简直令人发指！！！</p>
+<p><img src="https://img-blog.csdnimg.cn/20190304234330104.png" alt="在这里插入图片描述"><br>
+9、多试几次稳定在60ms左右，也是非常低的延迟了！<br>
+<img src="https://img-blog.csdnimg.cn/20190304234534153.png" alt="在这里插入图片描述"></p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

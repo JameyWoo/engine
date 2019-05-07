@@ -1,0 +1,63 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79921690				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>python中的random库, 是随python内置的标准库.</p>
+
+<p>使用时直接import就好.</p>
+
+<p>这些”随机数”是采用梅森旋转算法生成的伪随机序列中的元素</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs rsl">import <span class="hljs-built_in">random</span></code></pre>
+
+<p>基本随机函数: <br>
+<strong>seed(), random()</strong> <br>
+扩展随机函数: <br>
+<strong>randint(), getrandbits(), uniform(), randrang(), choice(), shuffle()</strong></p>
+
+
+
+<pre class="prettyprint"><code class="language-python hljs ">seed(a = <span class="hljs-keyword">None</span>)
+<span class="hljs-comment"># 相同的种子生成的随机序列相同, 所以想要复现随机过程时, 可以先设置特定的随机种子</span>
+<span class="hljs-comment"># 默认种子是系统时间</span>
+
+random()
+<span class="hljs-comment"># 生成一个[0.0, 1.0)间的随机小数</span>
+
+<span class="hljs-comment"># 由random()扩展出一些随机数函数</span>
+
+randint(a, b)
+<span class="hljs-comment"># 生成一个[a, b]之间的整数</span>
+
+randrange(m, n[, k])
+<span class="hljs-comment"># 生成一个[m, n)之间以k为步长的随机整数. 注意是[m, n)</span>
+
+getrandbits(k)
+<span class="hljs-comment"># 生成一个k比特长的随机整数</span>
+<span class="hljs-comment"># 2进制</span>
+
+uniform(a, b)
+<span class="hljs-comment"># 生成一个[a, b]之间的随机整数, (不确定开闭?)</span>
+
+choice(seq)
+<span class="hljs-comment"># 从序列seq中随机选择一个元素</span>
+
+shuffle(seq)
+<span class="hljs-comment"># 将序列seq中元素随机排列, 返回排列后的序列</span></code></pre>
+
+<p>以上是基本的用法</p>
+
+<p><a href="https://blog.csdn.net/akonlookie/article/details/8223525" rel="nofollow">C++的random</a></p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

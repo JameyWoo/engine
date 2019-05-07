@@ -1,0 +1,1 @@
+                                                                                                                   今天装了好久tensorflow，终于安装好了导入的时候却出现报错。报的几个错都跟numpy有关，其中有一个是这样的： ModuleNotFoundError: No module named ‘numpy.core._multiarray_umath’ 解决方法是：卸载numpy，然后重新安装。 pip uninstall numpy pip install numpy                                              

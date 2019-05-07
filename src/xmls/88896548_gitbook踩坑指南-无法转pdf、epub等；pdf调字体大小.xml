@@ -1,0 +1,36 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/88896548				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>前几天折腾gitbook，本以为可以很快搞定的事情却遇到了一些坑然后折腾了两个小时，下面来分享以下我遇到的几个问题。</p>
+<p>环境 <code>win 10</code></p>
+<hr>
+<p>一、无法使用转pdf或epub等功能</p>
+<p>按照网上常见的教程一步一步弄过来，结果弄到转化成pdf等电子书的时候，出现问题无法转电子书。提示是ebook-convert命令出现问题。</p>
+<p>再找了好久资料和尝试之后，终于在github上的一个issue上发现了解决方法。</p>
+<p>方法是安装calibre软件，在软件安装根目录下找到ebook-convert，并将其添加到环境变量中。</p>
+<p>出现这个问题的原因是，在win 10 环境中，安装gitbook没有提供ebook-convert工具，需要安装此软件来获取。<br>
+<img src="https://img-blog.csdnimg.cn/2019032916431418.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/20190329164510750.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>这样我们就可以愉快地使用gitbook来制作电子书了。意外的发现epub格式的电子书很好看，而且排版超方便。<br>
+<img src="https://img-blog.csdnimg.cn/2019032916475564.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<hr>
+<p>二、转成的PDF文件字体太小</p>
+<p>使用默认的设置转成的PDF字真的不要太小！还好我们可以修改。</p>
+<p>可以在书的根目录下添加一个book.json文件，用来配置书的信息，这里我只配置了PDF的一些格式，主要是为了放大字体。<br>
+<img src="https://img-blog.csdnimg.cn/2019032916500523.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+默认的字体是12还是14我记不清了，把它调到20之后看着才没有那么小！<br>
+<img src="https://img-blog.csdnimg.cn/20190329165124454.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

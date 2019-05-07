@@ -1,0 +1,85 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/80977388				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h2 id="urllibparse模块">urllib.parse模块</h2>
+
+
+
+<h2 id="url框架分析">url框架分析</h2>
+
+<p>关键是url分几块, 每一块是用来干什么的. 这些应该明白</p>
+
+<p>首先一个样例 <br>
+‘<a href="https://www.baidu.com/s?ie=UTF-8&amp;wd=%E5%BC%95%E6%93%8E" rel="nofollow">https://www.baidu.com/s?ie=UTF-8&amp;wd=%E5%BC%95%E6%93%8E</a>’ <br>
+这是一个百度搜索url, 中文关键词是”引擎”, 粘贴过来因为编码是url的, 所以不显示中文,可以用unquote()方法进行解码.</p>
+
+<p></p>
+
+<h2 id="下面是parse中的部分方法">下面是parse中的部分方法</h2>
+
+
+
+<h3 id="1urlparse方法">1.urlparse()方法</h3>
+
+<pre><code>parse是分析的意思
+将url解析, 返回一个urllib.parse.ParseResult类对象
+
+urllib.parse.urlparse(urlstring[, scheme='', allow_fragments=True])
+
+urlstring: 必填, 带解析的url
+scheme: 作为默认的协议, 如果链接中没有scheme信息, 则使用这个的值作为协议信息
+allow_fragments: 是否忽略掉fragment, 如果设置成False, 那么fragment就会被忽略
+
+```
+from urllib.parse import urlparse
+
+result = urlparse('https://www.baidu.com/s?ie=UTF-8&amp;wd=%E5%BC%95%E6%93%8E', scheme='http')
+print(type(result), result)
+```
+
+结果是
+</code></pre>
+
+<blockquote>
+  <p></p></blockquote>
+
+<h3 id="2urlunparse方法">2.urlunparse()方法</h3>
+
+<p>这个方法和urlparse()方法对立, 接受一个可迭代对象, 长度必须为6, 否则会抛出参数数量出错问题.</p>
+
+
+
+<pre class="prettyprint"><code class="language-python hljs "><span class="hljs-keyword">from</span> urllib.parse <span class="hljs-keyword">import</span> urlparse, urlunparse
+
+result = urlparse(<span class="hljs-string">'https://www.baidu.com/s?ie=UTF-8&amp;wd=%E5%BC%95%E6%93%8E'</span>, scheme=<span class="hljs-string">'http'</span>)
+print(type(result), result)
+
+data = [<span class="hljs-string">'https'</span>, <span class="hljs-string">'www.baidu.com'</span>, <span class="hljs-string">'/s'</span>, <span class="hljs-string">''</span>, <span class="hljs-string">'ie=UTF-8&amp;wd=%E5%BC%95%E6%93%8E'</span>, <span class="hljs-string">''</span>]
+test = urlunparse(data)
+print(test)</code></pre>
+
+<blockquote>
+  <p></p></blockquote>
+
+<h3 id="其他方法">其他方法</h3>
+
+<p>3.urlsplit() <br>
+4.urlunsplit() <br>
+5.urljoin() <br>
+6.urlencode() <br>
+7.parse_qs() <br>
+8.parse_qsl() <br>
+9.quote() <br>
+10.unquote()</p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

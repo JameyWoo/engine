@@ -1,0 +1,187 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79332869				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>并查集是一种很有趣的数据结构. 最清楚说明并查集的例子是亲戚问题, 今天是大年初二, 四处亲戚来拜年, 学习并查集真是应景. </p>
+
+<p><strong>并查集是我新年学的第一种数据结构. </strong>之前接触它的时候觉得这个名字的DS很复杂, 因为不了解且很难望文生义, 不过接触了之后, 发现比较简单的.</p>
+
+<blockquote>
+  <p><strong>所以, 学算法千万不能畏难, 因为各种算法都不会是简单的, 但也不会是很难的. 只要你多去做做, 自己写写, 理解了就不难了.</strong></p>
+</blockquote>
+
+<p><a href="https://www.luogu.org/problemnew/show/P3367" rel="nofollow">下面给出洛谷网的一个并查集模板</a>, 这里有并查集最基本的操作</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">int</span> f[<span class="hljs-number">10005</span>];
+
+<span class="hljs-keyword">void</span> init(<span class="hljs-keyword">int</span> n) <span class="hljs-comment">//初始化数组, 非常重要!!!</span>
+{
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        f[i] = i;
+}
+
+<span class="hljs-keyword">int</span> find(<span class="hljs-keyword">int</span> n) <span class="hljs-comment">//查找所属集合(祖先)的函数</span>
+{
+    <span class="hljs-keyword">return</span> n == f[n] ? n : f[n] = find(f[n]); <span class="hljs-comment">//路径压缩</span>
+}
+
+<span class="hljs-keyword">void</span> merge(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)  <span class="hljs-comment">//合并集合的函数</span>
+{
+    x = find(x), y = find(y);
+    <span class="hljs-keyword">if</span>(x != y) {
+        f[y] = x;
+    }
+}
+
+<span class="hljs-keyword">void</span> getData(<span class="hljs-keyword">int</span> m)
+{
+    <span class="hljs-keyword">int</span> a, b, c;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; a &gt;&gt; b &gt;&gt; c;
+        <span class="hljs-keyword">if</span>(a == <span class="hljs-number">1</span>) merge(b, c);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(find(b) == find(c))
+            <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Y\n"</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"N\n"</span>;
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, m;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    init(n);  <span class="hljs-comment">//初始化数组, 很重要!</span>
+    getData(m);  <span class="hljs-comment">//get数据</span>
+}</code></pre>
+
+<p>上面这个模板包含了并查集最基本的<strong>建立, 合并, 查找</strong>操作, 写并查集的时候牢记这几个操作就好, 一个一个写出来.</p>
+
+<p>并查集的一个优化是<strong>路径压缩</strong>, 各种资料都有提到. 我就不介绍并查集了, 介绍也介绍不清楚.</p>
+
+<p><a href="https://www.luogu.org/problemnew/show/P1551" rel="nofollow">亲戚问题</a></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">int</span> f[<span class="hljs-number">5005</span>];
+
+<span class="hljs-keyword">void</span> init(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt;= n; ++i)
+        f[i] = i;
+}
+
+<span class="hljs-keyword">int</span> find(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">return</span> (n == f[n] ? n : (f[n] = find(f[n])));
+}
+
+<span class="hljs-keyword">void</span> merge(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)
+{
+    x = find(x), y = find(y);
+    <span class="hljs-keyword">if</span>(x != y) {
+        f[y] = find(x);
+    }
+}
+
+<span class="hljs-keyword">void</span> getData(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-comment">//cout &lt;&lt; "1\n";</span>
+    <span class="hljs-keyword">int</span> x, y;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y;
+        merge(x, y);
+    }
+    <span class="hljs-comment">//cout &lt;&lt; "2\n";</span>
+}
+
+<span class="hljs-keyword">void</span> ask(<span class="hljs-keyword">int</span> p)
+{
+    <span class="hljs-keyword">int</span> x, y;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; p; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y;
+        <span class="hljs-keyword">if</span>(find(x) == find(y)) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Yes\n"</span>;
+        } <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"No\n"</span>;
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, m, p;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m &gt;&gt; p;
+    init(n);
+    getData(m);
+    ask(p);
+}</code></pre>
+
+<p><a href="https://www.luogu.org/problemnew/show/P1536" rel="nofollow">村村通</a></p>
+
+<p>AC代码</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">int</span> f[<span class="hljs-number">1005</span>];
+
+<span class="hljs-keyword">void</span> init(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        f[i] = i;
+}
+
+<span class="hljs-keyword">int</span> find(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">return</span> n == f[n] ? f[n] : f[n] = find(f[n]);
+}
+
+<span class="hljs-keyword">void</span> merge(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)
+{
+    x = find(x), y = find(y);
+    <span class="hljs-keyword">if</span>(x != y) {
+        f[y] = x;
+    }
+}
+
+<span class="hljs-keyword">void</span> getData(<span class="hljs-keyword">int</span> m)
+{
+    <span class="hljs-keyword">int</span> x, y;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y;
+        merge(x, y);
+    }
+}
+
+<span class="hljs-keyword">int</span> judge(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">int</span> cnt = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span>(f[i] == i) cnt++;
+    }
+    <span class="hljs-keyword">return</span> cnt - <span class="hljs-number">1</span>;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, m;
+    <span class="hljs-keyword">while</span>((<span class="hljs-built_in">cin</span> &gt;&gt; n) &amp;&amp; n) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; m;
+        init(n);
+        getData(m);
+        <span class="hljs-built_in">cout</span> &lt;&lt; judge(n)&lt;&lt; endl;
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,156 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/82701608				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h3 id="割点"><strong>割点</strong></h3>
+
+<p>在一个<strong>无向图</strong>中，如果有一个顶点集合，删除这个顶点集合以及这个集合中所有顶点相关联的边以后，<strong>图的连通分量增多</strong>，就称这个点集为割点集合。</p>
+
+<p>注意： <br>
+1、讨论割点是在无向图中。 <br>
+2、删除这个点使图的联通分量增多就是割点，所以非连通图也有割点。</p>
+
+<hr>
+
+
+
+<h3 id="割边桥"><strong>割边（桥）</strong></h3>
+
+<p>假设有连通图G，e是其中一条边，如果G-e是不连通的，则边e是图G的一条割边。此情形下，G-e必包含两个连通分支。</p>
+
+<p>为什么必包含两个？因为一条边最多连两个点。。。</p>
+
+<hr>
+
+
+
+<h3 id="强推这位大佬的博客写的非常认真非常详细非常感谢"><a href="https://www.cnblogs.com/nullzx/p/7968110.html" rel="nofollow">强推这位大佬的博客，写的非常认真非常详细，非常感谢！</a></h3>
+
+<p><del>我就不多介绍了，再说就是误导人了</del></p>
+
+<p><del>没错我就是来发个模板的，大家可以参考参考，还是满规范的</del></p>
+
+<p>模板题：<a href="https://www.luogu.org/problemnew/show/P3388" rel="nofollow">P3388 【模板】割点（割顶）</a></p>
+
+<p>割点割边写起来比缩点还是短不少的。</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10010</span>;
+<span class="hljs-keyword">int</span> n, m, id = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">int</span> cut[maxn] = {};
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> G[maxn];
+<span class="hljs-keyword">int</span> dfn[maxn] = {}, low[maxn];
+
+<span class="hljs-keyword">void</span> tarjan(<span class="hljs-keyword">int</span> u, <span class="hljs-keyword">int</span> root)
+{
+    <span class="hljs-keyword">int</span> child = <span class="hljs-number">0</span>;
+    dfn[u] = low[u] = ++id;
+    <span class="hljs-keyword">for</span> (size_t i = <span class="hljs-number">0</span>; i &lt; G[u].size(); ++i) {
+        <span class="hljs-keyword">int</span> v = G[u][i];
+        <span class="hljs-keyword">if</span> (dfn[v] == <span class="hljs-number">0</span>) {
+            tarjan(v, root);
+            low[u] = min(low[u], low[v]);
+            <span class="hljs-keyword">if</span> (u != root &amp;&amp; low[v] &gt;= dfn[u]) cut[u] = <span class="hljs-keyword">true</span>;
+            <span class="hljs-keyword">if</span> (u == root) child++;
+        }
+        low[u] = min(low[u], dfn[v]);
+    }
+    <span class="hljs-keyword">if</span> (u == root &amp;&amp; child &gt;= <span class="hljs-number">2</span>) cut[root] = <span class="hljs-keyword">true</span>;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= m; ++i) {
+        <span class="hljs-keyword">int</span> x, y;
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y;
+        G[x].push_back(y);
+        G[y].push_back(x);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (dfn[i] == <span class="hljs-number">0</span>) tarjan(i, i);
+    }
+    <span class="hljs-keyword">int</span> ans = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (cut[i]) ans++;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans &lt;&lt; endl;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (cut[i]) <span class="hljs-built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}</code></pre>
+
+<p>割边（无模板题），换链式前向星来存图。</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Edge {
+    <span class="hljs-keyword">int</span> to, next;
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">10010</span>;
+<span class="hljs-keyword">int</span> n, m, id = <span class="hljs-number">0</span>, cnt = <span class="hljs-number">1</span>;
+Edge edge[maxn], cut[maxn];
+<span class="hljs-keyword">int</span> dfn[maxn] = {}, low[maxn];
+<span class="hljs-keyword">int</span> head[maxn] = {}, baba[maxn] = {};
+<span class="hljs-keyword">int</span> tou[maxn] = {};
+
+<span class="hljs-keyword">void</span> Add(Edge *edge, <span class="hljs-keyword">int</span> u, <span class="hljs-keyword">int</span> v, <span class="hljs-keyword">int</span> *head)
+{
+    edge[cnt].to = v;
+    edge[cnt].next = head[u];
+    head[u] = cnt++;
+}
+
+<span class="hljs-keyword">void</span> tarjan(<span class="hljs-keyword">int</span> u)
+{
+    dfn[u] = low[u] = ++id;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = head[u]; i; i = edge[i].next) {
+        <span class="hljs-keyword">int</span> v = edge[i].to;
+        <span class="hljs-keyword">if</span> (baba[u] == v) <span class="hljs-keyword">continue</span>;
+        <span class="hljs-keyword">if</span> (dfn[v] == <span class="hljs-number">0</span>) {
+            baba[v] = u;
+            tarjan(v);
+            low[u] = min(low[u], low[v]);
+            <span class="hljs-keyword">if</span> (low[v] &gt; dfn[u]) Add(cut, u, v, tou);
+        }
+        low[u] = min(low[u], dfn[v]);
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= m; ++i) {
+        <span class="hljs-keyword">int</span> x, y;
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y;
+        Add(edge, x, y, head);
+        Add(edge, y, x, head);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (dfn[i] == <span class="hljs-number">0</span>) tarjan(i);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> u = <span class="hljs-number">1</span>; u &lt;= n; ++u) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = tou[u]; i; i = cut[i].next) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; u &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; cut[i].to &lt;&lt; endl;
+        }
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

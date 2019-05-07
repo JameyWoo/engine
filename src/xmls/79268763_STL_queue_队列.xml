@@ -1,0 +1,101 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79268763				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>包含在头文件</p>
+
+<blockquote>
+  <p>#include &lt; queue &gt;</p>
+</blockquote>
+
+<p>有一下常用函数</p>
+
+<blockquote>
+  <p>push(x) 把x压入队尾 <br>
+  pop() 弹出队顶元素 <br>
+  front() 返回队顶元素 <br>
+  back() 返回队尾元素 <br>
+  size() 返回队列的元素数 <br>
+  empty() 返回bool数</p>
+</blockquote>
+
+<p>简单代码示例</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt; <span class="hljs-keyword">int</span> &gt;</span>que;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) {
+        que.push(i);
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; que.size() &lt;&lt; endl;
+    <span class="hljs-keyword">if</span>(que.empty()) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"it is empty\n"</span>;
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"it is not empty\n"</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; que.front() &lt;&lt; endl;
+    que.pop();
+    <span class="hljs-built_in">cout</span> &lt;&lt; que.front() &lt;&lt; endl;
+    <span class="hljs-built_in">cout</span> &lt;&lt; que.back() &lt;&lt; endl;
+
+    <span class="hljs-comment">//que.clear(); //没有clear函数 </span>
+
+    <span class="hljs-built_in">cout</span> &lt;&lt; que.size() &lt;&lt; endl;
+}</code></pre>
+
+<pre><code>queue在那些方面有应用?
+</code></pre>
+
+<p>我知道<strong>广度优先搜索(BFS)</strong>用到了队列</p>
+
+<p>值得注意的是, 队列queue是没有clear函数的, 所以要用其他方法全部清零</p>
+
+<p>方法一: </p>
+
+<pre><code>直接赋值法
+</code></pre>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-stl_container"><span class="hljs-built_in">queue</span> &lt; <span class="hljs-keyword">int</span> &gt;</span> que;
+<span class="hljs-comment">//......</span>
+que = <span class="hljs-stl_container"><span class="hljs-built_in">queue</span> &lt; <span class="hljs-keyword">int</span> &gt;</span>();</code></pre>
+
+<p>方法二: </p>
+
+<pre><code>遍历pop法
+</code></pre>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-stl_container"><span class="hljs-built_in">queue</span> &lt; <span class="hljs-keyword">int</span> &gt;</span> que;
+<span class="hljs-comment">//......</span>
+<span class="hljs-keyword">while</span>(!que.empty()) {
+    que.pop();
+}</code></pre>
+
+<p>方法三:</p>
+
+<pre><code>使用swap，这种是最高效的，定义clear，保持STL容器的标准。(摘抄)
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-keyword">void</span> clear(<span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt;</span>&amp; q) {
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> empty;
+    swap(empty, q);
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

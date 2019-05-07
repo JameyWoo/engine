@@ -1,0 +1,197 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79889057				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>之前没有想过不用结构体数组如何对一个有多种属性的变量体排序. 比如一个人, 既有名字又有分数, 先按照分数排序, 分数相同再按照名字排序, 然后输出序列.</p>
+
+<p>一个非常简单明了的思路是, 用STL的sort, 自定义排序规则, 开一个结构体, 然后给结构体数组排序.</p>
+
+<p>可是, 如果我不会结构体呢? <em>好像</em>有点困难. 以前从没想过这样的问题, 今天看到有一位大佬用了<strong>下标排序</strong>的方法, 恍然大悟, 感觉非常奇妙.</p>
+
+<p><strong>这是一种非常有启迪的思想.</strong></p>
+
+<p>简单的代码:</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">int</span> a[<span class="hljs-number">101</span>] = {};
+
+<span class="hljs-keyword">bool</span> cmp(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)
+{
+    <span class="hljs-keyword">return</span> a[x] &gt; a[y];
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, b[<span class="hljs-number">101</span>] = {};
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; a[b[i] = i];
+    }
+    sort(b, b+n, cmp);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; a[b[i]] &lt;&lt; endl;
+    }
+}</code></pre>
+
+<p>下面是几道排序方面的水题.</p>
+
+<p><a href="https://www.luogu.org/problemnew/show/P1177" rel="nofollow">P1177 【模板】快速排序</a> <br>
+AC Code:</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">void</span> quickSort(<span class="hljs-keyword">int</span> *a, <span class="hljs-keyword">int</span> left, <span class="hljs-keyword">int</span> right)
+{
+    <span class="hljs-keyword">if</span>(right &lt; left) <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">int</span> key = a[(left+right)&gt;&gt;<span class="hljs-number">1</span>], l = left, r = right;
+    <span class="hljs-keyword">do</span> {
+        <span class="hljs-keyword">while</span>(a[l] &lt; key) l++;
+        <span class="hljs-keyword">while</span>(a[r] &gt; key) r--;
+        <span class="hljs-keyword">if</span>(l &lt;= r) {
+            swap(a[l], a[r]);
+            l++, r--;
+        }
+    } <span class="hljs-keyword">while</span>(l &lt;= r);
+    <span class="hljs-keyword">if</span>(l &lt; right) quickSort(a, l, right);
+    <span class="hljs-keyword">if</span>(r &gt; left) quickSort(a, left, r);
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">std</span>::ios::sync_with_stdio(<span class="hljs-keyword">false</span>);
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">int</span> *a = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span> [n+<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; a[i];
+    }
+    quickSort(a, <span class="hljs-number">0</span>, n - <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+}</code></pre>
+
+<p><a href="https://www.luogu.org/problemnew/show/P1059" rel="nofollow">明明的随机数</a> <br>
+AC Code:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, a[<span class="hljs-number">1005</span>] = {}, tmp, cnt = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; tmp;
+        <span class="hljs-keyword">if</span>(a[tmp]) cnt += <span class="hljs-number">1</span>;
+        a[tmp] = <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; n - cnt &lt;&lt; endl;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1001</span>; ++i) {
+        <span class="hljs-keyword">if</span>(a[i]) <span class="hljs-built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">' '</span>;    }
+}</code></pre>
+
+<p><a href="https://www.luogu.org/problemnew/show/P1068" rel="nofollow">分数线划定</a> <br>
+AC Code:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Stu {
+    <span class="hljs-built_in">string</span> id;
+    <span class="hljs-keyword">int</span> sco;
+}stu[<span class="hljs-number">10000</span>];
+
+<span class="hljs-keyword">bool</span> cmp(Stu s1, Stu s2)
+{
+    <span class="hljs-keyword">if</span>(s1.sco != s2.sco) {
+        <span class="hljs-keyword">return</span> s1.sco &gt; s2.sco;
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> s1.id &lt; s2.id;
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, m;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">int</span> k = m*<span class="hljs-number">1.5</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; stu[i].id &gt;&gt; stu[i].sco;
+    }
+    sort(stu+<span class="hljs-number">1</span>, stu + n + <span class="hljs-number">1</span>, cmp);
+    <span class="hljs-keyword">int</span> cnt = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = k + <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span>(stu[i].sco == stu[k].sco) {
+            cnt++;
+        }
+    }
+    k += cnt;
+    <span class="hljs-built_in">cout</span> &lt;&lt; stu[k].sco &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; k &lt;&lt; endl;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= k; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; stu[i].id &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; stu[i].sco &lt;&lt; endl;
+    }
+}</code></pre>
+
+<p><a href="https://www.luogu.org/problemnew/show/P1781" rel="nofollow">宇宙总统</a></p>
+
+<p>AC Code:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;stdlib.h&gt; </span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Pre {
+    <span class="hljs-keyword">int</span> id;
+    <span class="hljs-built_in">string</span> ps;
+}pre[<span class="hljs-number">22</span>];
+
+<span class="hljs-keyword">bool</span> MAX(<span class="hljs-built_in">string</span> s1, <span class="hljs-built_in">string</span> s2)
+{
+    <span class="hljs-keyword">if</span>(s1.size() == s2.size()) {
+        <span class="hljs-keyword">return</span> s1 &lt; s2;
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> s1.size() &lt; s2.size();
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; pre[i+<span class="hljs-number">1</span>].ps;
+        pre[i+<span class="hljs-number">1</span>].id = i+<span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">int</span> id = <span class="hljs-number">1</span>;
+    <span class="hljs-built_in">string</span> Max = <span class="hljs-string">""</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+        <span class="hljs-keyword">if</span>(MAX(Max, pre[j].ps)) {
+            id = pre[j].id;
+            Max = pre[j].ps;
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; id &lt;&lt; endl &lt;&lt; Max;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,248 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79027435				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<blockquote>
+  <p>如果你觉得这篇博客对你有所帮助, 请在左边点个赞吧: )</p>
+</blockquote>
+
+<p>下面我们先提出几个问题:</p>
+
+<blockquote>
+  <p>已知有n个长度不等的母串, 以及一个长度为m的模式串, 求该模式串是否为其中一个母串的前缀.</p>
+</blockquote>
+
+<p>这个问题应该如何解呢? 按照最常规的暴力方法, 使用线性搜索, 从头到尾挨个查找, 时间复杂度将会达到O(n*m), 如果n或m很大, 或者需要查找的模式串很多, 那么时间复杂度将会非常的大.</p>
+
+<p>再看另一问题:</p>
+
+<blockquote>
+  <p>已知一个长度为n的字符串S, 求该字符串有多少个不同的子串.</p>
+</blockquote>
+
+<p>朴素的做法是, 枚举出所有的子串, 再去重, 时间复杂度将高达O(n^2).</p>
+
+<p>作为一个非常看重性能的程序设计者,用这么多时间解决这种小问题显然是无法容忍的. 所幸, 我们的前辈们已经给我们提供了很好的解决方案.那就是我们这篇博客的主角:</p>
+
+<blockquote>
+  <p><strong>字典树</strong></p>
+  
+  <p><strong>定义</strong>:  字典树, 又称单词查找树，Trie树，是一种树形结构，是一种哈希树的变种。</p>
+  
+  <p><strong>应用</strong>:  典型应用是用于统计，排序和保存大量的字符串（但不仅限于字符串），所以经常被搜索引擎系统用于文本词频统计。</p>
+  
+  <p><strong>优点</strong>:  利用字符串的公共前缀来减少查询时间，最大限度地减少无谓的字符串比较，查询效率比哈希树高。</p>
+  
+  <p><strong>三个性质</strong>:  根节点不包含字符，除根节点外每一个节点都只包含一个字符； 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串； 每个节点的所有子节点包含的字符都不相同。 (百度百科)</p>
+</blockquote>
+
+<p>如何<strong>建立字典树</strong>呢?</p>
+
+<p>比如我们有a, to, tea, ted, ten, i, in, inn 等字符串, 我们建立的字典树是这样的: <br>
+<img src="https://img-blog.csdn.net/20180110191056614?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2poMjYyMjA3NTEyNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="构造字典树" title=""></p>
+
+<p>每个结点对应一个字母, 结点的值就是它的编号(第几个结点), 根节点没有值, 单词从根节点往下遍历.</p>
+
+<p>需要说明的是, 字典树遍历是否存在孩子结点的方式不是从a-&gt;b依次遍历, 而是直接判断.时间复杂度是O(1). 怎么说呢? <br>
+这跟它的策略有关: 用空间换取时间.  <br>
+现在不理解没有关系, 看了接下来的字典树构造代码后, 相信很容易就可以明白了.</p>
+
+<p>这是一个<strong>结点</strong>类:</p>
+
+<pre class="prettyprint"><code class=" hljs cs">class Node {
+    <span class="hljs-keyword">public</span>:
+        <span class="hljs-title">Node</span>() {
+            fill(son,son+<span class="hljs-number">26</span>,<span class="hljs-number">0</span>); <span class="hljs-comment">//初始化(可能的)孩子结点</span>
+            <span class="hljs-keyword">is</span> = <span class="hljs-number">0</span>; 
+        }
+        <span class="hljs-keyword">int</span> son[<span class="hljs-number">26</span>];  <span class="hljs-comment">//26个元素分别代表26个字母, 数量视具体情况而定.</span>
+        <span class="hljs-keyword">bool</span> <span class="hljs-keyword">is</span>;  <span class="hljs-comment">//标记次结点是否为一字符串终点</span>
+} node[<span class="hljs-number">666666</span>];</code></pre>
+
+<p>接下来是<strong>插入</strong>操作:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs axapta"><span class="hljs-keyword">int</span> tot = <span class="hljs-number">0</span>; <span class="hljs-comment">//结点序号</span>
+<span class="hljs-keyword">void</span> insert(string <span class="hljs-keyword">str</span>)
+{
+    <span class="hljs-keyword">int</span> p = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>; <span class="hljs-keyword">str</span>[i]; ++i ) {
+        <span class="hljs-keyword">if</span>(node[p].son[<span class="hljs-keyword">str</span>[i] - <span class="hljs-string">'a'</span>] == <span class="hljs-number">0</span>) {
+            node[p].son[<span class="hljs-keyword">str</span>[i] - <span class="hljs-string">'a'</span>] = ++tot;
+        }
+        p = node[p].son[<span class="hljs-keyword">str</span>[i] - <span class="hljs-string">'a'</span>]; <span class="hljs-comment">//迭代</span>
+    }
+    node[p].is = <span class="hljs-number">1</span>; <span class="hljs-comment">//字符串末尾字母标记</span>
+}</code></pre>
+
+<p>然后是<strong>查询</strong>操作:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs rust"><span class="hljs-keyword">bool</span> search(string <span class="hljs-keyword">str</span>)
+{
+    <span class="hljs-keyword">int</span> p = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>; <span class="hljs-keyword">str</span>[i]; ++i ) {
+        <span class="hljs-keyword">if</span>(node[p].son[<span class="hljs-keyword">str</span>[i] - <span class="hljs-string">'a'</span>] == <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>; <span class="hljs-comment">//没有找到, 也不存在这样的前缀</span>
+        }
+        p = node[p].son[<span class="hljs-keyword">str</span>[i] - <span class="hljs-string">'a'</span>];
+    }
+    <span class="hljs-keyword">if</span>( node[p].is == <span class="hljs-number">1</span> ) <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>; <span class="hljs-comment">//找到了这个字符串</span>
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>; <span class="hljs-comment">//没有这个字符串, 但它是其他某字符串的前缀</span>
+}</code></pre>
+
+<p>以上三段代码就是字典树<em>最基本的三个操作</em>:</p>
+
+<ul>
+<li>建立结点, 即建立了一个空的字典树</li>
+<li>向字典树中插入字符串</li>
+<li>在字典树字典树中查找字符串</li>
+</ul>
+
+<p>需要<strong>注意</strong>的是: </p>
+
+<ul>
+<li>字典树还有一些其他功能, 如查询前缀等, 只需稍加变动就可实现. 具体如何使用字典树, 视情况而定.</li>
+<li>字典树可以储存如上由单词组成的字符串, 但不限于此, but必须已知</li>
+<li>字典树策略是空间换时间, 因此时间不是问题, 应该留心空间复杂度</li>
+</ul>
+
+<p>百度百科上一些应用:</p>
+
+<blockquote>
+  <p><strong>串的快速检索</strong> <br>
+  给出N个单词组成的熟词表，以及一篇全用小写英文书写的文章，请你按最早出现的顺序写出所有不在熟词表中的生词。 <br>
+      在这道题中，我们可以用数组枚举，用哈希，用字典树，先把熟词建一棵树，然后读入文章进行比较，这种方法效率是比较高的。 <br>
+  <strong>“串”排序</strong> <br>
+      给定N个互不相同的仅由一个单词构成的英文名，让你将他们按字典序从小到大输出 <br>
+      用字典树进行排序，采用数组的方式创建字典树，这棵树的每个结点的所有儿子很显然地按照其字母大小排序。对这棵树进行先序遍历即可。 <br>
+  <strong>最长公共前缀</strong> <br>
+      对所有串建立字典树，对于两个串的最长公共前缀的长度即他们所在的结点的公共祖先个数，于是，问题就转化为当时公共祖先问题。</p>
+</blockquote>
+
+<p><a href="https://www.luogu.org/problemnew/show/2580" rel="nofollow">一道洛谷OJ的字典树题目</a></p>
+
+<blockquote>
+  <p>题目背景</p>
+  
+  <p>XS中学化学竞赛组教练是一个酷爱炉石的人。</p>
+  
+  <p>他会一边搓炉石一边点名以至于有一天他连续点到了某个同学两次，然后正好被路过的校长发现了然后就是一顿欧拉欧拉欧拉（详情请见已结束比赛CON900）。 <br>
+  题目描述</p>
+  
+  <p>这之后校长任命你为特派探员，每天记录他的点名。校长会提供化学竞赛学生的人数和名单，而你需要告诉校长他有没有点错名。（为什么不直接不让他玩炉石。） <br>
+  输入输出格式 输入格式：</p>
+  
+  <p>第一行一个整数 n，表示班上人数。接下来 n 行，每行一个字符串表示其名字（互不相同，且只含小写字母，长度不超过 50）。第 n+2 <br>
+  行一个整数 m，表示教练报的名字。接下来 m 行，每行一个字符串表示教练报的名字（只含小写字母，且长度不超过 50）。</p>
+  
+  <p>输出格式：</p>
+  
+  <p>对于每个教练报的名字，输出一行。如果该名字正确且是第一次出现，输出“OK”，如果该名字错误，输出“WRONG”，如果该名字正确但不是第一次出现，输出“REPEAT”。（均不加引号）</p>
+  
+  <p>输入输出样例 输入样例#1： 复制</p>
+  
+  <p>5   a b c ad acd 3 a a e</p>
+  
+  <p>输出样例#1： 复制</p>
+  
+  <p>OK REPEAT WRONG</p>
+  
+  <p>说明</p>
+  
+  <p>对于 40%的数据，n≤1000,m≤2000；</p>
+  
+  <p>对于 70%的数据，n≤10000,m≤20000；</p>
+  
+  <p>对于 100%的数据， n≤10000，m≤100000。</p>
+  
+  <p>T1总是送分的。</p>
+</blockquote>
+
+<p>代码:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;string&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> tot = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">class</span> Node {
+    <span class="hljs-keyword">public</span>:
+        Node() {
+            fill(son,son+<span class="hljs-number">26</span>,<span class="hljs-number">0</span>);
+            cnt = <span class="hljs-number">0</span>;
+            is = <span class="hljs-number">0</span>;
+        }
+        <span class="hljs-keyword">int</span> cnt;
+        <span class="hljs-keyword">int</span> son[<span class="hljs-number">26</span>];
+        <span class="hljs-keyword">bool</span> is;
+}node[<span class="hljs-number">500000</span>];
+
+<span class="hljs-keyword">void</span> insert(<span class="hljs-built_in">string</span> str)
+{
+    <span class="hljs-keyword">int</span> p = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>; str[i]; ++i ) {
+        <span class="hljs-keyword">if</span>(node[p].son[str[i] - <span class="hljs-string">'a'</span>] == <span class="hljs-number">0</span>) {
+            node[p].son[str[i] - <span class="hljs-string">'a'</span>] = ++tot;
+        }
+        p = node[p].son[str[i] - <span class="hljs-string">'a'</span>];
+    }
+    node[p].is = <span class="hljs-number">1</span>;
+}
+
+<span class="hljs-keyword">int</span> search(<span class="hljs-built_in">string</span> str)
+{
+    <span class="hljs-keyword">int</span> p = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>; str[i]; ++i ) {
+        <span class="hljs-keyword">if</span>(node[p].son[str[i] - <span class="hljs-string">'a'</span>] == <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>; <span class="hljs-comment">//Wrong </span>
+        }
+        p = node[p].son[str[i] - <span class="hljs-string">'a'</span>];
+    }
+    <span class="hljs-keyword">if</span>( !node[p].is ) <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>; <span class="hljs-comment">//WRONG</span>
+    <span class="hljs-keyword">if</span>( node[p].cnt == <span class="hljs-number">0</span> ) {
+        node[p].cnt++;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; <span class="hljs-comment">//OK</span>
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; <span class="hljs-comment">//REPEAT</span>
+}
+
+<span class="hljs-keyword">int</span> main( )
+{
+    <span class="hljs-keyword">int</span> n, m, judge;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-built_in">string</span> tmp;
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>; i&lt;n; ++i ) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; tmp;
+        insert(tmp);
+    }
+    <span class="hljs-built_in">cin</span> &gt;&gt; m;
+    <span class="hljs-keyword">for</span>( <span class="hljs-keyword">int</span> j=<span class="hljs-number">0</span>; j&lt;m; ++j ) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; tmp;
+        judge = search(tmp);
+        <span class="hljs-keyword">if</span>( judge == -<span class="hljs-number">1</span> ) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"WRONG\n"</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>( judge == <span class="hljs-number">0</span> ) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"OK\n"</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"REPEAT\n"</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>
+
+<p>欢迎在评论区讨论问题, 或指出博主错误: )</p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,163 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81665240				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><div class="toc"><div class="toc">
+<ul>
+<li><ul>
+<li><a href="#引言" rel="nofollow">引言</a></li>
+<li><a href="#火狐浏览器解决方案" rel="nofollow">火狐浏览器解决方案</a><ul>
+<li><a href="#安装方式" rel="nofollow">安装方式</a><ul>
+<li><a href="#1-在浏览器右上角菜单处-找到附加组件" rel="nofollow">1. 在浏览器右上角菜单处, 找到附加组件</a></li>
+<li><a href="#2-搜索adblock-hyper并安装" rel="nofollow">2. 搜索Adblock Hyper并安装</a></li>
+</ul>
+</li>
+<li><a href="#屏蔽方式" rel="nofollow">屏蔽方式</a><ul>
+<li><a href="#1-首先-点击广告插件-点击block-element" rel="nofollow">1. 首先, 点击广告插件, 点击Block Element</a></li>
+<li><a href="#2-移动到百度热搜那一栏-点击" rel="nofollow">2. 移动到百度热搜那一栏, 点击</a></li>
+<li><a href="#3-会弹出这样一个页面-选择创建就好了" rel="nofollow">3. 会弹出这样一个页面, 选择创建就好了</a></li>
+<li><a href="#4-屏蔽成功" rel="nofollow">4. 屏蔽成功</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#chrome浏览器解决方案" rel="nofollow">Chrome浏览器解决方案</a><ul>
+<li><a href="#安装插件方式" rel="nofollow">安装插件方式</a></li>
+<li><a href="#推荐插件" rel="nofollow">推荐插件</a></li>
+</ul>
+</li>
+<li><a href="#后记" rel="nofollow">后记</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</p>
+
+
+
+<h2 id="引言">引言</h2>
+
+<p>相信大家使用百度搜索时, 都会有这样的感受: 本来是打算搜个什么东西, 结果搜着搜着就被百度热搜上面的热点信息给吸引了, 然后点开<strong>某某明星发微博秒删, </strong> <strong>某某明星否认已婚</strong>, <strong>某某明星宣布分手</strong>, 这一类毫无营养而又非常”吸引人”的消息. </p>
+
+<p>为了让我们<strong>更专注于重要信息</strong>, 我们就需要一种手段, 能够看不到这些”时下热点”, 当然百度不会给我们这种机会, 我们只能使用些工具来屏蔽热搜. 而我现在要介绍的是<strong>使用Chrome浏览器和火狐浏览器的插件</strong>, 来帮我们完成这项任务. 其他浏览器不熟, 建议不用这两款浏览器的用用看, 真的非常好用.</p>
+
+<p>对比百度和谷歌:</p>
+
+<p><img src="https://img-blog.csdn.net/20180814123953965?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+<p><img src="https://img-blog.csdn.net/20180814124148861?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+<p><img src="https://img-blog.csdn.net/20180814124157763?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+<p><strong>看人家谷歌, 只会在右侧为了利益给你推荐有用的信息, 而不是为了利益分散你的注意力. 每天被百度热搜耽误的时间和精力, 注意力, 换算成生产力不知道可以买下多少百度.</strong></p>
+
+<p>先介绍火狐, 由于历史遗留问题, Chrome浏览器安装插件不是那么方便.</p>
+
+<hr>
+
+<h2 id="火狐浏览器解决方案">火狐浏览器解决方案</h2>
+
+<p>我们要用到的是火狐浏览器的Adblock Hyper插件, 如图是装好了的页面</p>
+
+<p><img src="https://img-blog.csdn.net/20180814124820566?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<h3 id="安装方式">安装方式</h3>
+
+<p>没有安装此插件的按照下面步骤安装</p>
+
+
+
+<h4 id="1-在浏览器右上角菜单处-找到附加组件">1. 在浏览器右上角菜单处, 找到附加组件</h4>
+
+<p><img src="https://img-blog.csdn.net/20180814125030727?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<h4 id="2-搜索adblock-hyper并安装">2. 搜索Adblock Hyper并安装</h4>
+
+<p><strong>但是这次搜索我并没有搜到Adblock Hyper, 可能是什么原因下架了? 用Adblock Plus也是可以的</strong></p>
+
+<p><img src="https://img-blog.csdn.net/20180814125147748?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+<p>OK, 屏蔽广告插件安装好了, 下面利用这个插件把百度热搜当作广告给拦截了.</p>
+
+
+
+<h3 id="屏蔽方式">屏蔽方式</h3>
+
+
+
+<h4 id="1-首先-点击广告插件-点击block-element">1. 首先, 点击广告插件, 点击Block Element</h4>
+
+<p><img src="https://img-blog.csdn.net/20180814125556475?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<h4 id="2-移动到百度热搜那一栏-点击">2. 移动到百度热搜那一栏, 点击</h4>
+
+<p><img src="https://img-blog.csdn.net/2018081412571611?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<h4 id="3-会弹出这样一个页面-选择创建就好了">3. 会弹出这样一个页面, 选择创建就好了</h4>
+
+<p><img src="https://img-blog.csdn.net/20180814125956615?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<h4 id="4-屏蔽成功">4. 屏蔽成功</h4>
+
+<p>我们刷新一下页面, 会发现原来的热搜已经不见了, <strong>那些明星谁跟谁结婚我就不用看到了</strong>. 不过因为百度的所有结果只占半边, 所以页面有点丑, 所以我保留了热搜上面的一些相关内容推荐.</p>
+
+<p><img src="https://img-blog.csdn.net/20180814130208880?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+<hr>
+
+
+
+<h2 id="chrome浏览器解决方案">Chrome浏览器解决方案</h2>
+
+
+
+<h3 id="安装插件方式">安装插件方式</h3>
+
+<p>Chrome浏览器的屏蔽方式基本上是一样的, 不过安装谷歌的插件不是那么方便. <strong>官方的应用商店要翻墙才能访问</strong>. </p>
+
+<p><strong><em>不过有一种到其他插件网站下载好插件文件, 然后拖拽到扩展程序页面进行安装的方式.以前是可以用的, 但是最近我拖拽提示说”此页面无法安装扩展程序”. 不知道以后会如何.</em></strong> <strong>大家可以试试, 也许你们的可以</strong></p>
+
+<p><a href="https://www.baidu.com/s?ie=UTF-8&amp;wd=%E8%B0%B7%E6%AD%8C%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8F%92%E4%BB%B6" rel="nofollow">Chrome浏览器插件</a> <br>
+ <a href="https://www.baidu.com/s?ie=utf-8&amp;f=8&amp;rsv_bp=1&amp;tn=baidu&amp;wd=%E8%B0%B7%E6%AD%8C%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95" rel="nofollow">谷歌浏览器插件安装方法</a></p>
+
+
+
+<h3 id="推荐插件">推荐插件</h3>
+
+<p>我在应用商店搜了下, Chrome里面也没有Adblock Hyper, 然后<strong>我对比了几款屏蔽广告插件(如Adblock, Adblock Plus, 广告终结者), 发现Adblock Plus最好用最正确. 所以推荐大家用这款.</strong></p>
+
+<p><img src="https://img-blog.csdn.net/20180814130801771?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+<p>如图, 同样是屏蔽了的</p>
+
+<p><img src="https://img-blog.csdn.net/20180814130919426?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<h2 id="后记">后记</h2>
+
+<p><strong>这篇教程就到这里了, 希望屏蔽了百度热搜, 大家的注意力都能够集中到想要搜索的信息. 学习工作效率直线提升!</strong></p>
+
+<p>同理—知乎热榜…</p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

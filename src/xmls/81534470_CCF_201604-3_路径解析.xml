@@ -1,0 +1,63 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81534470				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>CCF 201604-3 路径解析 <a href="http://118.190.20.162/view.page?gpid=T40" rel="nofollow">传送门</a></p>
+
+<p>没看懂题目, 感觉乱七八糟的, 这是什么规则, 怎么看不懂啊? 无奈之下搜了搜题解, 自己按照大佬的方法做了一次, 觉得好像真是那么回事. 大概是因为没有路径查询的相关经验吧, 所以看题的时候会无法理解一些反常识的操作. 会觉得莫名其妙.</p>
+
+<p>总之, 方法就是如果查询的路径是相对路径, 那么把它添加到当前目录里面去, 绝对路径不变.</p>
+
+<p>然后对新的路径进行正规化处理, <strong>以有一个或多个<code>/</code>作为分隔符, 遇到<code>.</code>就直接跳过去, 这里不太好理解, 这样的话这个<code>.</code>有什么用? 遇到<code>..</code>就把最后一个元素删除, 嗯, 就是类似栈的操作. 其余的都加入到栈中.</strong></p>
+
+<p>要注意的是可能会读取空字符查询, 而普通的<code>cin</code>是会忽略的, 所以用getline来读取一行. <strong>代码中非常巧妙地用了<code>stringstream</code>来处理, 十分值得借鉴学习.</strong></p>
+
+<p>代码只有三十多行, 理解了题目意思就很简单了, 如果理解不了(比如我), 就会一头雾水. 话说这是我的锅还是CCF的锅?</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;sstream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-built_in">string</span> path, s, str;
+    <span class="hljs-built_in">cin</span> &gt;&gt; path;
+    <span class="hljs-built_in">cin</span>.get();  <span class="hljs-comment">// 用getline时千万要注意吸收这个换行符</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        getline(<span class="hljs-built_in">cin</span>, str);
+        <span class="hljs-keyword">if</span> (str == <span class="hljs-string">""</span>) str = path;
+        <span class="hljs-keyword">if</span> (str[<span class="hljs-number">0</span>] != <span class="hljs-string">'/'</span>) str = path + <span class="hljs-string">'/'</span> + str;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; str.size(); ++j) {
+            <span class="hljs-keyword">if</span> (str[j] == <span class="hljs-string">'/'</span>) str[j] = <span class="hljs-string">' '</span>;
+        }
+        <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt;</span> sta;
+        <span class="hljs-built_in">stringstream</span> ss(str);
+        <span class="hljs-keyword">while</span> (ss &gt;&gt; s) {
+            <span class="hljs-keyword">if</span> (s == <span class="hljs-string">"."</span>) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s == <span class="hljs-string">".."</span> &amp;&amp; !sta.empty()) sta.pop_back();
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s != <span class="hljs-string">".."</span>) sta.push_back(s);
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">'/'</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; sta.size(); ++j) {
+            <span class="hljs-keyword">if</span> (j) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">'/'</span>;
+            <span class="hljs-built_in">cout</span> &lt;&lt; sta[j];
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+}</code></pre>
+
+<p>对了, 用getline注意吸收前面的换行符.</p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

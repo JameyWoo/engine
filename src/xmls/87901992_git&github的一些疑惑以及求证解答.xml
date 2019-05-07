@@ -1,0 +1,44 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/87901992				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h4><a id="1urlclonemaster_0"></a>1、从远程端克隆文件，发现从url上看，是不会区分分支的，因此可以判断clone的东西都是master分支上的，只有这个分支才作数。</h4>
+<p><img src="https://img-blog.csdnimg.cn/20190224123012845.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4><a id="2git_push_origin_branchname_git_pushmaster_2"></a>2、在本地仓库修改后，想使用<code>git push origin branch-name</code> 提交到远程仓库的分支，发现无法提交。使用<code>git push</code>，成功提交，并看到master上进行了修改。</h4>
+<p><img src="https://img-blog.csdnimg.cn/20190224123547845.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4><a id="3_4"></a>3、那么如何单独克隆项目的某一远程分支？</h4>
+<p>查资料后，了解到<code>-b</code>参数，使用<code>git clone -b branch-name git-url</code> 命令，可以克隆某一分支的文件</p>
+<p>克隆成功<br>
+<img src="https://img-blog.csdnimg.cn/20190224124120297.png" alt="在这里插入图片描述"></p>
+<h4><a id="4push_10"></a>4、接下来进行修改和push操作，该仓库自动提交到远程分支仓库吗？</h4>
+<p>是的，提交成功，只对分支进行更改！<br>
+<img src="https://img-blog.csdnimg.cn/20190224124853524.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4><a id="5AB_15"></a>5、如何对将从远程仓库分支A克隆的文件提交到远程仓库分支B？</h4>
+<p>查资料了解到，可以使用该命令<code>git push origin 本地分支:远程分支</code>。</p>
+<p>但是在push到远程master时，出现了一些错误，这些错误不是由该命令本身引起的。尝试push到一个不存在的分支，发现push成功，而且建立了一个新的分支。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190224135032872.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+先pull了master后，合并了本地仓库和远程master仓库，然后可以将本地仓库push到远程的master分支。<br>
+<img src="https://img-blog.csdnimg.cn/2019022413563695.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4><a id="6_25"></a>6、在本地仓库建立分支的作用？</h4>
+<p>经过测试发现，本地仓库分支的作用和远程仓库分支类似。而且会出现一种看上去有点奇怪而实际上正是如此的现象。</p>
+<p>情景：<br>
+本地仓库有分支A，B，假设当前处在分支A中，使用<code>touch file.txt</code> 新建了一个文件后，访问本地资源管理器，确实存在。分别在分支A，分支B状态下，使用<code>ls</code>查看目录，都存在该文件。而当切换到某一具体分支，如在分支A时，将其add，commit之后，使用ls查看，有该文件，而在bash中切换到分支B时，使用ls查看，发现该文件消失了。有趣的是，在bash中进行这样的操作，使用ls查看的同时，在win10资源管理器中查看文件，同样是这样的情景！与远程仓库一致！</p>
+<p>之所以有些奇怪，是因为在远程仓库中，查看两个分支相当于在两个文件夹下，而在我的本地，只有一个文件夹，他如何存储多个分支呢？事实证明确实可以存储，而为何可以，就是git的技术了。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190224142203560.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/20190224142233917.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+如图所示，切换到不同分支后，资源管理器的文件也随之改变。颇为奇妙。</p>
+<h4><a id="8forkpull_request_37"></a>8、可以直接从fork的仓库的某一分支提交pull request吗？</h4>
+<p>可以的！分支也可以pull request。</p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

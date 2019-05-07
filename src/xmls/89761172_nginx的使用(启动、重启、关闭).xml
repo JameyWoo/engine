@@ -1,0 +1,28 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>转载自 <a href="https://blog.csdn.net/daipianpian/article/details/83034777" rel="nofollow">https://blog.csdn.net/daipianpian/article/details/83034777</a></p>
+<ol>
+<li>首先利用配置文件启动nginx。</li>
+</ol>
+<p>命令: nginx -c /usr/local/nginx/conf/nginx.conf</p>
+<p>重启服务： service nginx restart</p>
+<ol start="2">
+<li>
+<p>快速停止或关闭Nginx：nginx -s stop</p>
+</li>
+<li>
+<p>正常停止或关闭Nginx：nginx -s quit</p>
+</li>
+<li>
+<p>配置文件修改重装载命令：nginx -s reload</p>
+</li>
+</ol>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

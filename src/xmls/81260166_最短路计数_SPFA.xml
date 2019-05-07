@@ -1,0 +1,150 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81260166				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>P1144 最短路计数 <a href="https://www.luogu.org/problemnew/show/P1144" rel="nofollow">传送门</a></p>
+
+<dl>
+<dt>题目描述</dt>
+<dd>给出一个 NN 个顶点 MM 条边的无向无权图，顶点编号为 1-N1−N 。问从顶点 11 开始，到其他每个点的最短路有几条。</dd>
+
+<dt>输入输出格式</dt>
+<dd>输入格式： <br>
+第一行包含 22 个正整数 N,MN,M ，为图的顶点数与边数。</dd>
+
+<dd>
+<p>接下来 MM 行，每行 22 个正整数 x,yx,y ，表示有一条顶点 xx 连向顶点 yy 的边，请注意可能有自环与重边。</p>
+</dd>
+
+<dt>输出格式：</dt>
+<dd>共 NN 行，每行一个非负整数，第 ii 行输出从顶点 11 到顶点 ii 有多少条不同的最短路，由于答案有可能会很大，你只需要输出 ans \bmod 100003ansmod100003 后的结果即可。如果无法到达顶点 ii 则输出 00 。</dd>
+
+<dt>输入输出样例</dt>
+<dd>输入样例#1：  <br>
+5 7 <br>
+1 2 <br>
+1 3 <br>
+2 4 <br>
+3 4 <br>
+2 3 <br>
+4 5 <br>
+4 5 <br>
+输出样例#1：  <br>
+1 <br>
+1 <br>
+1 <br>
+2 <br>
+4</dd>
+</dl>
+
+<p>差不多是SPFA的模板题了吧. 看这庞大的数据范围, 就知道Dijkstra是不可能的了. 而<strong>SPFA的时间复杂度是O(kE), k是常数, E是边的数量. </strong></p>
+
+<p>不得不说在边少的情况SPFA还真是优秀啊.</p>
+
+<p>需要注意的一点是<strong>最短路计数</strong></p>
+
+<p>怎么记呢? 只需要在判断长度的代码那里稍微改动一点即可.</p>
+
+<p>两种情况</p>
+
+<ol>
+<li><strong>如果长度可以更新, 那么就更新, 且把u点的结果数count赋值到v点上</strong></li>
+<li><strong>如果长度和原来一样, 说明从两种路走来的情况都是最短路, 那么count[v] 就要加上count[u].</strong></li>
+</ol>
+
+<p>除此以外没什么特殊的了. <del>重边不重边什么的都OK的啦</del></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1000005</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> mode = <span class="hljs-number">100003</span>;
+<span class="hljs-keyword">bool</span> in[maxn] = {};
+<span class="hljs-keyword">int</span> n, m, dis[maxn], count[maxn] = {};
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> G[maxn];
+
+<span class="hljs-keyword">void</span> spfa()
+{
+    dis[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> que;
+    que.push(<span class="hljs-number">1</span>);
+    in[<span class="hljs-number">1</span>] = <span class="hljs-keyword">true</span>;
+    count[<span class="hljs-number">1</span>] = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">while</span> (!que.empty()) {
+        <span class="hljs-keyword">int</span> u = que.front();
+        que.pop();
+        in[u] = <span class="hljs-keyword">false</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; G[u].size(); ++i) {
+            <span class="hljs-keyword">int</span> v = G[u][i];
+            <span class="hljs-comment">//cout &lt;&lt; "out u = " &lt;&lt; u &lt;&lt; "  v = " &lt;&lt; v &lt;&lt; endl;</span>
+            <span class="hljs-comment">//cout &lt;&lt; "dis[u] = " &lt;&lt; dis[u] &lt;&lt; "  dis[v] = " &lt;&lt; dis[v] &lt;&lt; endl;</span>
+            <span class="hljs-keyword">if</span> (dis[v] &gt; dis[u] + <span class="hljs-number">1</span>) {
+                <span class="hljs-comment">//cout &lt;&lt; "v = " &lt;&lt; v &lt;&lt; endl;</span>
+                dis[v] = dis[u] + <span class="hljs-number">1</span>; <span class="hljs-comment">// 靠, 这里写错了 </span>
+                count[v] = count[u];
+                <span class="hljs-keyword">if</span> (!in[v]) {
+                    que.push(v);
+                    in[v] = <span class="hljs-keyword">true</span>;
+                }
+            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (dis[u] + <span class="hljs-number">1</span> == dis[v]) {
+                <span class="hljs-comment">//cout &lt;&lt; "u = " &lt;&lt; u &lt;&lt; "  v = " &lt;&lt; v &lt;&lt; endl;</span>
+                count[v] += count[u];
+                count[v] %= mode;
+                <span class="hljs-keyword">if</span> (!in[v]) {
+                    que.push(v);
+                    in[v] = <span class="hljs-keyword">true</span>;
+                }
+            }
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">memset</span>(dis, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span>(dis));
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= m; ++i) {
+        <span class="hljs-keyword">int</span> u, v;
+        <span class="hljs-built_in">cin</span> &gt;&gt; u &gt;&gt; v;
+        G[u].push_back(v);
+        G[v].push_back(u);
+    }
+    spfa();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; count[i] &lt;&lt; <span class="hljs-string">'\n'</span>;
+    }
+}
+<span class="hljs-comment">/*
+数据这么大, 看来非spfa不可了 
+*/</span>
+<span class="hljs-comment">/*
+5 7
+1 2
+1 3
+2 4
+3 4
+2 3
+4 5
+4 5
+*/</span></code></pre>
+
+<p><strong>最后</strong></p>
+
+<p></p><h1 id="以及博客100祭-hiehie"><del> 以及博客100祭   hiehie</del></h1><p></p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

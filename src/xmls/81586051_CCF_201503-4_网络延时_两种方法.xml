@@ -1,0 +1,149 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81586051				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>CCF 201503-4 网络延时 <a href="http://118.190.20.162/view.page?gpid=T24" rel="nofollow">传送门</a></p>
+
+<p>初看题: 这不就是多源最短路径里长度最大的? floyd? 不过看数据,这样只能过70%的数据,正解肯定不是这样. 写了份floyd交上去, 70分. <strong>这说明出题人特别仁慈, 给了这么多放水的数据, 可是这样是不是太不公平?</strong></p>
+
+<p>但是什么是正解呢? <br>
+<code>1 ≤ n ≤ 10000，1 ≤ m ≤ 10000</code>, 这么大个数据,肯定得从题目的特殊性下手</p>
+
+<p>思考一下可能跟<strong>最近公共祖先(LCA)</strong>有关, 因为这样的路径一定经过两个端点的LCA. <strong>可通过倍增法求出两个叶子节点的最近公共祖先及距离公共祖先的长度, 然后相加, 找这些长度中最长的. </strong></p>
+
+<p>一对结点查找大概是logn的复杂度, 但是枚举所有可能的情况是<code>O(n^2)</code>级别的复杂度. <strong>综合起来就是<code>O(n²logn)</code>, 这肯定是会超时的, 所以LCA也行不通.</strong></p>
+
+<p>那么还有什么算法? 动态规划? </p>
+
+<p>其实看数据, 最差应该是<code>O(nlogn)</code>, 然后最多可能会有个比较大的常数. 当然, 这是数据范围的限制.</p>
+
+<p>画个图来理解. 既然这是一棵树, 我们就从树的特殊性来求解. 我们肯定知道所求的路径的两端一定是叶子节点, 他们向上查找祖先结点时一定会有公共祖先(但一般不会存在其中一个是另一个的祖先的情况). 我们思考一下这个公共祖先的性质, 会发现, <strong>这条路径的长度就是从这个祖先分别到两个端点的路径长度和, 所以想到了什么? 答案就是所有的中间节点的最大的路径和.</strong></p>
+
+<p>一个结点可能会有两个以上子结点, 而这些路往下, <strong>深度最大的两颗子树, 深度之和就是答案</strong>. 我们定义这样一个结构体</p>
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> first, second, degree, parent;
+    Node () {first = second = degree = parent = <span class="hljs-number">0</span>;}
+};</code></pre>
+
+<p><strong>一个结点存储了它的<code>父节点, 入度, 最大子树深度和第二子树深度</code>. 我们只要把每个入度为0的结点压入队列中, 对每个出队的结点, 更新它父节点的相关信息(<code>第一第二深度调整, 入度减一, 减到0就入队</code>), 这样当队列为空时, 树的深度遍历结束, 答案就是所有节点里面<code>first + second</code>最大的.</strong></p>
+
+<p>100分代码, 自己都<code>屁福</code>自己</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> first, second, degree, parent;
+    Node () {first = second = degree = parent = <span class="hljs-number">0</span>;}
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">20000</span> + <span class="hljs-number">5</span>;
+Node nodes[maxn];
+<span class="hljs-keyword">int</span> n, m, ans = -<span class="hljs-number">1</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">2</span>, u; i &lt;= n + m; ++i) {  <span class="hljs-comment">//可以合起来输入!</span>
+        <span class="hljs-built_in">cin</span> &gt;&gt; u;
+        nodes[u].degree++;
+        nodes[i].parent = u;
+    }
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> Q;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n + m; ++i)
+        <span class="hljs-keyword">if</span> (nodes[i].degree == <span class="hljs-number">0</span>) Q.push(i);
+    <span class="hljs-keyword">while</span> (!Q.empty()) {
+        <span class="hljs-keyword">int</span> now = Q.front();
+        Q.pop();
+        <span class="hljs-keyword">if</span> (now == <span class="hljs-number">1</span>) <span class="hljs-keyword">continue</span>;
+        <span class="hljs-keyword">int</span> next = nodes[now].first + <span class="hljs-number">1</span>, parent = nodes[now].parent;
+        <span class="hljs-keyword">if</span> (nodes[parent].first &lt;= next) {
+            swap(nodes[parent].first, nodes[parent].second);
+            nodes[parent].first = next;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodes[parent].second &lt; next) {
+            nodes[parent].second = next;
+        }
+        nodes[parent].degree--;
+        <span class="hljs-keyword">if</span> (nodes[parent].degree == <span class="hljs-number">0</span>) Q.push(parent);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n + m; ++i)
+        ans = max(ans, nodes[i].first + nodes[i].second);
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+}</code></pre>
+
+<p>但是我百度了下, 发现几乎没有用我这种方法的, 他们用的是一种可以称之为算法的东西: <strong>树的直径</strong>. 没错, 这道题就是求树的直径.</p>
+
+<p>有这么一条定理</p>
+
+<blockquote>
+  <p><strong>定理：假设路径s-t为树的直径，则从任意一点u出发找到的最远的点一定是s、t中的一点。</strong></p>
+</blockquote>
+
+<p>具体证明和分析可以参考这篇博客: <a href="https://blog.csdn.net/jiange_zh/article/details/50302005" rel="nofollow">点我点我</a></p>
+
+<p><strong>做法就是选一个点, 从这个点BFS或DFS到最远的一个点u, 然后从这个u点BFS或DFS到另一个点v, 那么<code>u-&gt;v</code>的长度就是树的直径, 也就是此题答案.</strong></p>
+
+<p>100分代码.</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">20000</span> + <span class="hljs-number">5</span>;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> G[maxn];
+<span class="hljs-keyword">bool</span> vis[maxn] = {};
+<span class="hljs-keyword">int</span> n, m, ans = <span class="hljs-number">0</span>, depth[maxn];
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">2</span>, u; i &lt;= n + m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; u;
+        G[u].push_back(i);
+        G[i].push_back(u);
+    }
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> Q;
+    Q.push(<span class="hljs-number">1</span>);
+    vis[<span class="hljs-number">1</span>] = <span class="hljs-keyword">true</span>;
+    <span class="hljs-keyword">int</span> now;
+    <span class="hljs-keyword">while</span> (!Q.empty()) {
+        now = Q.front();
+        Q.pop();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; G[now].size(); ++i) {
+            <span class="hljs-keyword">int</span> v = G[now][i];
+            <span class="hljs-keyword">if</span> (vis[v]) <span class="hljs-keyword">continue</span>;
+            vis[v] = <span class="hljs-keyword">true</span>;
+            Q.push(v);
+        }
+    }
+    Q.push(now);
+    <span class="hljs-built_in">memset</span>(vis, <span class="hljs-keyword">false</span>, <span class="hljs-keyword">sizeof</span>(vis));
+    vis[now] = <span class="hljs-keyword">true</span>;
+    <span class="hljs-keyword">while</span> (!Q.empty()) {
+        now = Q.front();
+        Q.pop();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; G[now].size(); ++i) {
+            <span class="hljs-keyword">int</span> v = G[now][i];
+            <span class="hljs-keyword">if</span> (vis[v]) <span class="hljs-keyword">continue</span>;
+            vis[v] = <span class="hljs-keyword">true</span>;
+            depth[v] = depth[now] + <span class="hljs-number">1</span>;
+            Q.push(v);
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; depth[now];
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

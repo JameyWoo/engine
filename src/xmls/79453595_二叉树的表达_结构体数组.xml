@@ -1,0 +1,98 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79453595				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>思路是用结构体储存数的一个结点的信息, 其中包括parent, left, right;</p>
+
+<p>因为是二叉树, 所以不必使用左子右兄弟法</p>
+
+<p>同时, 因为本题二叉树的结点数量固定, 因此可以利用结构体数组来实现.</p>
+
+<p>涉及几个操作:</p>
+
+<blockquote>
+  <p>建立一棵二叉树 <br>
+  求二叉树各结点的深度 <br>
+  求二叉树各结点的高度 <br>
+  得到二叉树的信息并输出</p>
+</blockquote>
+
+<p>其实比上一篇有根树的表达更简单</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-preprocessor">#define MAX 10005</span>
+<span class="hljs-preprocessor">#define NIL -1</span>
+
+<span class="hljs-keyword">struct</span> Node  {<span class="hljs-keyword">int</span> p, l, r; };  <span class="hljs-comment">//结点结构体</span>
+
+Node T[MAX];
+<span class="hljs-keyword">int</span> D[MAX], H[MAX], n, root;  <span class="hljs-comment">//深度, 高度, 结点数量, 根节点</span>
+
+<span class="hljs-keyword">void</span> setDepth(<span class="hljs-keyword">int</span> u, <span class="hljs-keyword">int</span> d)  <span class="hljs-comment">//递归得到各结点深度</span>
+{
+    <span class="hljs-keyword">if</span>(u == NIL) <span class="hljs-keyword">return</span>;
+    D[u] = d;
+    setDepth(T[u].l, d+<span class="hljs-number">1</span>);
+    setDepth(T[u].r, d+<span class="hljs-number">1</span>);
+}
+
+<span class="hljs-keyword">int</span> setHeight(<span class="hljs-keyword">int</span> u)   <span class="hljs-comment">//递归得到各结点高度</span>
+{
+    <span class="hljs-keyword">int</span> h1 = <span class="hljs-number">0</span>, h2 = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span>(T[u].l != NIL) h1 = setHeight(T[u].l) + <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span>(T[u].r != NIL) h2 = setHeight(T[u].r) + <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">return</span> H[u] = max(h1, h2);
+}
+
+<span class="hljs-keyword">void</span> buildTree()  <span class="hljs-comment">//构建一棵树, 并给出根节点信息</span>
+{
+    <span class="hljs-keyword">int</span> k, l, r;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) T[i].p = NIL;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; k &gt;&gt; l &gt;&gt; r;
+        T[k].l = l, T[k].r = r;
+        <span class="hljs-keyword">if</span>(l != NIL) T[l].p = k;
+        <span class="hljs-keyword">if</span>(r != NIL) T[r].p = k;
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i)
+            <span class="hljs-keyword">if</span>(T[i].p == NIL) root = i;
+}
+
+<span class="hljs-keyword">void</span> print(<span class="hljs-keyword">int</span> u)
+{
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"node "</span> &lt;&lt; u &lt;&lt; <span class="hljs-string">": parent = "</span> &lt;&lt; T[u].p &lt;&lt; <span class="hljs-string">", sibling = "</span>;
+    <span class="hljs-keyword">if</span>(T[T[u].p].l != NIL &amp;&amp; T[T[u].p].l != u) <span class="hljs-built_in">cout</span> &lt;&lt; T[T[u].p].l;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(T[T[u].p].r != NIL &amp;&amp; T[T[u].p].r != u) <span class="hljs-built_in">cout</span> &lt;&lt; T[T[u].p].r;
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; -<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">int</span> deg = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span>(T[u].l != NIL) deg++;
+    <span class="hljs-keyword">if</span>(T[u].r != NIL) deg++;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">", degree = "</span> &lt;&lt; deg &lt;&lt; <span class="hljs-string">", depth = "</span> &lt;&lt; D[u] &lt;&lt; <span class="hljs-string">", height = "</span> &lt;&lt; H[u] &lt;&lt; <span class="hljs-string">", "</span>;
+    <span class="hljs-keyword">if</span>(u == root) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"root"</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(deg == <span class="hljs-number">0</span>) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"leaf"</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"internal node"</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    buildTree();
+    setDepth(root, <span class="hljs-number">0</span>);
+    setHeight(root);
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) print(i);
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

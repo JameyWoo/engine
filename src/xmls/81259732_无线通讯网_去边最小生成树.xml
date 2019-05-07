@@ -1,0 +1,150 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81259732				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>P1991 无线通讯网 <a href="https://www.luogu.org/problemnew/show/P1991#sub" rel="nofollow">传送门</a></p>
+
+<dl>
+<dt>题目描述</dt>
+<dd>国防部计划用无线网络连接若干个边防哨所。2 种不同的通讯技术用来搭建无线网络；</dd>
+
+<dd>
+<p>每个边防哨所都要配备无线电收发器；有一些哨所还可以增配卫星电话。 <br>
+任意两个配备了一条卫星电话线路的哨所（两边都ᤕ有卫星电话）均可以通话，无论他们相距多远。而只通过无线电收发器通话的哨所之间的距离不能超过 D，这是受收发器 <br>
+的功率限制。收发器的功率越高，通话距离 D 会更远，但同时价格也会更贵。</p>
+</dd>
+
+<dd>
+<p>收发器需要统一购买和安装，所以全部哨所只能选择安装一种型号的收发器。换句话说，每一对哨所之间的通话距离都是同一个 D。你的任务是确定收发器必须的最小通话距离 D，使得每一对哨所之间至少有一条通话路径（直接的或者间接的）。</p>
+</dd>
+
+<dt>输入输出格式</dt>
+<dd>输入格式： <br>
+从 wireless.in 中输入数据第 1 行，2 个整数 S 和 P，S 表示可安装的卫星电话的哨所数，P 表示边防哨所的数量。接下里 P 行，每行两个整数 x，y 描述一个哨所的平面坐标(x, y)，以 km 为单位。</dd>
+
+<dt>输出格式：</dt>
+<dd>输出 wireless.out 中第 1 行，1 个实数 D，表示无线电收发器的最小传输距离，㋮确到小数点后两位。</dd>
+
+<dt>输入输出样例</dt>
+<dd>输入样例#1：</dd>
+
+<dd>2 4 <br>
+0 100 <br>
+0 300 <br>
+0 600 <br>
+150 750 <br>
+输出样例#1：</dd>
+
+<dd>212.13</dd>
+</dl>
+
+<p>这道题区别于模板的最小生成树的点有两个</p>
+
+<p><strong>一. 题目给出了坐标的数据,而不是点和边. 那么就需要我们计算坐标之间的距离来计算边的长度. </strong></p>
+
+<p><strong>二. 数据给出s个卫星电话, 是可以把边的距离缩短到0的.</strong></p>
+
+<p>这个就是本题的重点与难点了.  如果没有这个第二点, 我们只需找出最小生成树的n - 1条边即可, 答案就是最大的那条边. <strong><em>但是有了这s个卫星电话, 简直是破坏生态平衡的存在. 怎么设定这s个电话呢? 难道枚举出每一种组合,然后分别求最小生成树吗?</em></strong></p>
+
+<p>没那么麻烦. 我们需要利用一棵树的性质</p>
+
+<p><strong><code>删掉s条边, 一棵树将会变成s + 1个联通块.</code></strong></p>
+
+<p>就是这个性质, 所以我们可以放肆的删掉最小生成树的n - 1条边里最长的 s - 1条边了. <strong>因为我们有s个卫星电话, 那么我们就保证s个联通块里面分别有一个卫星电话, 就可以维持这s个联通块互相连通. 而这些联通块是具体哪一个结点都是无所谓的.</strong></p>
+
+<p>之所以分成s个联通块, 是因为我们的最大资源就是s个卫星电话, 而我们的目的是找出最小的最大边, 所以当然尽可能地删掉最大的边, 能删多少删多少. 那就删<code>s - 1</code>条边咧.</p>
+
+<p><del><strong>so, 在代码上反倒是第一点比较复杂, 而第二点是理解起来比较复杂</strong></del></p>
+
+<p><del><strong>且允许我把它叫做<code>去边最小生成树</code></strong></del></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cmath&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstdio&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">500</span> + <span class="hljs-number">5</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> INF = <span class="hljs-number">1e16</span>;
+<span class="hljs-keyword">double</span> G[maxn][maxn];
+<span class="hljs-keyword">int</span> s, n;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;pair&lt;<span class="hljs-keyword">double</span>, <span class="hljs-keyword">double</span>&gt;</span> &gt; point;
+<span class="hljs-keyword">bool</span> vis[maxn] = {};
+<span class="hljs-keyword">double</span> dis[maxn] = {};
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">double</span>&gt;</span> vec;
+
+<span class="hljs-keyword">void</span> Prim()
+{
+    dis[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">int</span> u = -<span class="hljs-number">1</span>;
+        <span class="hljs-keyword">double</span> _min = INF;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; ++j) {
+            <span class="hljs-keyword">if</span> (!vis[j] &amp;&amp; dis[j] &lt; _min) {
+                _min = dis[j];
+                u = j;
+            }
+        }
+        vis[u] = <span class="hljs-keyword">true</span>;
+        vec.push_back(_min);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; ++j) {
+            <span class="hljs-keyword">if</span> (G[u][j] &lt; dis[j]) {
+                dis[j] = G[u][j];
+            }
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; s &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        dis[i] = <span class="hljs-number">1e16</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; ++j) {
+            G[i][j] = <span class="hljs-number">1e16</span>;
+        }
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">double</span> x, y;
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y;
+        point.push_back(make_pair(x, y));
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; point.size(); ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; point.size(); ++j) {
+            <span class="hljs-keyword">if</span> (i == j) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">double</span> x1 = point[i].first, y1 = point[i].second;
+            <span class="hljs-keyword">double</span> x2 = point[j].first, y2 = point[j].second;
+            G[i][j] = <span class="hljs-built_in">sqrt</span>(<span class="hljs-built_in">pow</span>(x1 - x2, <span class="hljs-number">2</span>) + <span class="hljs-built_in">pow</span>(y1 - y2, <span class="hljs-number">2</span>));
+        }
+    }
+    Prim();
+    sort(vec.begin(), vec.end());
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; vec.size(); ++i) {
+        <span class="hljs-keyword">if</span> (i == n - s) <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%.2f"</span>, vec[i]);
+    }
+}
+<span class="hljs-comment">/*
+2 4
+0 100
+0 300
+0 600
+150 750
+*/</span>
+<span class="hljs-comment">/*
+两个要点
+1.根据点的坐标获取边的长度
+2.理解一棵树去掉s条边之后一定变成s+1个联通块. (难点) 
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

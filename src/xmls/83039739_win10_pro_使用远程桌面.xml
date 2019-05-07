@@ -1,0 +1,37 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/83039739				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>今天升级到了win10 专业版, 有了几个家庭版没有的功能, 比如win10自带的远程桌面功能. 远程桌面就是可以通过其他设备访问并操作电脑的功能, 比如说Android手机.</p>
+<p><a href="https://blog.csdn.net/wjh2622075127/article/details/83037757" rel="nofollow">使用win10家庭版的同学可以参考我的这篇文章升级成为win10专业版</a></p>
+<p>如何使用呢?</p>
+<h2><a id="_win10_6"></a>一. 首先在win10上开启此功能.</h2>
+<p><code>设置-&gt;系统-&gt;远程桌面.</code></p>
+<p>就可以开启了.</p>
+<p><img src="https://img-blog.csdn.net/20181013162708536?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述"></p>
+<h2><a id="_	_Microsoftapp_14"></a>二. 下载安装	 Microsoft远程桌面app</h2>
+<p>我用的是Android, 所以直接在Play商店安装即可. 国内的各大app商店应该都有安装.</p>
+<p>下载好后, 点击app右上角的<code>+</code>, 添加桌面. 出现这样的页面:</p>
+<p><img src="https://img-blog.csdn.net/20181013164105706?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt=""></p>
+<p>填好你电脑的ip地址(在百度上直接搜ip即可知道), 添加微软账户的用户名, 就可以点save进行了.</p>
+<p>或者选择一些更高级的操作, 点击<code>show additional options</code>, 里面有一项<code>friendly name</code>, 可以设置昵称. 随意设置咯.</p>
+<p><img src="https://img-blog.csdn.net/20181013164424702?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述"></p>
+<h2><a id="____30"></a>三. 这样远程桌面就设置好了,  就可以在手机上对电脑进行操作.</h2>
+<p>在手机上操作时电脑出现锁屏界面, 不可同时操作(会有一方退出). 如下图为手机端的电脑页面.</p>
+<p><img src="https://img-blog.csdn.net/20181013165054475?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="在这里插入图片描述"></p>
+<p>用起来还是挺流畅的, 里面一些操作需要多操作一些才能熟练使用.</p>
+<p>不过电脑端肯定是要一直联网的. 我在学校里用的话, 买的电信宽带每次网络连接都需要拨号, 就不太方便了, 因为它需要时刻联网.</p>
+<hr>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

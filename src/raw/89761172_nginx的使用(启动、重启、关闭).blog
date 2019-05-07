@@ -1,0 +1,1 @@
+                                                                 转载自 https://blog.csdn.net/daipianpian/article/details/83034777  首先利用配置文件启动nginx。  命令: nginx -c /usr/local/nginx/conf/nginx.conf 重启服务： service nginx restart   快速停止或关闭Nginx：nginx -s stop   正常停止或关闭Nginx：nginx -s quit   配置文件修改重装载命令：nginx -s reload                                                

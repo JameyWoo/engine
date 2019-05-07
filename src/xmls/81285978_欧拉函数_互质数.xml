@@ -1,0 +1,81 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81285978				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>什么是欧拉函数? 见 <a href="https://baike.baidu.com/item/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0/1944850?fr=aladdin" rel="nofollow">百度百科</a></p>
+
+<p>就是这样的一个函数, 在ACM里面算是一个常见内容了(虽然目前我只见过一次).</p>
+
+<p><strong><em>那么我们定义Φ(n)为n的欧拉函数</em></strong></p>
+
+<p><strong>那么显然的, 如果n是质数, Φ(n) = n - 1, 如果n不是质数, 那么我们只要求出n的所有因数, 即可求出Φ(n). </strong></p>
+
+<p>这么看来求欧拉函数就是分解质因数 + 计算了.</p>
+
+<p>有没有更方便, 更快速的方法呢?</p>
+
+<p><strong>有的! 我们可以把求欧拉函数和素数筛法结合起来. 这就是所谓欧拉筛法.</strong></p>
+
+<pre class="prettyprint"><code class=" hljs matlab"><span class="hljs-keyword">for</span> (long long <span class="hljs-built_in">i</span> = <span class="hljs-number">1</span>; <span class="hljs-built_in">i</span> &lt;= n; ++<span class="hljs-built_in">i</span>) <span class="hljs-cell">{
+        Euler[i] = i;
+    }</span>
+    <span class="hljs-keyword">for</span> (long long <span class="hljs-built_in">i</span> = <span class="hljs-number">2</span>; <span class="hljs-built_in">i</span> &lt;= n; ++<span class="hljs-built_in">i</span>) <span class="hljs-cell">{ // 普通筛法i * i &lt;= n没错的, 但是这是欧拉筛,所有约数都要出现 
+        if (prim[i] == <span class="hljs-number">0</span>) {
+            for (long long j = i + i; j &lt;= n; j += i) {
+                prim[j] = <span class="hljs-number">1</span>;
+                Euler[j] = Euler[j] * (i - <span class="hljs-number">1</span>) / i;
+            }</span>
+        }
+    }
+    <span class="hljs-keyword">for</span> (int <span class="hljs-built_in">i</span> = <span class="hljs-number">2</span>; <span class="hljs-built_in">i</span> &lt;= n; ++<span class="hljs-built_in">i</span>) <span class="hljs-cell">{
+        if (prim[i] == <span class="hljs-number">0</span>) Euler[i]--;
+    }</span></code></pre>
+
+<p><a href="https://www.luogu.org/problemnew/show/P2158" rel="nofollow">一道欧拉筛法的模板题</a> 仪仗队</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">40000</span> + <span class="hljs-number">5</span>;
+<span class="hljs-keyword">bool</span> prim[maxn] = {};
+<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> n, Euler[maxn], ans = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">if</span> (n == <span class="hljs-number">1</span>) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        Euler[i] = i;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> i = <span class="hljs-number">2</span>; i &lt;= n; ++i) { <span class="hljs-comment">// 普通筛法i * i &lt;= n没错的, 但是这是欧拉筛,所有约数都要出现 </span>
+        <span class="hljs-keyword">if</span> (prim[i] == <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> j = i + i; j &lt;= n; j += i) {
+                prim[j] = <span class="hljs-number">1</span>;
+                Euler[j] = Euler[j] * (i - <span class="hljs-number">1</span>) / i;
+            }
+        }
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">2</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (prim[i] == <span class="hljs-number">0</span>) Euler[i]--;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">2</span>; i &lt; n; ++i) {
+        ans += Euler[i];
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-number">2</span> * ans + <span class="hljs-number">3</span>;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

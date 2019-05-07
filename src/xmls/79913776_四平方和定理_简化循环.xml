@@ -1,0 +1,99 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79913776				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><a href="https://www.jisuanke.com/minicourse/733/37619" rel="nofollow">.</a></p>
+
+<blockquote>
+  <p>四平方和定理，又称为拉格朗日定理：每个正整数都可以表示为至多四个正整数的平方和。如果把 00 包括进去，就正好可以表示为四个数的平方和。</p>
+  
+  <p>比如：</p>
+  
+  <p>\displaystyle 5 = 0^2 + 0^2 + 1^2 + 2^25=0  2  +0  2  +1  2  +2  2  </p>
+  
+  <p>\displaystyle 7 = 1^2 + 1^2 + 1^2 + 2^27=1  2  +1  2  +1  2  +2  2  </p>
+  
+  <p>则对于一个给定的正整数 nn，可以表示为：n = a^2 + b^2 + c^2 + d^2n=a  2  +b  2  +c  2  +d <br>
+  2  。</p>
+  
+  <p>你需要求出 字典序 最小的一组解 a,b,c,da,b,c,d。</p>
+  
+  <p>字典序大小：从左到右依次比较，如果相同则比较下一项，直到有一项不同，较小的一方字典序更小，反之字典序更大，所有项均相同则二者字典序相同。</p>
+  
+  <p>输入格式 程序输入为一个正整数 N(1 \leq N \leq 5000000)N(1≤N≤5000000)。</p>
+  
+  <p>输出格式 输出四个非负整数 a,b,c,da,b,c,d，中间用空格分开。</p>
+  
+  <p>样例输入1 5 样例输出1 0 0 1 2 样例输入2 12 样例输出2 0 2 2 2</p>
+</blockquote>
+
+<p><strong>用四重循环就可以简单解决， 但是其实可以用三重循环， 因为第四个数据可以用前三个数据算出来， 这也是这道题的价值所在， 在做其他题目是， 可以用这种思想简化时间复杂度。</strong></p>
+
+<p>效果是很客观的， 就这道题来说， 实际时间差了50倍。</p>
+
+<pre class="prettyprint"><code class=" hljs perl"><span class="hljs-comment">#include &lt;iostream&gt;</span>
+<span class="hljs-comment">#include &lt;cmath&gt;</span>
+using namespace std;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n;
+    cin &gt;&gt; n;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i<span class="hljs-variable">*i</span> &lt; n; ++i) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = i; j<span class="hljs-variable">*j</span> + i<span class="hljs-variable">*i</span> &lt; n; ++j) {
+            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> k = j; k<span class="hljs-variable">*k</span> + j<span class="hljs-variable">*j</span> + i<span class="hljs-variable">*i</span> &lt; n; ++k) {
+                <span class="hljs-keyword">if</span>(<span class="hljs-keyword">int</span>(pow(<span class="hljs-keyword">int</span>(pow(n-i<span class="hljs-variable">*i</span>-j<span class="hljs-variable">*j</span>-k<span class="hljs-variable">*k</span>, <span class="hljs-number">0</span>.<span class="hljs-number">5</span>)), <span class="hljs-number">2</span>)) == (n-i<span class="hljs-variable">*i</span>-j<span class="hljs-variable">*j</span>-k<span class="hljs-variable">*k</span>)) {
+                    cout &lt;&lt; i &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; j &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; k &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; pow(n-i<span class="hljs-variable">*i</span>-j<span class="hljs-variable">*j</span>-k<span class="hljs-variable">*k</span>, <span class="hljs-number">0</span>.<span class="hljs-number">5</span>);
+                    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+                }
+            }
+        }
+    }
+}</code></pre>
+
+<p>四重循环代码：</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs perl"><span class="hljs-comment">#include &lt;iostream&gt;</span>
+<span class="hljs-comment">#include &lt;cmath&gt;</span>
+using namespace std;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n;
+    cin &gt;&gt; n;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i<span class="hljs-variable">*i</span> &lt; n; ++i) {
+        <span class="hljs-keyword">int</span> ii = i<span class="hljs-variable">*i</span>;
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = i; ii + j<span class="hljs-variable">*j</span> &lt; n; ++j) {
+            <span class="hljs-keyword">int</span> jj = ii+j<span class="hljs-variable">*j</span>;
+            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> k = j; k<span class="hljs-variable">*k</span> + jj &lt; n; ++k) {
+                <span class="hljs-keyword">int</span> kk = jj + k<span class="hljs-variable">*k</span>;
+                <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> l = k; l<span class="hljs-variable">*l</span> + kk &lt;= n; ++l) {
+                    <span class="hljs-keyword">if</span>(l<span class="hljs-variable">*l</span> + kk == n) {
+                        cout &lt;&lt; i &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; j &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; k &lt;&lt; <span class="hljs-string">' '</span> &lt;&lt; l;
+                        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+                    }
+                }
+            }
+        }
+    }
+}
+/*
+<span class="hljs-number">5</span>
+<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span>
+
+<span class="hljs-number">12</span>
+<span class="hljs-number">0</span> <span class="hljs-number">2</span> <span class="hljs-number">2</span> <span class="hljs-number">2</span>
+<span class="hljs-variable">*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

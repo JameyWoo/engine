@@ -1,0 +1,42 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/89763557				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>搭建好LNMP环境后，访问服务器上的php文件，居然直接下载而不是解析php文件。</p>
+<p>找了好多博客，外行提取到的信息甚浅，跌跌撞撞很久之后终于成功了。</p>
+<hr>
+<p>方法：配置nginx.conf文件<br>
+在我的服务器上，它的路径是<code>/etc/nginx/nginx.conf</code><br>
+打开查看这一部分<br>
+<img src="https://img-blog.csdnimg.cn/20190502181316506.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+画线的两个路径是站点的根目录<br>
+添加圈里的这部分代码，就可以设置解析php文件了。</p>
+<pre><code>location ~ .php$ {
+            root           /data/www;
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi_params;
+        }
+</code></pre>
+<p>然后用命令<code>service nginx restart</code> 重启nginx服务即可。</p>
+<hr>
+<p>启发我的是这个讨论<br>
+<a href="https://www.52pojie.cn/thread-571087-1-1.html" rel="nofollow">https://www.52pojie.cn/thread-571087-1-1.html</a></p>
+<p>这次的问题源于我对php解析不太了解，看各种教程都是浮于表面，不知道为什么那样做。之前搞了好久没搞出来，是在搞一个类似的配置文件，它的目录是<code>/etc/nginx/conf.d/php.conf</code>。现在算是知道了，配置文件都找错了！<img src="https://img-blog.csdnimg.cn/20190502181838412.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+看到这个文件一条语句，会包含php.conf这个文件。这说明我们可以设置其他端口的php解析之类的内容。可是它命名会包含，为什么我之前设置php.conf总是失败呢？可能是端口问题？因为php.conf中如果设置了listen 其他端口比如8000的话，是正常的。而我们平时从浏览器上访问服务器是80端口。</p>
+<p>而我看这个nginx.conf文件里对80端口有好几条配置<br>
+<img src="https://img-blog.csdnimg.cn/20190502182351776.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

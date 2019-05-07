@@ -1,0 +1,164 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81099623				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<blockquote>
+  <p>试题编号： 201403-4 <br>
+  试题名称：   无线网络 <br>
+  时间限制：   1.0s <br>
+  内存限制：   256.0MB <br>
+  问题描述： <br>
+  问题描述 <br>
+  　　目前在一个很大的平面房间里有 n 个无线路由器,每个无线路由器都固定在某个点上。任何两个无线路由器只要距离不超过 r 就能互相建立网络连接。 <br>
+  　　除此以外,另有 m 个可以摆放无线路由器的位置。你可以在这些位置中选择至多 k 个增设新的路由器。 <br>
+  　　你的目标是使得第 1 个路由器和第 2 个路由器之间的网络连接经过尽量少的中转路由器。请问在最优方案下中转路由器的最少个数是多少? <br>
+  输入格式 <br>
+  　　第一行包含四个正整数 n,m,k,r。(2 ≤ n ≤ 100,1 ≤ k ≤ m ≤ 100, 1 ≤ r ≤ 108)。 <br>
+  　　接下来 n 行,每行包含两个整数 xi 和 yi,表示一个已经放置好的无线 路由器在 (xi, yi) 点处。输入数据保证第 1 和第 2 个路由器在仅有这 n 个路由器的情况下已经可以互相连接(经过一系列的中转路由器)。 <br>
+  　　接下来 m 行,每行包含两个整数 xi 和 yi,表示 (xi, yi) 点处可以增设 一个路由器。 <br>
+  　　输入中所有的坐标的绝对值不超过 108,保证输入中的坐标各不相同。 <br>
+  输出格式 <br>
+  　　输出只有一个数,即在指定的位置中增设 k 个路由器后,从第 1 个路 由器到第 2 个路由器最少经过的中转路由器的个数。 <br>
+  样例输入 <br>
+  5 3 1 3 <br>
+  0 0 <br>
+  5 5 <br>
+  0 3 <br>
+  0 5 <br>
+  3 5 <br>
+  3 3 <br>
+  4 4 <br>
+  3 0 <br>
+  样例输出 <br>
+  2</p>
+</blockquote>
+
+<p>这道题是CCF第四题, 通常第四题会是一道图论题, 这题也不例外.</p>
+
+<p>因为博主做的图论题目还是比较少, 所以做到这道<strong>不那么常规的图论问题</strong>时不知道怎么下手.</p>
+
+<p>为什么说不常规? 因为以前做的图论题都是给出边的信息, 每条边上有两个点, 有可能还有权值. <strong>但是这道题, 只给了点, 以及点可以到达的半径.</strong> 没见过, 所以不知道怎么套模型.<strong>这是遇到的第一个问题.</strong></p>
+
+<p>后来看其他大佬分享的博客, 知道了这种情况其实是<strong>很容易</strong>转变成常规的图论模型的. <strong>只要计算点和点之间的距离, 然后根据可达半径判断这两点是否可以成边, 这样就可以以邻接矩阵的形式遍历各边.</strong></p>
+
+<p><strong>so, 第一个问题解决了, 它使得此题回归到常规图论模型.</strong></p>
+
+<p>接下来遇到了<strong>第二个问题</strong>: 如果可选的k个点都被选出来了, 那么对这确定的n+k个点, 我们怎么得到最小的路径长度呢? 其实还是很容易想到BFS的吧, <strong>因为此前做过的好些走迷宫步数最小问题用bfs很方便的, 一层一层铺开, 每层的中转次数是一样的, 那么第一个到大2点的路径, 就是中转数最小的路径了.</strong></p>
+
+<p><strong>so, 第二个问题也解决了, 它使得我们有方法找到最小中转数</strong></p>
+
+<p>然后是<strong>第三个问题: 可选k是不确定的, 怎么办, 难道我们还要遍历出所有可能的组合吗?</strong> </p>
+
+<p>虽然我不知道那样为什么是对的, 但我知道那样子就是对的!</p>
+
+<p>不用找出所有可能的情况, <strong>只要在bfs的过程中记录我们使用的点有多少个在那k个点中, 如果刚好是k个, 那么就不能用了, 否则是可以用的. </strong> 即, 只要进行一次判断, 选择出循环的上界. 每次push进去一个点, 判断它是不是可选点, 如果是, 可选点数量就+1. </p>
+
+<p><strong>so, 第三个问题也解决了</strong></p>
+
+<p>有很多细节需要注意, 代码可以控制在四十多行.</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">205</span>;
+<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> n, m, k, r, _max = -<span class="hljs-number">1</span>;
+<span class="hljs-keyword">bool</span> visit[maxn] = {};
+
+<span class="hljs-keyword">struct</span> Statu {
+    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> x, y, k;
+    <span class="hljs-keyword">int</span> step;
+    Statu () { step = k = <span class="hljs-number">0</span>; }
+    Statu (<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y, <span class="hljs-keyword">int</span> s, <span class="hljs-keyword">int</span> k) : x(x), y(y), step(s), k(k) {}
+} <span class="hljs-built_in">map</span>[maxn];
+
+<span class="hljs-keyword">int</span> bfs(<span class="hljs-keyword">int</span> begin, <span class="hljs-keyword">int</span> end)
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;Statu&gt;</span> Q;
+    Q.push(Statu(<span class="hljs-built_in">map</span>[begin].x, <span class="hljs-built_in">map</span>[begin].y, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>));
+    visit[begin] = <span class="hljs-keyword">true</span>;
+    <span class="hljs-keyword">while</span> (!Q.empty()) {
+        Statu s = Q.front();
+        Q.pop();
+        <span class="hljs-keyword">if</span> (s.x == <span class="hljs-built_in">map</span>[end].x &amp;&amp; s.y == <span class="hljs-built_in">map</span>[end].y) <span class="hljs-keyword">return</span> s.step - <span class="hljs-number">1</span>; <span class="hljs-comment">// 求的是中转个数,步数减一 </span>
+        <span class="hljs-keyword">if</span> (s.k == k) _max = n; <span class="hljs-comment">// step, k搞混!!! </span>
+        <span class="hljs-keyword">else</span> _max = n + m;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= _max; ++i) {
+            <span class="hljs-keyword">if</span> (visit[i]) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">if</span> ((<span class="hljs-built_in">map</span>[i].x - s.x)*(<span class="hljs-built_in">map</span>[i].x - s.x) + (<span class="hljs-built_in">map</span>[i].y - s.y)*(<span class="hljs-built_in">map</span>[i].y - s.y) &gt; r*r) <span class="hljs-keyword">continue</span>;
+            visit[i] = <span class="hljs-keyword">true</span>; 
+            Q.push(Statu(<span class="hljs-built_in">map</span>[i].x, <span class="hljs-built_in">map</span>[i].y, s.step + <span class="hljs-number">1</span>, i &gt; n ? s.k + <span class="hljs-number">1</span> : s.k)); <span class="hljs-comment">// 错写成m </span>
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m &gt;&gt; k &gt;&gt; r;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n + m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; <span class="hljs-built_in">map</span>[i].x &gt;&gt; <span class="hljs-built_in">map</span>[i].y;
+    }
+    <span class="hljs-keyword">int</span> ans = bfs(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>);
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+}
+<span class="hljs-comment">/*
+测试数据：
+5 3 1 3
+0 0
+5 5
+0 3
+0 5
+3 5
+3 3
+4 4
+3 0
+2
+10 1 1 2
+0 0
+3 1
+-2 0
+-2 2
+-2 4
+-2 6
+0 6
+2 6
+2 4
+2 2
+2 0
+1
+10 1 1 2
+0 0
+3 1
+-2 0
+-2 2
+-2 4
+-2 6
+0 6
+2 6
+2 4
+2 2
+3 0
+8
+6 3 2 50000000
+0 0
+50000000 100000000
+100000000 100000000
+100000000 0
+100000000 50000000
+50000000 0
+-100000000 50000000
+0 50000000
+0 100000000
+2
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

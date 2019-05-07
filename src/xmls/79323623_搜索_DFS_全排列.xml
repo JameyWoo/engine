@@ -1,0 +1,100 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79323623				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>全排列是什么?</p>
+
+<blockquote>
+  <p>比如1 2 3 这三个数的全排列是: <br>
+  1 2 3 <br>
+  1 3 2 <br>
+  2 1 3 <br>
+  2 3 1 <br>
+  3 1 2 <br>
+  3 2 1</p>
+</blockquote>
+
+<p>用DFS生成一个序列的全排列很方便也很简单.</p>
+
+<p>同样, 用<strong>搜索树</strong>的概念去理解这样的一个过程</p>
+
+<p>时间复杂度为O(n!)</p>
+
+<p><a href="https://www.luogu.org/problemnew/show/P1706" rel="nofollow">一道全排列的问题</a></p>
+
+<p>基本是裸的回溯了</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">int</span> n, vis[<span class="hljs-number">10</span>] = {};
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span> &lt;<span class="hljs-keyword">int</span>&gt;</span> vec;
+
+<span class="hljs-keyword">void</span> dfs(<span class="hljs-keyword">int</span> t)
+{
+    <span class="hljs-keyword">if</span>(t == n + <span class="hljs-number">1</span>) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">"    %d"</span>, vec[i]);
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span>(vis[i]) <span class="hljs-keyword">continue</span>;
+        vis[i] = <span class="hljs-number">1</span>; vec.push_back(i);
+        dfs(t+<span class="hljs-number">1</span>);
+        vis[i] = <span class="hljs-number">0</span>; vec.pop_back();
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    dfs(<span class="hljs-number">1</span>);
+}</code></pre>
+
+<p>全排列是没有重复的, 考虑另一种情况, 有重复元素的排列</p>
+
+<p>把vis[]去掉即可, 因为vis的作用就是限制只能选一次的</p>
+
+<p>还有, 加上超范围跳出函数 <br>
+之前的程序不用加, 是因为之前所有的数都会排列, 全部vis置一之后就结束了</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">int</span> n, vis[<span class="hljs-number">10</span>] = {};
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span> &lt;<span class="hljs-keyword">int</span>&gt;</span> vec;
+
+<span class="hljs-keyword">void</span> dfs(<span class="hljs-keyword">int</span> t)
+{
+    <span class="hljs-keyword">if</span>(t == n + <span class="hljs-number">1</span>) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">"    %d"</span>, vec[i]);
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span>(vis[i]) <span class="hljs-keyword">continue</span>;
+        vis[i] = <span class="hljs-number">1</span>; vec.push_back(i);
+        dfs(t+<span class="hljs-number">1</span>);
+        vis[i] = <span class="hljs-number">0</span>; vec.pop_back();
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    dfs(<span class="hljs-number">1</span>);
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

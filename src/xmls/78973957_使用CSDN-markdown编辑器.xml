@@ -1,0 +1,260 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h1 id="欢迎使用markdown编辑器写博客">欢迎使用Markdown编辑器写博客</h1>
+
+<p>本Markdown编辑器使用<a href="https://github.com/benweet/stackedit" rel="nofollow" target="_blank">StackEdit</a>修改而来，用它写博客，将会带来全新的体验哦：</p>
+
+<ul>
+<li><strong>Markdown和扩展Markdown简洁的语法</strong></li>
+<li><strong>代码块高亮</strong></li>
+<li><strong>图片链接和图片上传</strong></li>
+<li><strong><em>LaTex</em>数学公式</strong></li>
+<li><strong>UML序列图和流程图</strong></li>
+<li><strong>离线写博客</strong></li>
+<li><strong>导入导出Markdown文件</strong></li>
+<li><strong>丰富的快捷键</strong></li>
+</ul>
+
+<hr>
+
+
+
+<h2 id="快捷键">快捷键</h2>
+
+<ul>
+<li>加粗    <code>Ctrl + B</code> </li>
+<li>斜体    <code>Ctrl + I</code> </li>
+<li>引用    <code>Ctrl + Q</code></li>
+<li>插入链接    <code>Ctrl + L</code></li>
+<li>插入代码    <code>Ctrl + K</code></li>
+<li>插入图片    <code>Ctrl + G</code></li>
+<li>提升标题    <code>Ctrl + H</code></li>
+<li>有序列表    <code>Ctrl + O</code></li>
+<li>无序列表    <code>Ctrl + U</code></li>
+<li>横线    <code>Ctrl + R</code></li>
+<li>撤销    <code>Ctrl + Z</code></li>
+<li>重做    <code>Ctrl + Y</code></li>
+</ul>
+
+
+
+<h2 id="markdown及扩展">Markdown及扩展</h2>
+
+<blockquote>
+  <p>Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档，然后转换成格式丰富的HTML页面。    —— <a href="https://zh.wikipedia.org/wiki/Markdown" rel="nofollow" target="_blank"> [ 维基百科 ]</a></p>
+</blockquote>
+
+<p>使用简单的符号标识不同的标题，将某些文字标记为<strong>粗体</strong>或者<em>斜体</em>，创建一个<a href="http://www.csdn.net" rel="nofollow" target="_blank">链接</a>等，详细语法参考帮助？。</p>
+
+<p>本编辑器支持 <strong>Markdown Extra</strong> , 　扩展了很多好用的功能。具体请参考<a href="https://github.com/jmcmanus/pagedown-extra" rel="nofollow" title="Pagedown Extra" target="_blank">Github</a>.  </p>
+
+
+
+<h3 id="表格">表格</h3>
+
+<p><strong>Markdown　Extra</strong>　表格语法：</p>
+
+<table>
+<thead>
+<tr>
+  <th>项目</th>
+  <th>价格</th>
+</tr>
+</thead>
+<tbody><tr>
+  <td>Computer</td>
+  <td>$1600</td>
+</tr>
+<tr>
+  <td>Phone</td>
+  <td>$12</td>
+</tr>
+<tr>
+  <td>Pipe</td>
+  <td>$1</td>
+</tr>
+</tbody></table>
+
+
+<p>可以使用冒号来定义对齐方式：</p>
+
+<table>
+<thead>
+<tr>
+  <th align="left">项目</th>
+  <th align="right">价格</th>
+  <th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+  <td align="left">Computer</td>
+  <td align="right">1600 元</td>
+  <td align="center">5</td>
+</tr>
+<tr>
+  <td align="left">Phone</td>
+  <td align="right">12 元</td>
+  <td align="center">12</td>
+</tr>
+<tr>
+  <td align="left">Pipe</td>
+  <td align="right">1 元</td>
+  <td align="center">234</td>
+</tr>
+</tbody></table>
+
+
+
+
+<h3 id="定义列表">定义列表</h3>
+
+<dl>
+<dt><strong>Markdown　Extra</strong>　定义列表语法：</dt>
+<dt>项目１</dt>
+<dt>项目２</dt>
+<dd>定义 A</dd>
+
+<dd>定义 B</dd>
+
+<dt>项目３</dt>
+<dd>定义 C</dd>
+
+<dd>
+<p>定义 D</p>
+
+<blockquote>
+  <p>定义D内容</p>
+</blockquote>
+</dd>
+</dl>
+
+
+
+<h3 id="代码块">代码块</h3>
+
+<p>代码块语法遵循标准markdown代码，例如：</p>
+
+
+
+<pre class="prettyprint"><code class="language-python hljs "><span class="hljs-decorator">@requires_authorization</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">somefunc</span><span class="hljs-params">(param1=<span class="hljs-string">''</span>, param2=<span class="hljs-number">0</span>)</span>:</span>
+    <span class="hljs-string">'''A docstring'''</span>
+    <span class="hljs-keyword">if</span> param1 &gt; param2: <span class="hljs-comment"># interesting</span>
+        <span class="hljs-keyword">print</span> <span class="hljs-string">'Greater'</span>
+    <span class="hljs-keyword">return</span> (param2 - param1 + <span class="hljs-number">1</span>) <span class="hljs-keyword">or</span> <span class="hljs-keyword">None</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SomeClass</span>:</span>
+    <span class="hljs-keyword">pass</span>
+<span class="hljs-prompt">&gt;&gt;&gt; </span>message = <span class="hljs-string">'''interpreter
+<span class="hljs-prompt">... </span>prompt'''</span></code></pre>
+
+
+
+<h3 id="脚注">脚注</h3>
+
+<p>生成一个脚注<a href="#fn:footnote" rel="nofollow" id="fnref:footnote" title="See footnote" class="footnote" target="_blank">1</a>.</p>
+
+
+
+<h3 id="目录">目录</h3>
+
+<p>用 <code>[TOC]</code>来生成目录：</p>
+
+<p><div class="toc">
+<ul>
+<li><a href="#欢迎使用markdown编辑器写博客" rel="nofollow" target="_blank">欢迎使用Markdown编辑器写博客</a><ul>
+<li><a href="#快捷键" rel="nofollow" target="_blank">快捷键</a></li>
+<li><a href="#markdown及扩展" rel="nofollow" target="_blank">Markdown及扩展</a><ul>
+<li><a href="#表格" rel="nofollow" target="_blank">表格</a></li>
+<li><a href="#定义列表" rel="nofollow" target="_blank">定义列表</a></li>
+<li><a href="#代码块" rel="nofollow" target="_blank">代码块</a></li>
+<li><a href="#脚注" rel="nofollow" target="_blank">脚注</a></li>
+<li><a href="#目录" rel="nofollow" target="_blank">目录</a></li>
+<li><a href="#数学公式" rel="nofollow" target="_blank">数学公式</a></li>
+<li><a href="#uml-图" rel="nofollow" target="_blank">UML 图</a></li>
+</ul>
+</li>
+<li><a href="#离线写博客" rel="nofollow" target="_blank">离线写博客</a></li>
+<li><a href="#浏览器兼容" rel="nofollow" target="_blank">浏览器兼容</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</p>
+
+
+
+<h3 id="数学公式">数学公式</h3>
+
+<p>使用MathJax渲染<em>LaTex</em> 数学公式，详见<a href="http://math.stackexchange.com/" rel="nofollow" target="_blank">math.stackexchange.com</a>.</p>
+
+<ul>
+<li>行内公式，数学公式为：<span class="MathJax_Preview"></span><span class="MathJax" id="MathJax-Element-1-Frame" role="textbox" aria-readonly="true" style=""><nobr><span class="math" id="MathJax-Span-1" style="width: 13.55em; display: inline-block;"><span style="display: inline-block; position: relative; width: 10.827em; height: 0px; font-size: 125%;"><span style="position: absolute; clip: rect(2.183em, 1000em, 3.503em, -0.455em); top: -3.093em; left: 0em;"><span class="mrow" id="MathJax-Span-2"><span class="mi" id="MathJax-Span-3" style="font-family: MathJax_Main;">Γ</span><span class="mo" id="MathJax-Span-4" style="font-family: MathJax_Main;">(</span><span class="mi" id="MathJax-Span-5" style="font-family: MathJax_Math; font-style: italic;">n</span><span class="mo" id="MathJax-Span-6" style="font-family: MathJax_Main;">)</span><span class="mo" id="MathJax-Span-7" style="font-family: MathJax_Main; padding-left: 0.278em;">=</span><span class="mo" id="MathJax-Span-8" style="font-family: MathJax_Main; padding-left: 0.278em;">(</span><span class="mi" id="MathJax-Span-9" style="font-family: MathJax_Math; font-style: italic;">n</span><span class="mo" id="MathJax-Span-10" style="font-family: MathJax_Main; padding-left: 0.222em;">−</span><span class="mn" id="MathJax-Span-11" style="font-family: MathJax_Main; padding-left: 0.222em;">1</span><span class="mo" id="MathJax-Span-12" style="font-family: MathJax_Main;">)</span><span class="mo" id="MathJax-Span-13" style="font-family: MathJax_Main;">!</span><span class="mspace" id="MathJax-Span-14" style="height: 0em; vertical-align: 0em; width: 1em; display: inline-block; overflow: hidden;"></span><span class="mi" id="MathJax-Span-15" style="font-family: MathJax_Main;">∀</span><span class="mi" id="MathJax-Span-16" style="font-family: MathJax_Math; font-style: italic;">n</span><span class="mo" id="MathJax-Span-17" style="font-family: MathJax_Main; padding-left: 0.278em;">∈</span><span class="texatom" id="MathJax-Span-18" style="padding-left: 0.278em;"><span class="mrow" id="MathJax-Span-19"><span class="mi" id="MathJax-Span-20" style="font-family: MathJax_AMS;">N</span></span></span></span><span style="display: inline-block; width: 0px; height: 3.093em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.383em; vertical-align: -0.379em;"></span></span></nobr></span><script type="math/tex" id="MathJax-Element-1">\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N</script>。</li>
+<li>块级公式：</li>
+</ul>
+
+
+
+<p><span class="MathJax_Preview"></span><div class="MathJax_Display" role="textbox" aria-readonly="true" style="text-align: center;"><span class="MathJax" id="MathJax-Element-2-Frame" style=""><nobr><span class="math" id="MathJax-Span-21" style="width: 11.617em; display: inline-block;"><span style="display: inline-block; position: relative; width: 9.28em; height: 0px; font-size: 125%;"><span style="position: absolute; clip: rect(0.886em, 1000em, 3.629em, -0.445em); top: -2.773em; left: 0em;"><span class="mrow" id="MathJax-Span-22"><span class="mi" id="MathJax-Span-23" style="font-family: MathJax_Math; font-style: italic;">x</span><span class="mo" id="MathJax-Span-24" style="font-family: MathJax_Main; padding-left: 0.278em;">=</span><span class="mstyle" id="MathJax-Span-25" style="padding-left: 0.278em;"><span class="mrow" id="MathJax-Span-26"><span class="mfrac" id="MathJax-Span-27"><span style="display: inline-block; position: relative; width: 7.16em; height: 0px; margin-right: 0.12em; margin-left: 0.12em;"><span style="position: absolute; clip: rect(1.563em, 1000em, 3.083em, -0.396em); top: -3.45em; left: 50%; margin-left: -3.52em;"><span class="mrow" id="MathJax-Span-28"><span class="mo" id="MathJax-Span-29" style="font-family: MathJax_Main;">−</span><span class="mi" id="MathJax-Span-30" style="font-family: MathJax_Math; font-style: italic;">b</span><span class="mo" id="MathJax-Span-31" style="font-family: MathJax_Main; padding-left: 0.222em;">±</span><span class="msqrt" id="MathJax-Span-32" style="padding-left: 0.222em;"><span style="display: inline-block; position: relative; width: 4.612em; height: 0px;"><span style="position: absolute; clip: rect(1.721em, 1000em, 2.944em, -0.44em); top: -2.773em; left: 1.013em;"><span class="mrow" id="MathJax-Span-33"><span class="msubsup" id="MathJax-Span-34"><span style="display: inline-block; position: relative; width: 0.875em; height: 0px;"><span style="position: absolute; clip: rect(1.759em, 1000em, 2.784em, -0.44em); top: -2.613em; left: 0em;"><span class="mi" id="MathJax-Span-35" style="font-family: MathJax_Math; font-style: italic;">b</span><span style="display: inline-block; width: 0px; height: 2.613em;"></span></span><span style="position: absolute; top: -2.928em; left: 0.427em;"><span class="mn" id="MathJax-Span-36" style="font-size: 70.7%; font-family: MathJax_Main;">2</span><span style="display: inline-block; width: 0px; height: 2.507em;"></span></span></span></span><span class="mo" id="MathJax-Span-37" style="font-family: MathJax_Main; padding-left: 0.222em;">−</span><span class="mn" id="MathJax-Span-38" style="font-family: MathJax_Main; padding-left: 0.222em;">4</span><span class="mi" id="MathJax-Span-39" style="font-family: MathJax_Math; font-style: italic;">a</span><span class="mi" id="MathJax-Span-40" style="font-family: MathJax_Math; font-style: italic;">c</span></span><span style="display: inline-block; width: 0px; height: 2.773em;"></span></span><span style="position: absolute; clip: rect(3.57em, 1000em, 4.03em, -0.48em); top: -4.78em; left: 1.013em;"><span style="display: inline-block; position: relative; width: 3.598em; height: 0px;"><span style="position: absolute; font-family: MathJax_Main; top: -4em; left: -0.084em;">−<span style="display: inline-block; width: 0px; height: 4em;"></span></span><span style="position: absolute; font-family: MathJax_Main; top: -4em; left: 2.904em;">−<span style="display: inline-block; width: 0px; height: 4em;"></span></span><span style="font-family: MathJax_Main; position: absolute; top: -4em; left: 0.393em;">−<span style="display: inline-block; width: 0px; height: 4em;"></span></span><span style="font-family: MathJax_Main; position: absolute; top: -4em; left: 0.895em;">−<span style="display: inline-block; width: 0px; height: 4em;"></span></span><span style="font-family: MathJax_Main; position: absolute; top: -4em; left: 1.398em;">−<span style="display: inline-block; width: 0px; height: 4em;"></span></span><span style="font-family: MathJax_Main; position: absolute; top: -4em; left: 1.9em;">−<span style="display: inline-block; width: 0px; height: 4em;"></span></span><span style="font-family: MathJax_Main; position: absolute; top: -4em; left: 2.402em;">−<span style="display: inline-block; width: 0px; height: 4em;"></span></span></span><span style="display: inline-block; width: 0px; height: 4em;"></span></span><span style="position: absolute; clip: rect(2.99em, 1000em, 4.51em, -0.369em); top: -4.2em; left: 0em;"><span style="font-family: MathJax_Size1;">√</span><span style="display: inline-block; width: 0px; height: 4em;"></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.773em;"></span></span><span style="position: absolute; clip: rect(1.947em, 1000em, 2.943em, -0.43em); top: -2.087em; left: 50%; margin-left: -0.507em;"><span class="mrow" id="MathJax-Span-41"><span class="mn" id="MathJax-Span-42" style="font-family: MathJax_Main;">2</span><span class="mi" id="MathJax-Span-43" style="font-family: MathJax_Math; font-style: italic;">a</span></span><span style="display: inline-block; width: 0px; height: 2.773em;"></span></span><span style="position: absolute; clip: rect(0.84em, 1000em, 1.227em, -0.48em); top: -1.287em; left: 0em;"><span style="border-left: 7.16em solid; display: inline-block; overflow: hidden; width: 0px; height: 1.25px; vertical-align: 0em;"></span><span style="display: inline-block; width: 0px; height: 1.067em;"></span></span></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.773em;"></span></span></span><span style="border-left: 0em solid; display: inline-block; overflow: hidden; width: 0px; height: 3.162em; vertical-align: -0.937em;"></span></span></nobr></span></div><script type="math/tex; mode=display" id="MathJax-Element-2">	x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a} </script></p>
+
+<p>更多LaTex语法请参考 <a href="http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference" rel="nofollow" target="_blank">这儿</a>.</p>
+
+
+
+<h3 id="uml-图">UML 图:</h3>
+
+<p>可以渲染序列图：</p>
+
+
+
+<div class="sequence-diagram"><svg height="248.91666793823242" version="1.1" width="460.2916622161865" xmlns="http://www.w3.org/2000/svg" style="overflow: hidden; position: relative; left: -0.0833283px; top: -0.0334473px;"><desc>Created with Raphaël 2.1.0</desc><defs><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block"></path><marker id="raphael-marker-endblock55" markerHeight="5" markerWidth="5" orient="auto" refX="2.5" refY="2.5"><use xlink:href="#raphael-marker-block" transform="rotate(180 2.5 2.5) scale(1,1)" stroke-width="1.0000" fill="#000" stroke="none"></use></marker></defs><rect x="10" y="20" width="50" height="35.333333015441895" r="0" rx="0" ry="0" fill="none" stroke="#000000" style="" stroke-width="2"></rect><rect x="20" y="30" width="30" height="15.333333015441895" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style=""></rect><text style="text-anchor: middle; font: normal normal normal normal 16px Andale Mono, monospace;" x="35" y="37.66666650772095" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.666666030883789">张三</tspan></text><rect x="10" y="193.58333492279053" width="50" height="35.333333015441895" r="0" rx="0" ry="0" fill="none" stroke="#000000" style="" stroke-width="2"></rect><rect x="20" y="203.5833282470703" width="30" height="15.333333015441895" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style=""></rect><text style="text-anchor: middle; font: normal normal normal normal 16px Andale Mono, monospace;" x="35" y="211.25000143051147" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.66666316986084">张三</tspan></text><path style="" fill="none" stroke="#000000" d="M35,55.333333015441895L35,193.58333492279053" stroke-width="2"></path><rect x="195.19165992736816" y="20" width="50.04999923706055" height="35.333333015441895" r="0" rx="0" ry="0" fill="none" stroke="#000000" style="" stroke-width="2"></rect><rect x="205.16665649414062" y="30" width="30.049999237060547" height="15.333333015441895" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style=""></rect><text style="text-anchor: middle; font: normal normal normal normal 16px Andale Mono, monospace;" x="220.21665954589844" y="37.66666650772095" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.666666030883789">李四</tspan></text><rect x="195.19165992736816" y="193.58333492279053" width="50.04999923706055" height="35.333333015441895" r="0" rx="0" ry="0" fill="none" stroke="#000000" style="" stroke-width="2"></rect><rect x="205.16665649414062" y="203.5833282470703" width="30.049999237060547" height="15.333333015441895" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style=""></rect><text style="text-anchor: middle; font: normal normal normal normal 16px Andale Mono, monospace;" x="220.21665954589844" y="211.25000143051147" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.66666316986084">李四</tspan></text><path style="" fill="none" stroke="#000000" d="M220.21665954589844,55.333333015441895L220.21665954589844,193.58333492279053" stroke-width="2"></path><rect x="46.6916618347168" y="72.29167175292969" width="161.8333282470703" height="16.08333396911621" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style=""></rect><text style="text-anchor: middle; font: normal normal normal normal 16px Andale Mono, monospace;" x="127.60832977294922" y="80.3333330154419" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.291666030883789">嘿，小四儿, 写博客了没?</tspan></text><path style="" fill="none" stroke="#000000" d="M35,91.4166669845581C35,91.4166669845581,185.64472659225794,91.4166669845581,215.21463874562107,91.4166669845581" stroke-width="2" marker-end="url(#raphael-marker-endblock55)" stroke-dasharray="0"></path><rect x="240.21665954589844" y="111.4166669845581" width="145.0500030517578" height="26.08333396911621" r="0" rx="0" ry="0" fill="none" stroke="#000000" style="" stroke-width="2"></rect><rect x="245.19166564941406" y="116.41667175292969" width="135.0500030517578" height="16.08333396911621" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style=""></rect><text style="text-anchor: middle; font: normal normal normal normal 16px Andale Mono, monospace;" x="312.74166107177734" y="124.45833396911621" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.2916669845581055">李四愣了一下，说：</tspan></text><rect x="44.891658782958984" y="154.4583282470703" width="165.21665954589844" height="16.08333396911621" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style=""></rect><text style="text-anchor: middle; font: normal normal normal normal 16px Andale Mono, monospace;" x="127.60832977294922" y="162.50000095367432" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.291662216186523">忙得吐血，哪有时间写。</tspan></text><path style="" fill="none" stroke="#000000" d="M220.21665954589844,173.58333492279053C220.21665954589844,173.58333492279053,69.5719329536405,173.58333492279053,40.002020800277364,173.58333492279053" stroke-width="2" marker-end="url(#raphael-marker-endblock55)" stroke-dasharray="6,2"></path></svg></div>
+
+<p>或者流程图：</p>
+
+
+
+<div class="flow-chart"><svg height="361.62499952316284" version="1.1" width="143.5" xmlns="http://www.w3.org/2000/svg" style="overflow: hidden; position: relative; left: -0.0833359px; top: -0.583252px;"><desc>Created with Raphaël 2.1.0</desc><defs><marker id="raphael-marker-endblock33" markerHeight="3" markerWidth="3" orient="auto" refX="1.5" refY="1.5"><use xlink:href="#raphael-marker-block" transform="rotate(180 1.5 1.5) scale(0.6,0.6)" stroke-width="1.6667" fill="black" stroke="none"></use></marker></defs><rect x="0" y="0" width="50.08333396911621" height="35.333333015441895" r="20" rx="20" ry="20" fill="#ffffff" stroke="#000000" style="" stroke-width="2" class="flowchart" id="st" transform="matrix(1,0,0,1,35.2083,14.4583)"></rect><text style="text-anchor: start; font: normal normal normal normal 14px sans-serif;" x="10" y="17.666666507720947" text-anchor="start" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" id="stt" class="flowchartt" font-size="14px" font-family="sans-serif" font-weight="normal" transform="matrix(1,0,0,1,35.2083,14.4583)"><tspan dy="5.666667938232422">开始</tspan></text><rect x="0" y="0" width="80.0999984741211" height="35.333333015441895" r="0" rx="0" ry="0" fill="#ffffff" stroke="#000000" style="" stroke-width="2" class="flowchart" id="op" transform="matrix(1,0,0,1,20.2,114.25)"></rect><text style="text-anchor: start; font: normal normal normal normal 14px sans-serif;" x="10" y="17.666666507720947" text-anchor="start" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" id="opt" class="flowchartt" font-size="14px" font-family="sans-serif" font-weight="normal" transform="matrix(1,0,0,1,20.2,114.25)"><tspan dy="5.666667938232422">我的操作</tspan></text><path style="font-family: sans-serif; font-weight: normal;" fill="#ffffff" stroke="#000000" d="M28.125,14.0625L0,28.125L56.25,56.25L112.5,28.125L56.25,0L0,28.125" stroke-width="2" font-family="sans-serif" font-weight="normal" id="cond" class="flowchart" transform="matrix(1,0,0,1,4,203.5833)"></path><text style="text-anchor: start; font: normal normal normal normal 14px sans-serif;" x="33.125" y="28.125" text-anchor="start" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" id="condt" class="flowchartt" font-size="14px" font-family="sans-serif" font-weight="normal" transform="matrix(1,0,0,1,4,203.5833)"><tspan dy="5.666667461395264">确认？</tspan><tspan dy="18" x="33.125"></tspan></text><rect x="0" y="0" width="50.316667556762695" height="35.333333015441895" r="20" rx="20" ry="20" fill="#ffffff" stroke="#000000" style="" stroke-width="2" class="flowchart" id="e" transform="matrix(1,0,0,1,35.0917,324.2917)"></rect><text style="text-anchor: start; font: normal normal normal normal 14px sans-serif;" x="10" y="17.666666507720947" text-anchor="start" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" id="et" class="flowchartt" font-size="14px" font-family="sans-serif" font-weight="normal" transform="matrix(1,0,0,1,35.0917,324.2917)"><tspan dy="5.666667938232422">结束</tspan></text><path style="font-family: sans-serif; font-weight: normal;" fill="none" stroke="#000000" d="M60.25,49.79166650772095C60.25,49.79166650772095,60.25,98.53856705725264,60.25,111.24894054038248" stroke-width="2" marker-end="url(#raphael-marker-endblock33)" font-family="sans-serif" font-weight="normal"></path><path style="font-family: sans-serif; font-weight: normal;" fill="none" stroke="#000000" d="M60.25,149.5833330154419C60.25,149.5833330154419,60.25,189.23743295669556,60.25,200.58377210004255" stroke-width="2" marker-end="url(#raphael-marker-endblock33)" font-family="sans-serif" font-weight="normal"></path><path style="font-family: sans-serif; font-weight: normal;" fill="none" stroke="#000000" d="M60.25,259.8333330154419C60.25,259.8333330154419,60.25,308.5802335649736,60.25,321.2906070481034" stroke-width="2" marker-end="url(#raphael-marker-endblock33)" font-family="sans-serif" font-weight="normal"></path><text style="text-anchor: start; font: normal normal normal normal 14px sans-serif;" x="65.25" y="269.8333330154419" text-anchor="start" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" font-size="14px" font-family="sans-serif" font-weight="normal"><tspan dy="4.524999618530273">yes</tspan></text><path style="font-family: sans-serif; font-weight: normal;" fill="none" stroke="#000000" d="M116.5,231.7083330154419C116.5,231.7083330154419,141.5,231.7083330154419,141.5,231.7083330154419C141.5,231.7083330154419,141.5,89.25,141.5,89.25C141.5,89.25,60.25,89.25,60.25,89.25C60.25,89.25,60.25,104.62344455718994,60.25,111.25924777425826" stroke-width="2" marker-end="url(#raphael-marker-endblock33)" font-family="sans-serif" font-weight="normal"></path><text style="text-anchor: start; font: normal normal normal normal 14px sans-serif;" x="121.5" y="221.7083330154419" text-anchor="start" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" font-size="14px" font-family="sans-serif" font-weight="normal"><tspan dy="5.666666507720947">no</tspan></text></svg></div>
+
+<ul>
+<li>关于 <strong>序列图</strong> 语法，参考 <a href="http://bramp.github.io/js-sequence-diagrams/" rel="nofollow" target="_blank">这儿</a>,</li>
+<li>关于 <strong>流程图</strong> 语法，参考 <a href="http://adrai.github.io/flowchart.js/" rel="nofollow" target="_blank">这儿</a>.</li>
+</ul>
+
+
+
+<h2 id="离线写博客">离线写博客</h2>
+
+<p>即使用户在没有网络的情况下，也可以通过本编辑器离线写博客（直接在曾经使用过的浏览器中输入<a href="http://write.blog.csdn.net/mdeditor" rel="nofollow" target="_blank">write.blog.csdn.net/mdeditor</a>即可。<strong>Markdown编辑器</strong>使用浏览器离线存储将内容保存在本地。</p>
+
+<p>用户写博客的过程中，内容实时保存在浏览器缓存中，在用户关闭浏览器或者其它异常情况下，内容不会丢失。用户再次打开浏览器时，会显示上次用户正在编辑的没有发表的内容。</p>
+
+<p>博客发表后，本地缓存将被删除。　</p>
+
+<p>用户可以选择 <i class="icon-disk"></i> 把正在写的博客保存到服务器草稿箱，即使换浏览器或者清除缓存，内容也不会丢失。</p>
+
+<blockquote>
+  <p><strong>注意：</strong>虽然浏览器存储大部分时候都比较可靠，但为了您的数据安全，在联网后，<strong>请务必及时发表或者保存到服务器草稿箱</strong>。</p>
+</blockquote>
+
+
+
+<h2 id="浏览器兼容">浏览器兼容</h2>
+
+<ol>
+<li>目前，本编辑器对Chrome浏览器支持最为完整。建议大家使用较新版本的Chrome。</li>
+<li>IE９以下不支持</li>
+<li>IE９，１０，１１存在以下问题 <br>
+<ol><li>不支持离线功能</li>
+<li>IE9不支持文件导入导出</li>
+<li>IE10不支持拖拽文件导入</li></ol></li>
+</ol>
+
+<hr>
+
+<div class="footnotes"><hr><ol><li id="fn:footnote">这里是 <strong>脚注</strong> 的 <em>内容</em>. <a href="#fnref:footnote" rel="nofollow" title="Return to article" class="reversefootnote" target="_blank">↩</a></li></ol></div>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

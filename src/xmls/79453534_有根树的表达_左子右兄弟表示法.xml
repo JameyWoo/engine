@@ -1,0 +1,99 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79453534				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>这是&lt;&lt;挑战程序设计竞赛2&gt;&gt;上的一节, 介绍了用<strong>左子右兄弟的方法存储一棵有根树.</strong></p>
+
+<p><strong>用递归的方法求出所有结点的深度</strong>, 复杂度为O(n)</p>
+
+<p>或者是<strong>单独求出一个结点的深度(递归或是循环)</strong></p>
+
+<p>以及<strong>如何遍历一个结点的所有子结点</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-preprocessor">#define MAX 1005</span>
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> p, l, r;
+} T[MAX];
+<span class="hljs-keyword">int</span> D[MAX], n;  <span class="hljs-comment">//数组D存储树所有节点的深度 </span>
+
+<span class="hljs-keyword">void</span> getDepth(<span class="hljs-keyword">int</span> u, <span class="hljs-keyword">int</span> d)  <span class="hljs-comment">//u代表结点编号，d代表结点深度 </span>
+{
+    D[u] = d;
+    <span class="hljs-keyword">if</span>(T[u].l != -<span class="hljs-number">1</span>) getDepth(T[u].l, d+<span class="hljs-number">1</span>);  <span class="hljs-comment">//是儿子就增加深度 </span>
+    <span class="hljs-keyword">if</span>(T[u].r != -<span class="hljs-number">1</span>) getDepth(T[u].r, d);  <span class="hljs-comment">//是兄弟就不增加深度 </span>
+} 
+
+<span class="hljs-keyword">void</span> buildTree()  <span class="hljs-comment">//建立一棵有根树 </span>
+{
+    <span class="hljs-keyword">int</span> x, y, k, t;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i)
+        T[i].p = T[i].l = T[i].r = -<span class="hljs-number">1</span>;   <span class="hljs-comment">//刚开始都是没有的,初始化为-1 </span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; k;  <span class="hljs-comment">//第x个结点，有k个儿子结点 </span>
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; k; ++j) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; y;
+            <span class="hljs-keyword">if</span>(j == <span class="hljs-number">0</span>) T[x].l = y;  <span class="hljs-comment">//第一个结点，存储为左子 </span>
+            <span class="hljs-keyword">else</span> T[t].r = y;  <span class="hljs-comment">//其余结点，存储为上一个结点的右兄弟 </span>
+            t = y; 
+            T[y].p = x;  <span class="hljs-comment">//所有节点都是x的儿子结点 </span>
+        }
+    } 
+    <span class="hljs-keyword">int</span> root = <span class="hljs-number">0</span>;  <span class="hljs-comment">//根节点编号 </span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i)
+        <span class="hljs-keyword">if</span>(T[i].p == -<span class="hljs-number">1</span>) root = i;
+    getDepth(root, <span class="hljs-number">0</span>);  <span class="hljs-comment">//得到深度数据 </span>
+}
+
+<span class="hljs-keyword">void</span> printSon(<span class="hljs-keyword">int</span> u)  <span class="hljs-comment">//输出儿子结点。从左子开始，迭代遍历其右兄弟 </span>
+{
+    <span class="hljs-keyword">if</span>(T[u].l != -<span class="hljs-number">1</span>) {
+        u = T[u].l;
+        <span class="hljs-built_in">cout</span> &lt;&lt; u;
+        <span class="hljs-keyword">while</span>(T[u].r != -<span class="hljs-number">1</span>) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">", "</span>&lt;&lt; T[u].r;
+            u = T[u].r;
+        }
+    }
+}
+
+<span class="hljs-keyword">void</span> printData()  <span class="hljs-comment">//输出数据 </span>
+{
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"node "</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">": parent = "</span> &lt;&lt; T[i].p &lt;&lt; <span class="hljs-string">", depth = "</span> &lt;&lt; D[i] &lt;&lt; <span class="hljs-string">", "</span>;
+        <span class="hljs-keyword">if</span>(T[i].p == -<span class="hljs-number">1</span>) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"root, ["</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(T[i].l == -<span class="hljs-number">1</span>) <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"leaf, ["</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"internal node, ["</span>;
+        printSon(i);
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">']'</span>;
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+} 
+
+<span class="hljs-keyword">int</span> oneDepth(<span class="hljs-keyword">int</span> u)  <span class="hljs-comment">//获得一个节点的深度 </span>
+{
+    <span class="hljs-keyword">if</span>(T[u].p != -<span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> oneDepth(T[u].p) + <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    buildTree();
+    printData();
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"结点5的深度为："</span> &lt;&lt; oneDepth(<span class="hljs-number">5</span>) &lt;&lt; endl; 
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"结点9的深度为："</span> &lt;&lt; oneDepth(<span class="hljs-number">9</span>) &lt;&lt; endl; 
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

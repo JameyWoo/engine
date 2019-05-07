@@ -1,0 +1,79 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/84190404				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h2><a id="_PCA_0"></a>一. 使用PCA(主成分分析)进行降维实现数据可视化</h2>
+<p><strong>降维</strong>的任务是要找到一个可以保留数据本质特征的低维矩阵来表示高维数据, 通常用于辅助数据可视化的工作.</p>
+<p>下面我们使用<strong>主成分分析(principal component analysis, PCA)方法</strong>, 这是一种<strong>快速线性降维技术</strong>. 模型返回两个主成分, 用二维数据表示鸢尾花的4维数据.</p>
+<h3><a id="1__6"></a>1. 首先导入数据</h3>
+<pre><code class="prism language-py"><span class="token keyword">import</span> seaborn <span class="token keyword">as</span> sns
+sns<span class="token punctuation">.</span><span class="token builtin">set</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+iris <span class="token operator">=</span> sns<span class="token punctuation">.</span>load_dataset<span class="token punctuation">(</span><span class="token string">'iris'</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>iris<span class="token punctuation">)</span> <span class="token comment"># 输出查看数据</span>
+</code></pre>
+<h3><a id="2___15"></a>2. 划分数据, 特征和标签</h3>
+<pre><code class="prism language-py">X_iris <span class="token operator">=</span> iris<span class="token punctuation">.</span>drop<span class="token punctuation">(</span><span class="token string">'species'</span><span class="token punctuation">,</span> axis<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+y_iris <span class="token operator">=</span> iris<span class="token punctuation">[</span><span class="token string">'species'</span><span class="token punctuation">]</span>
+</code></pre>
+<h3><a id="3_PCA__22"></a>3. 选择PCA模型, 进行拟合</h3>
+<pre><code class="prism language-py"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>decomposition <span class="token keyword">import</span> PCA
+model <span class="token operator">=</span> PCA<span class="token punctuation">(</span>n_components<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token comment"># 设置超参数, 初始化模型</span>
+model<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X_iris<span class="token punctuation">)</span> <span class="token comment"># 进行拟合</span>
+X_2D <span class="token operator">=</span> model<span class="token punctuation">.</span>transform<span class="token punctuation">(</span>X_iris<span class="token punctuation">)</span> <span class="token comment"># 将数据转化为二维</span>
+</code></pre>
+<h3><a id="4__31"></a>4. 图形可视化</h3>
+<p>思路是将二维数据插入到DataFrame中, 然后用seaborn的lmplot方法绘制图形.</p>
+<pre><code class="prism language-py">iris<span class="token punctuation">[</span><span class="token string">'PCA1'</span><span class="token punctuation">]</span> <span class="token operator">=</span> X_2D<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span>
+iris<span class="token punctuation">[</span><span class="token string">'PCA2'</span><span class="token punctuation">]</span> <span class="token operator">=</span> X_2D<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
+sns<span class="token punctuation">.</span>lmplot<span class="token punctuation">(</span><span class="token string">"PCA1"</span><span class="token punctuation">,</span> <span class="token string">"PCA2"</span><span class="token punctuation">,</span> hue<span class="token operator">=</span><span class="token string">'species'</span><span class="token punctuation">,</span> data<span class="token operator">=</span>iris<span class="token punctuation">,</span> fit_reg<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+</code></pre>
+<h3><a id="_40"></a>结果展示:</h3>
+<p>可以看到PCA降维成功地将鸢尾花的种类在视觉上进行划分.<br>
+<strong>原先的数据集是4维, 难以进行可视化, 降维后在2维上实现可视化.</strong><br>
+<img src="https://img-blog.csdnimg.cn/20181117170532581.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<hr>
+<h2><a id="__47"></a>二. 使用高斯混合模型对鸢尾花数据进行聚类</h2>
+<h3><a id="1__49"></a>1. 首先导入数据</h3>
+<pre><code class="prism language-py"><span class="token keyword">import</span> seaborn <span class="token keyword">as</span> sns
+sns<span class="token punctuation">.</span><span class="token builtin">set</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+iris <span class="token operator">=</span> sns<span class="token punctuation">.</span>load_dataset<span class="token punctuation">(</span><span class="token string">'iris'</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>iris<span class="token punctuation">)</span> <span class="token comment"># 输出查看数据</span>
+</code></pre>
+<h3><a id="2___58"></a>2. 划分数据, 特征和标签</h3>
+<pre><code class="prism language-py">X_iris <span class="token operator">=</span> iris<span class="token punctuation">.</span>drop<span class="token punctuation">(</span><span class="token string">'species'</span><span class="token punctuation">,</span> axis<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+y_iris <span class="token operator">=</span> iris<span class="token punctuation">[</span><span class="token string">'species'</span><span class="token punctuation">]</span>
+</code></pre>
+<h3><a id="3_2_65"></a>3. 使用主成分分析进行降维(为了可视化为2维数据)</h3>
+<pre><code class="prism language-py"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>decomposition <span class="token keyword">import</span> PCA
+model <span class="token operator">=</span> PCA<span class="token punctuation">(</span>n_components<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token comment"># 设置超参数, 初始化模型</span>
+model<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X_iris<span class="token punctuation">)</span> <span class="token comment"># 进行拟合</span>
+X_2D <span class="token operator">=</span> model<span class="token punctuation">.</span>transform<span class="token punctuation">(</span>X_iris<span class="token punctuation">)</span> <span class="token comment"># 将数据转化为二维</span>
+iris<span class="token punctuation">[</span><span class="token string">'PCA1'</span><span class="token punctuation">]</span> <span class="token operator">=</span> X_2D<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span>
+iris<span class="token punctuation">[</span><span class="token string">'PCA2'</span><span class="token punctuation">]</span> <span class="token operator">=</span> X_2D<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
+</code></pre>
+<h3><a id="4__76"></a>4. 选择高斯混合模型</h3>
+<pre><code class="prism language-py"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>mixture <span class="token keyword">import</span> GMM
+model <span class="token operator">=</span> GMM<span class="token punctuation">(</span>n_components<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">,</span> covariance_type<span class="token operator">=</span><span class="token string">'full'</span><span class="token punctuation">)</span> <span class="token comment"># 设置超参数</span>
+model<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X_iris<span class="token punctuation">)</span> <span class="token comment"># 拟合数据</span>
+y_gmm <span class="token operator">=</span> model<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>X_iris<span class="token punctuation">)</span> <span class="token comment"># 确定簇标签</span>
+</code></pre>
+<h3><a id="5__84"></a>5. 数据可视化</h3>
+<pre><code class="prism language-py">iris<span class="token punctuation">[</span><span class="token string">'cluster'</span><span class="token punctuation">]</span> <span class="token operator">=</span> y_gmm
+sns<span class="token punctuation">.</span>lmplot<span class="token punctuation">(</span><span class="token string">'PCA1'</span><span class="token punctuation">,</span> <span class="token string">'PCA2'</span><span class="token punctuation">,</span> data<span class="token operator">=</span>iris<span class="token punctuation">,</span> hue<span class="token operator">=</span><span class="token string">'species'</span><span class="token punctuation">,</span> col<span class="token operator">=</span><span class="token string">'cluster'</span><span class="token punctuation">,</span> fit_reg<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+</code></pre>
+<p>如图, 数据根据簇的不同被成三类.<br>
+<img src="https://img-blog.csdnimg.cn/20181117172625831.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>可以看到图一和图二的分类基本正确, 图三有少数的点是属于图二.</p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

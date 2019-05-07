@@ -1,0 +1,151 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/82622715				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<a><strong> 题目链接</strong></a>
+
+<div class="am-u-md-8 lg-right">
+<div class="lg-content-left">
+<div class="lg-article am-g">
+<h2 id="题目描述">题目描述</h2>
+<p>异或是一种神奇的运算,大部分人把它总结成不进位加法.</p>
+<p>在生活中…xor运算也很常见。比如，对于一个问题的回答，是为1，否为0.那么：</p>
+<p>（A是否是男生 ）xor（ B是否是男生）＝A和B是否能够成为情侣</p>
+<p>好了，现在我们来制造和处理一些复杂的情况。比如我们将给出一颗树，它很高兴自己有N个结点。树的每条边上有一个权值。我们要进行M次询问，对于每次询问，我们想知道某两点之间的路径上所有边权的异或值。</p>
+<h2 id="输入输出格式">输入输出格式</h2>
+<strong>输入格式：</strong><br>
+<p></p><p>输入文件第一行包含一个整数N，表示这颗开心的树拥有的结点数，以下有N-1行，描述这些边，每行有3个数，u,v,w,表示u和v之间有一条权值为w的边。接下来一行有一个整数M，表示询问数。之后的M行，每行两个数u,v，表示询问这两个点之间的路径上的权值异或值。</p>
+<strong>输出格式：</strong><br>
+<p></p><p>输出M行，每行一个整数，表示异或值</p>
+<h2 id="输入输出样例">输入输出样例</h2>
+<div class="am-g">
+<div class="am-u-md-6 copy-region">
+<strong>输入样例#1：</strong>
+<a class="am-badge am-radius lg-bg-orange sample-copy">复制</a>
+<pre>5
+1 4 9644
+2 5 15004
+3 1 14635
+5 3 9684
+3
+2 4
+5 4
+1 1
+</pre>
+</div>
+
+<div class="am-u-md-6 copy-region">
+<strong>输出样例#1：</strong>
+<a class="am-badge am-radius lg-bg-orange sample-copy">复制</a>
+<pre>975
+14675
+0
+</pre>
+</div>
+
+<p></p></div>
+
+<h2 id="说明">说明</h2>
+
+<p>对于40%的数据，有1 ≤ N，M ≤ 3000；</p>
+
+<p>对于100%的数据，有1 ≤ N ，M≤ 100000。</p>
+
+<p></p></div>
+
+<div class="lg-article-sub am-g" id="sub"></div>
+</div>
+
+<p></p></div> <br>
+
+
+<hr>
+
+<p>这道题看着很可怕，又是异或又是树什么的。鉴于异或的特殊性，我google了下异或是否有逆运算，了解了这些公式： <br>
+<strong> <br>
+<code>a ^ 0 = a</code> <br>
+<code>a ^ a = 0</code> <br>
+<code>a ^ b = c  -&gt;  a = b ^ c  -&gt;  b = a ^ c</code>  <br>
+</strong></p>
+
+<p>于是我就想，如果我们求的图形不是树，而是简单的链状结构，那么结合上面的公式，岂不是可以很简单地用<strong>前缀异或与差分的思想</strong>来解决？</p>
+
+<p>但这是树啊，于是我另辟蹊径。</p>
+
+<p>也许是树链剖分？也许要用LCA？然而我都不会。</p>
+
+<p>但是！解题的关键恰恰是看似把题目复杂化了的<code>xor</code>运算！此题的最简单解法就是用<strong>前缀异或与差分的思想</strong></p>
+
+<hr>
+
+<p><strong>异或运算<code>xor</code>满足交换律和结合律。</strong></p>
+
+<p>以任意结点为根节点，从该节点遍历其他结点，算出路径上边权的异或值。那么考虑这种一般情况，结点4和结点5有最近公共祖先（LCA）结点3，那么根节点1到4的异或值为X1,4, 1到5的异或值为X1,5, 1到3的异或值为X1,3，我们要求的是从结点4到5的异或值。</p>
+
+<p>有如下几个式子：</p>
+
+<p><strong> <br>
+<code>X1,3 ^ X3,4 = X1,4 -&gt; X3,4 = X1,3 ^ X1,4</code> <br>
+<code>X1,3 ^ X3,5 = X1,5 -&gt; X3,5 = X1,3 ^ X1,5</code> <br>
+<code>X4,5 = X3,4 ^ X3,5 = X1,3 ^ X1,4 ^ X1,3 ^ X1,5 = X1,4 ^ X1,5</code> <br>
+</strong></p>
+
+<p>于是，要求出从结点4到结点5的异或值，只要异或从根结点到结点4和结点5的异或值。</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> to, cost;
+    <span class="hljs-keyword">int</span> xo;
+    Node (<span class="hljs-keyword">int</span> t, <span class="hljs-keyword">int</span> c): to(t), cost(c) {}
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">100005</span>;
+<span class="hljs-keyword">int</span> n, m;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Node&gt;</span> G[maxn];
+<span class="hljs-keyword">int</span> xo[maxn] = {};
+<span class="hljs-keyword">bool</span> vis[maxn] = {};
+
+<span class="hljs-keyword">void</span> dfs(<span class="hljs-keyword">int</span> u)
+{
+    <span class="hljs-keyword">for</span> (size_t i = <span class="hljs-number">0</span>; i &lt; G[u].size(); ++i) {
+        <span class="hljs-keyword">int</span> to = G[u][i].to, c = G[u][i].cost;
+        <span class="hljs-keyword">if</span> (!vis[to]) {
+            xo[to] = xo[u] ^ c;
+            vis[to] = <span class="hljs-keyword">true</span>;
+            dfs(to);
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">int</span> u, v, c;
+        <span class="hljs-built_in">cin</span> &gt;&gt; u &gt;&gt; v &gt;&gt; c;
+        G[u].push_back(Node(v, c));
+        G[v].push_back(Node(u, c));
+    }
+    vis[<span class="hljs-number">1</span>] = <span class="hljs-keyword">true</span>;
+    dfs(<span class="hljs-number">1</span>);
+    <span class="hljs-built_in">cin</span> &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= m; ++i) {
+        <span class="hljs-keyword">int</span> x, y;
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y;
+        <span class="hljs-built_in">cout</span> &lt;&lt; (xo[x] ^ xo[y]) &lt;&lt; endl;
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

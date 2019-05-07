@@ -1,0 +1,253 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79049792				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>如果你觉得这篇博客对你有帮助, 请点个赞吧 : ) <br>
+高能预警: <strong>千万不要关注我 ! 千万不要关注我 ! 千万不要关注我 !</strong> <br>
+因为我的博客将会让你的代码能力迅速提升! 学到很多有用的语言知识, 技巧! 期末考试拿满分! ACM竞赛摘金夺银! CCF考试499+! BAT免试通过! 从此升职加薪, <strong>迎娶CEO, 出任白富美, 走上人生巅峰!</strong></p>
+
+<p>今天我突然想写一个可以控制电脑定时关机的exe小程序, 于是查了些资料, 写了一个简单的程序. C++初学者可以看一下. 代码不涉及算法, 但里面的几个小知识/技巧还是值得freshman学习学习的.</p>
+
+<p>提前声明, 此博客涉及的内容有: </p>
+
+<blockquote>
+  <p>简单的gdb调试程序 <br>
+  在命令行直接运行程序 <br>
+  几个简单命令行 <br>
+  C++代码执行命令行方式 <br>
+   字符串和数字之间的互相转换 <br>
+   取消C++ cin与stdin的同步, 挺高输入速度</p>
+</blockquote>
+
+<p>补充声明: 此博客没有真正的主题, 所以跑题是不存在的…</p>
+
+<p>先奉上程序运行截图 <br>
+<img src="https://img-blog.csdn.net/20180112233804898?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2poMjYyMjA3NTEyNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="关机" title=""></p>
+
+<p>如图所示, 此程序共有7个选项(0-6), 功能比较简单, 实现起来不难. 但不了解相关知识的同学要查阅各种资料.  <br>
+此博客可视为一个简单的合集.</p>
+
+<p>可以先看看总的代码</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;string&gt;</span>
+<span class="hljs-preprocessor">#include &lt;Windows.h&gt;</span>
+<span class="hljs-preprocessor">#include &lt;sstream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main( )
+{
+    <span class="hljs-keyword">int</span> n;
+    <span class="hljs-built_in">string</span> time = <span class="hljs-string">"shutdown -s -t "</span>, t;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"请选择一个选项:\n"</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"0 ) ---------------&gt;取消关机\n"</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"1 ) ---------------&gt; 立刻关机\n"</span>;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"2 ) ---------------&gt; 三分钟后关机\n"</span> ;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"3 ) ---------------&gt; 一小时后关机\n"</span>; 
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"4 ) ---------------&gt;指定时间后关机(单位为 s))\n"</span>; 
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"5 ) ---------------&gt;指定时间后关机(单位为 m))\n"</span>; 
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"6 ) ---------------&gt;指定时间后关机(单位为 h))\n"</span>; 
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">switch</span> (n) {
+        <span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:
+            WinExec(<span class="hljs-string">"shutdown -a"</span>, SW_HIDE);
+            <span class="hljs-keyword">break</span>; 
+        <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:
+            WinExec(<span class="hljs-string">"shutdown -p"</span>, SW_HIDE); 
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:
+            WinExec(<span class="hljs-string">"shutdown -s -t 180"</span>, SW_HIDE);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">3</span>:
+            WinExec(<span class="hljs-string">"shutdown -s -t 3600"</span>, SW_HIDE);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">4</span>:
+            <span class="hljs-built_in">cin</span> &gt;&gt; t;
+            time += t;
+            WinExec(time.c_str(), SW_HIDE);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-number">5</span>:
+            <span class="hljs-keyword">int</span> num;
+            <span class="hljs-built_in">cin</span> &gt;&gt; num;
+            num *= <span class="hljs-number">60</span>; 
+            <span class="hljs-built_in">stringstream</span> io;
+            io &lt;&lt; num;
+            io &gt;&gt; t;
+            time += t;
+            WinExec(time.c_str(), SW_HIDE);
+    }
+    WinExec(<span class="hljs-string">"pause"</span>, SW_HIDE);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>
+
+<p>代码结构很清晰, 7个选项分别代表switch的7个case.</p>
+
+<p>下面先介绍:</p>
+
+<blockquote>
+  <p><strong>简单的gdb调试程序</strong> <br>
+  gdb简介: gdb虽然只是一个文本界面的调试器,  但功能十分强大. 在Linux和Windows下的MinGW中, gcc和gdb都是最佳拍档.  <br>
+  它的使用方法很简单, 用gcc编译exe_name.exe 之后, 执行 gdb exe_name.exe即可, 如果要用gdb调试, 编译时应加上-g选项, 生成调试用的符号表.</p>
+</blockquote>
+
+<p>先声明: 此处介绍的gdb不是使用此程序所必须, 只是作为一个知识拓展.</p>
+
+<p>gdb exe_name.exe之后, 会出现(gdb) , 此为gdb的命令提示符, 接下来输入命令, 都是在gdb中进行的.  <br>
+我们可以输入命令 l (小写字母), 代表着list , gdb将会把源代码打印. <br>
+用户可能会发现无法在命令行中退出gdb, 这是就要用到一个q命令, 含义为quit.意为退出. <br>
+gdb有很多命令, 用户可以在(gdb)命令行下用help命令查看. <br>
+因博主也只是粗略了解, 在此处只简单提出gdb, 不做其他说明.</p>
+
+<blockquote>
+  <p><strong>在命令行直接运行exe文件</strong> <br>
+  windows的命令行提供了这样一种方式, 可以在命令行直接输入exe文件的名称, 运行文件.(需要注意的是, 如果是在绝对路径下进入cmd, 可以只输入可执行文件名字, 其他路径应指明相对路径)</p>
+</blockquote>
+
+<p>如我们定位到写好的关机程序(名为”关机”)所在的文件夹, 直接输入关机, 将会运行关机程序.</p>
+
+<p><img src="https://img-blog.csdn.net/20180113000653110?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2poMjYyMjA3NTEyNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="关机" title=""> <br>
+在这个例子中, 命令行运行程序并没有多少优势, 但结合其他命令或操作来使用, 可以做一些有趣的事情. 大家各自发挥想象.</p>
+
+<p>值得一提的是, 命令行可以重定向的方式运行程序, 即使用指定文件输入, 指定文件作为输出.</p>
+
+<blockquote>
+  <p><strong>关机.exe &lt; in.in &gt; out.out</strong></p>
+</blockquote>
+
+<p>乍一看, &lt; &gt; 将in.in包起来了, 其实&lt; 是和in.in相关的, &lt; 代表程序的输入从它右边的文件读入, &gt; 和out.out相关, 代表程序的输入输入到out.out文件当中.</p>
+
+<blockquote>
+  <p>关机 &lt; in.dat <br>
+  关机.exe &gt; out.txt</p>
+</blockquote>
+
+<p>值得注意的是: </p>
+
+<ul>
+<li>关机.exe 可以为关机, 即不指定后缀. 因为命令行首先会在文件夹中检索可执行文件. </li>
+<li>in.in和out.out只是两个存放数据的文件, <br>
+不是固定格式.</li>
+</ul>
+
+<p>那么, 这样左右什么好处呢? 好处多多, 当你要重复输入测试时, 我保证这样在命令行输入这样的命令进行测试一定比在exe小黑窗每次输入要方便, 而且B格更高.</p>
+
+<p>好了, 上面那么多好像都跟程序没什么关系, 那下面介绍跟程序相关的吧.</p>
+
+<blockquote>
+  <p>关机的几个命令: <br>
+  shutdown -p  //在命令行中输入这个命令计算机会立刻关闭, 没有任何提示 <br>
+  shutdown -s -t [argument]  //这个命令指定定时关机的时间, 从此时开始后的多久, 参数为以秒为单位的时间 <br>
+  如: shutdown -s -t 3600 设置为3600秒, 即1小时后关机 <br>
+  如: shutdown -s -t 60 设置为1分钟之后关机 <br>
+  shutdown -a  // 此命令取消之前的定时关机命令 <br>
+  值得一提的是: 执行这些命令系统都会有提示 <br>
+  更多命令可以在命令行输入shutdown查看, 或网上查阅资料.</p>
+</blockquote>
+
+<p>命令行是很有趣的东西, 熟练掌握后可以做好玩的事.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs asciidoc">include &lt;Windows.h&gt;
+<span class="hljs-bullet">.
+</span><span class="hljs-bullet">.
+</span><span class="hljs-bullet">.
+</span>WinExec("shutdown -p", SW<span class="hljs-emphasis">_HIDE);</span></code></pre>
+
+<p>WinExec函数将会执行第一个参数包含的命令, 它有两个参数, 读者可以到网上查找一下具体用法. <br>
+它包含在Windows.h头文件中</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs perl"><span class="hljs-keyword">system</span>(<span class="hljs-string">"pause"</span>);</code></pre>
+
+<p>system函数也是可以执行引号内的命令的. c语言中它包含在stdlib.h中, 所以c++中应包含在cstdlib中, 但Dev不包含cstdlib也可以编译通过, 测试知也包含在iostream中. <br>
+提示:system和WinExec功能类似, 但关机命令博主我在system中使用<strong>有时</strong>会出错, 而WinExec不会. 有时指的是可执行文件所在的文件位置, 具体原因不知. <br>
+介绍几个命令:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs livecodeserver"><span class="hljs-keyword">system</span>(<span class="hljs-string">"pause"</span>);<span class="hljs-comment"> //让程序暂停</span>
+<span class="hljs-keyword">system</span>(<span class="hljs-string">"cls"</span>);<span class="hljs-comment"> //清屏, 利用它可设计简单动画</span></code></pre>
+
+<p>以及</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs vala"><span class="hljs-preprocessor">#include &lt;Windows.h&gt;</span>
+.
+.
+.
+Sleep(<span class="hljs-number">1000</span>);
+<span class="hljs-keyword">int</span> n = <span class="hljs-number">1000</span>;
+Sleep( n );</code></pre>
+
+<p>Sleep(unsigned long); S是大写!  <br>
+包含Windows.h, W是大写! <br>
+Sleep的参数是以毫秒(ms) 为单位的unsigned long类型 <br>
+Sleep的作用是让程序睡眠一段时间, 其实就是暂停.</p>
+
+<p>可以这样执行命令:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cs"><span class="hljs-keyword">char</span> *s = <span class="hljs-string">"shutdown -p"</span>;
+system(s);
+WinExec(s, SW_HIDE); <span class="hljs-comment">//理解含义</span></code></pre>
+
+<p>WinExec的第一个参数一定要是字符数组, 那么C++中的string该如何用呢? <br>
+这就要用到一个string转char *的函数</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs scss">string s;
+<span class="hljs-function">system( s.<span class="hljs-function">c_str()</span> )</span>; <span class="hljs-comment">//s.c_str()就是string的char*形式</span>
+<span class="hljs-function">WinExec( s.<span class="hljs-function">c_str()</span>, SW_HIDE )</span>;</code></pre>
+
+<blockquote>
+  <p><strong>字符串和数字的相互转换</strong></p>
+</blockquote>
+
+<p>可以使用atoi()函数来将字符串转化为整型  <br>
+使用itoa()函数将整型转化为字符串. 网上有很多资料 <br>
+这里介绍字符串流的方式</p>
+
+<pre class="prettyprint"><code class=" hljs lua">include &lt;sstream&gt;
+.
+.
+.
+stringstream <span class="hljs-built_in">io</span>;
+int n = <span class="hljs-number">12</span>;
+<span class="hljs-built_in">string</span> s;
+<span class="hljs-built_in">io</span> &lt;&lt; n;
+<span class="hljs-built_in">io</span> &gt;&gt; s; //s就变成了<span class="hljs-string">"12"</span>
+
+<span class="hljs-built_in">string</span> str = <span class="hljs-string">"1234"</span>;
+int m;
+<span class="hljs-built_in">io</span> &lt;&lt; str;
+<span class="hljs-built_in">io</span> &gt;&gt; m; //m就变成了<span class="hljs-number">1234</span></code></pre>
+
+<p>在ACM竞赛中, 如果程序的输入量非常大的话, 普通的cin输入将会花掉很多时间, 所以很多选手用c的scanf输入, 但是, c++有没有提供解决方案呢? <br>
+有的 <br>
+我们要理解cin慢的原因, 那就是cin会和stdin同步, 导致速度变慢, 所以, 解决方案就是取消同步</p>
+
+<pre class="prettyprint"><code class=" hljs ruby"><span class="hljs-symbol">std:</span><span class="hljs-symbol">:ios</span><span class="hljs-symbol">:</span><span class="hljs-symbol">:sync_with_stdio</span>(<span class="hljs-keyword">false</span>);</code></pre>
+
+<p>这就取消了同步了.</p>
+
+<blockquote>
+  <p><strong>以上: 干货满满, 高程期末刚考完就来赶稿, 诸位看官还请在左边点个赞</strong></p>
+</blockquote>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

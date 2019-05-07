@@ -1,0 +1,160 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81225964				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><a href="https://www.luogu.org/problemnew/show/P1874" rel="nofollow">传送门</a></p>
+
+<blockquote>
+  <p>题目描述 <br>
+  给定一个数字字符串，用最小次数的加法让字符串等于一个给定的目标数字。每次加法就是在字符串的某个位置插入一个加号。在里面要的所有加号都插入后，就像做普通加法那样来求值。</p>
+  
+  <p>例如，考虑字符串“12”，做0次加法，我们得到数字12。如果插入1个加号，我们得到3，因此，这个例子中，最少用1次加法就得到数字3.</p>
+  
+  <p>再举一例，考虑字符串“303”和目标数字6，最佳方法不是“3+0+3”。而是“3+03”。能这样做是因为1个数的前导0不会改变它的大小。</p>
+  
+  <p>写一个程序来实现这个算法。</p>
+  
+  <p>输入输出格式 输入格式： 第1行：1个字符串s(1&lt;=s的长度&lt;=40);</p>
+  
+  <p>第2行：1个整数N(N&lt;=100000)。</p>
+  
+  <p>输出格式： 第1行：1个整数K，表示最少的加法次数让S等N。如果怎么做都不能让S等于N，则输出-1</p>
+  
+  <p>输入输出样例 输入样例#1: <br>
+  输出样例#1： <br>
+  4 </p>
+</blockquote>
+
+<p>最初印象: <strong>可能是暴力呀,组合虽然有这么多种情况, 但这道题的数据比较小∑C(40,i)(i:0-&gt;39), i从小到大遍历,哪种情况满足就可以直接跳出了. </strong></p>
+
+<p><strong>可是怎么找出组合呢?</strong> 找到了组合就可以StrToInt计算和了</p>
+
+<p><del>但是转念一看题目”快速求和”, 这种方法可不快速, 是否有更好的方法?(暂且不论)</del></p>
+
+<p><strong>找组合用dfs吧,累计加号的个数</strong></p>
+
+<p>我突然发现长度似乎有点长, 但是根据整数不大于十万, 所以长度是可以控制的,太长的可以直接跳过了 </p>
+
+<p>举个例子</p>
+
+<p>如字符串12345, 这里为了方便下标和数相同,实际上要区分的.</p>
+
+<p><strong>我们可以构造这样一个二维数组,元素Aij指的是字符串下标i-&gt;j的数, 如果这个数&gt;N(len &lt;= 6), 那么值为-1(不搜它)</strong></p>
+
+<p>so, 这个数组如下</p>
+
+<pre class="prettyprint"><code class=" hljs haml">1   12  123 1234 12345
+-<span class="ruby"><span class="hljs-number">1</span>  <span class="hljs-number">2</span>   <span class="hljs-number">23</span>  <span class="hljs-number">234</span>  <span class="hljs-number">2345</span>
+</span>-<span class="ruby"><span class="hljs-number">1</span>  -<span class="hljs-number">1</span>  <span class="hljs-number">3</span>   <span class="hljs-number">34</span>   <span class="hljs-number">345</span>
+</span>-<span class="ruby"><span class="hljs-number">1</span>  -<span class="hljs-number">1</span>  -<span class="hljs-number">1</span>  <span class="hljs-number">4</span>    <span class="hljs-number">45</span>
+</span>-<span class="ruby"><span class="hljs-number">1</span>  -<span class="hljs-number">1</span>  -<span class="hljs-number">1</span>  -<span class="hljs-number">1</span>   <span class="hljs-number">5</span> </span></code></pre>
+
+<p>构造出这样一个数组之后我们就可以进行dfs了, 不难发现<strong>从第一层开始, 找到一个数Ai,j, 那么下一个数要在j+1层里面去找,直到个数达到k(有两种情况)或者达不到k </strong></p>
+
+<p>答案呼之欲出. </p>
+
+<p>代码初稿没过, 直接输出-1.</p>
+
+<p>找到几个错误:</p>
+
+<ol>
+<li>if(~ans) 代表的是如果ans不为-1, 但是我需要的是如果ans为-1.</li>
+<li>cnt刚开始传进去是0而不应该是1. </li>
+<li>数组传递参数的时候传错了, i, j位置反了 </li>
+</ol>
+
+<p>结果90分, 还差10分是哪里出了问题? 可能是某个特殊情况吧.那就自己找几个特殊情况测试一下.</p>
+
+<p><strong>不用一个加号的.(没问题呀?) </strong> <br>
+<strong>不不不, 这个根据我之前的思路是有陷阱的. </strong></p>
+
+<p>一个区间长度可能很长, 但是前面<strong>可以有很多0</strong>, 那么这个应该算进去. </p>
+
+<p>AC了, 就是这样. 不过我的代码有点取巧的意味, 还没有修改完全正确, 不过不管了,思路就是这样了. </p>
+
+<p>完整代码</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> n, <span class="hljs-built_in">array</span>[<span class="hljs-number">41</span>][<span class="hljs-number">41</span>], len, ans = -<span class="hljs-number">1</span>;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> node;
+
+<span class="hljs-keyword">int</span> str_to_int(<span class="hljs-built_in">string</span> str, <span class="hljs-keyword">int</span> i, <span class="hljs-keyword">int</span> j)
+{
+    <span class="hljs-keyword">int</span> val = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = i; k &lt;= j; ++k)
+        val = val * <span class="hljs-number">10</span> + str[k] - <span class="hljs-string">'0'</span>;
+    <span class="hljs-keyword">return</span> val;
+}
+
+<span class="hljs-keyword">void</span> dfs(<span class="hljs-keyword">int</span> i, <span class="hljs-keyword">int</span> j, <span class="hljs-keyword">int</span> k, <span class="hljs-keyword">int</span> cnt, <span class="hljs-keyword">int</span> sum)
+{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">array</span>[i][j] == -<span class="hljs-number">1</span>) <span class="hljs-keyword">return</span>;
+    sum += <span class="hljs-built_in">array</span>[i][j];
+    <span class="hljs-keyword">if</span> (cnt == k) {
+        <span class="hljs-keyword">if</span> (sum == n &amp;&amp; j == len - <span class="hljs-number">1</span>) {
+            ans = cnt;
+            <span class="hljs-comment">/*for (int i = 0; i &lt; node.size(); ++i) {
+                cout &lt;&lt; node[i] &lt;&lt; ' ';
+            }
+            cout &lt;&lt; endl;*/</span>
+        }
+        <span class="hljs-keyword">return</span>;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> l = j + <span class="hljs-number">1</span>; l &lt; len; ++l) {
+        node.push_back(<span class="hljs-built_in">array</span>[j + <span class="hljs-number">1</span>][l]);
+        dfs(j + <span class="hljs-number">1</span>, l, k, cnt + <span class="hljs-number">1</span>, sum);
+        node.pop_back();
+    }
+} 
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">string</span> str;
+    <span class="hljs-built_in">cin</span> &gt;&gt; str &gt;&gt; n;
+    <span class="hljs-built_in">memset</span>(<span class="hljs-built_in">array</span>, -<span class="hljs-number">1</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-built_in">array</span>));
+    len = str.size();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; len; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; len; ++j) {
+            <span class="hljs-keyword">if</span> (j &lt; i) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">if</span> (j - i &gt;= <span class="hljs-number">9</span>) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-built_in">array</span>[i][j] = str_to_int(str, i, j);
+        }
+    }
+    <span class="hljs-comment">/*for (int i = 0; i &lt; len; ++i) {
+        for (int j = 0; j &lt; len; ++j) {
+            cout &lt;&lt; array[i][j] &lt;&lt; ' '; 
+        }
+        cout &lt;&lt; endl;
+    }*/</span>
+    <span class="hljs-keyword">if</span> (n == str_to_int(str, <span class="hljs-number">0</span>, len - <span class="hljs-number">1</span>)) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    } 
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">1</span>; k &lt; len; ++k) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; len; ++i) {
+            <span class="hljs-keyword">if</span> (!~ans) {
+                node.push_back(<span class="hljs-built_in">array</span>[<span class="hljs-number">0</span>][i]);
+                dfs(<span class="hljs-number">0</span>, i, k, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                node.pop_back();
+            }
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

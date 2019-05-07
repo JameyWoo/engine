@@ -1,0 +1,207 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/80990609				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>一.</p>
+
+<blockquote>
+  <p>试题编号： 201712-1 <br>
+  试题名称：   最小差值 <br>
+  时间限制：   1.0s <br>
+  内存限制：   256.0MB <br>
+  问题描述： <br>
+  问题描述 <br>
+  　　给定n个数，请找出其中相差（差的绝对值）最小的两个数，输出它们的差值的绝对值。 <br>
+  输入格式 <br>
+  　　输入第一行包含一个整数n。 <br>
+  　　第二行包含n个正整数，相邻整数之间使用一个空格分隔。 <br>
+  输出格式 <br>
+  　　输出一个整数，表示答案。 <br>
+  样例输入 <br>
+  5 <br>
+  1 5 4 8 20 <br>
+  样例输出 <br>
+  1 <br>
+  样例说明 <br>
+  　　相差最小的两个数是5和4，它们之间的差值是1。 <br>
+  样例输入 <br>
+  5 <br>
+  9 3 6 1 3 <br>
+  样例输出 <br>
+  0 <br>
+  样例说明 <br>
+  　　有两个相同的数3，它们之间的差值是0. <br>
+  数据规模和约定 <br>
+  　　对于所有评测用例，2 ≤ n ≤ 1000，每个给定的整数都是不超过10000的正整数。</p>
+</blockquote>
+
+<p>思路简单: 差值最小只能是大小相邻的两个数, 因此排序, 然后找出相邻差值最小. O(nlgn + n).</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cmath&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, x;
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> v;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x;
+        v.push_back(x);
+    }
+    sort(v.begin(), v.end());
+    <span class="hljs-keyword">int</span> m = <span class="hljs-number">10000000</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; (<span class="hljs-keyword">int</span>)v.size() - <span class="hljs-number">1</span>; ++i) {
+        m = min(m, <span class="hljs-built_in">abs</span>(v[i] - v[i+<span class="hljs-number">1</span>]));
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; m;
+}</code></pre>
+
+<p>二.</p>
+
+<blockquote>
+  <p>试题编号： 201712-2 <br>
+  试题名称：   游戏 <br>
+  时间限制：   1.0s <br>
+  内存限制：   256.0MB <br>
+  问题描述： <br>
+  问题描述 <br>
+  　　有n个小朋友围成一圈玩游戏，小朋友从1至n编号，2号小朋友坐在1号小朋友的顺时针方向，3号小朋友坐在2号小朋友的顺时针方向，……，1号小朋友坐在n号小朋友的顺时针方向。 <br>
+  　　游戏开始，从1号小朋友开始顺时针报数，接下来每个小朋友的报数是上一个小朋友报的数加1。若一个小朋友报的数为k的倍数或其末位数（即数的个位）为k，则该小朋友被淘汰出局，不再参加以后的报数。当游戏中只剩下一个小朋友时，该小朋友获胜。 <br>
+  　　例如，当n=5, k=2时： <br>
+  　　1号小朋友报数1； <br>
+  　　2号小朋友报数2淘汰； <br>
+  　　3号小朋友报数3； <br>
+  　　4号小朋友报数4淘汰； <br>
+  　　5号小朋友报数5； <br>
+  　　1号小朋友报数6淘汰； <br>
+  　　3号小朋友报数7； <br>
+  　　5号小朋友报数8淘汰； <br>
+  　　3号小朋友获胜。</p>
+  
+  <p>　给定n和k，请问最后获胜的小朋友编号为多少？ 输入格式 　　输入一行，包括两个整数n和k，意义如题目所述。 输出格式 <br>
+  　　输出一行，包含一个整数，表示获胜的小朋友编号。 样例输入 5 2 样例输出 3 样例输入 7 3 样例输出 4 数据规模和约定 <br>
+  　　对于所有评测用例，1 ≤ n ≤ 1000，1 ≤ k ≤ 9。</p>
+</blockquote>
+
+<p>我给出两种方法.</p>
+
+<p><strong>法一: 模拟链表, 还剩最后一个结点就是结果</strong> <br>
+<strong>法二: 使用vector, 当size = 1时, 剩下的值就是结果.</strong>其实内部还是用了链表. <br>
+<strong>法三: <a href="https://blog.csdn.net/qq_25973267/article/details/50405616" rel="nofollow">约瑟夫环也可以用数学方法解答</a></strong>, 不过此题并非标准约瑟夫环问题, 而是对条件进行了一些调整.</p>
+
+<p>代码量: 一 &gt; 二 &gt; 三</p>
+
+<p>法一代码:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs perl"><span class="hljs-comment">#include &lt;iostream&gt;</span>
+using namespace std;
+
+struct Node {
+    <span class="hljs-keyword">int</span> val;
+    Node <span class="hljs-variable">*last</span>, <span class="hljs-variable">*next</span>;
+};
+
+<span class="hljs-keyword">int</span> n, k;
+
+bool out(<span class="hljs-keyword">int</span> <span class="hljs-keyword">x</span>)
+{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">x</span> % k == <span class="hljs-number">0</span> || <span class="hljs-keyword">x</span> % <span class="hljs-number">10</span> == k) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    cin &gt;&gt; n &gt;&gt; k;
+    Node <span class="hljs-variable">*l1</span> = new Node;
+    l1-&gt;val = <span class="hljs-number">1</span>;
+    Node <span class="hljs-variable">*p</span> = l1;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">2</span>; i &lt;= n; ++i) {
+        Node <span class="hljs-variable">*tmp</span> = new Node;
+        tmp-&gt;val = i;
+        p-&gt;<span class="hljs-keyword">next</span> = tmp;
+        tmp-&gt;<span class="hljs-keyword">last</span> = p;
+        p = tmp;
+    }
+    p-&gt;<span class="hljs-keyword">next</span> = l1;
+    l1-&gt;<span class="hljs-keyword">last</span> = p;
+    Node <span class="hljs-variable">*b</span> = l1;
+    <span class="hljs-keyword">int</span> t = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">while</span> (b-&gt;<span class="hljs-keyword">next</span> != b) {
+        <span class="hljs-keyword">if</span> (out(t++)) {
+            Node <span class="hljs-variable">*tmp</span> = b-&gt;<span class="hljs-keyword">next</span>;
+            b-&gt;<span class="hljs-keyword">last</span>-&gt;<span class="hljs-keyword">next</span> = b-&gt;<span class="hljs-keyword">next</span>;
+            b-&gt;<span class="hljs-keyword">next</span>-&gt;<span class="hljs-keyword">last</span> = b-&gt;<span class="hljs-keyword">last</span>;
+            b = tmp;
+        }<span class="hljs-keyword">else</span> b = b-&gt;<span class="hljs-keyword">next</span>;
+    }
+    cout &lt;&lt; b-&gt;val;
+}</code></pre>
+
+<p>法二代码:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> n, k, t = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">bool</span> out(<span class="hljs-keyword">int</span> x)
+{
+    <span class="hljs-keyword">if</span> (x % k == <span class="hljs-number">0</span> || x % <span class="hljs-number">10</span> == k) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> v;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; k;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i)
+        v.push_back(i);
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span>::iterator it = v.begin();
+    <span class="hljs-keyword">while</span> (v.size() != <span class="hljs-number">1</span>) {
+        t++;
+        <span class="hljs-keyword">if</span> (out(t)) v.erase(it);
+        <span class="hljs-keyword">else</span> it++;
+        <span class="hljs-keyword">if</span> (it == v.end()) it = v.begin();
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; *it;
+}</code></pre>
+
+<p><strong>值得注意的是, erase函数删除某个结点之后, 迭代器自动指向这个结点的后一个结点.</strong></p>
+
+<p>法三代码:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, k, ans = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; k;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">2</span>; i &lt;= n; ++i)
+        ans = (ans + k) % i;
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans + <span class="hljs-number">1</span>;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

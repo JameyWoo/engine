@@ -1,0 +1,43 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/87895022				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>简单学习了一下git和github，发现其中的命令非常多，比较偏实际应用。而如果自己没有这样的应用场景会比较难理解。所以自己准备完成这样一个应用，从而练习一下简单地使用git&amp;github。</p>
+<p><strong>应用：想将本地的文件初始化为仓库并上传到github上。</strong></p>
+<hr>
+<h3><a id="github_7"></a>步骤一：在github网站上新建一个新的仓库</h3>
+<p><img src="https://img-blog.csdnimg.cn/20190223171036192.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3><a id="git_10"></a>步骤二、复制仓库的git链接，之后连接服务器有用</h3>
+<p>话说上传的方法github已经告诉我们了哈哈哈⬇<br>
+<img src="https://img-blog.csdnimg.cn/20190223171252642.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3><a id="git_bash_14"></a>步骤三、使用git bash进入到本地仓库并初始化</h3>
+<p>先使用<code>cd</code>命令转移到该文件夹，然后使用<code>git init</code>命令将文件夹初始化为仓库，使用<code>git status</code>查看仓库的状态。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190223171414896.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3><a id="readme_19"></a>步骤四、建立readme说明文档，并编辑</h3>
+<p>使用<code>touch readme.md</code>命令新建一个说明文档，然后使用<code>vi readme.md</code>进入编辑。</p>
+<p>在vim中，直接进入的模式是命令行模式，因此需要按 i 进入插入模式（即编辑模式）。</p>
+<p><a href="http://www.cnblogs.com/itech/archive/2009/04/17/1438439.html" rel="nofollow">vim的使用方法可以参照这篇博客</a><br>
+<img src="https://img-blog.csdnimg.cn/20190223172110420.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+然后<code>:q</code>退出编辑</p>
+<h3><a id="_29"></a>步骤五、添加文件，提交文件</h3>
+<p>使用<code>git add -A</code>添加文件夹所有的文件，然后使用<code>git commit -m "提交说明"</code><br>
+<img src="https://img-blog.csdnimg.cn/2019022317325483.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3><a id="_33"></a>步骤六、使用之前的链接连接远程库并提交仓库</h3>
+<p>使用<code>git remote add origin ‘git链接’</code>连接远程库。其中origin是仓库别名，可自定义，git链接是先前在github网站上复制的链接。</p>
+<p>然后使用<code>git push -u origin master</code>提交仓库</p>
+<p><img src="https://img-blog.csdnimg.cn/20190223173453386.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+回到网页上，发现服务器端已出现这些文件。<br>
+<img src="https://img-blog.csdnimg.cn/20190223173747248.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

@@ -1,0 +1,182 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/82532919				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>SPFA算法有两个小优化，虽然效率提升不多，但还是有的。</p>
+
+<p>如下四张图分别是朴素SPFA、SLF优化、LLL优化、SLF+LLL优化的在<a href="https://www.luogu.org/problemnew/show/P1359" rel="nofollow">洛谷P1359租用游艇</a>上的耗时情况。</p>
+
+<p><img src="https://img-blog.csdn.net/20180908201628709?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="SPFA" title=""> <br>
+<img src="https://img-blog.csdn.net/20180908201643224?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="SLF" title=""> <br>
+<img src="https://img-blog.csdn.net/20180908201653810?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="LLL" title=""> <br>
+<img src="https://img-blog.csdn.net/20180908201707982?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="SLF+LLL" title=""></p>
+
+<p>可以看到差别还是有的。</p>
+
+
+
+<h2 id="一slfsmall-label-first优化">一、SLF（Small Label First）优化。</h2>
+
+<p>他的思路很简单：<strong>原队列改为双端队列，对一个要加入队列的点u，如果dis[u] 小于队首元素v的dis[v]，那么就就加入到队首元素，否则加入到队尾。</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">205</span>;
+<span class="hljs-keyword">int</span> n, dis[maxn];
+<span class="hljs-keyword">int</span> G[maxn][maxn] = {};
+<span class="hljs-keyword">bool</span> inq[maxn] = {};
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">memset</span>(dis, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span>(dis));
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = i + <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; G[i][j];
+        }
+    }
+    <span class="hljs-stl_container"><span class="hljs-built_in">deque</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> Q;
+    Q.push_back(<span class="hljs-number">1</span>);
+    inq[<span class="hljs-number">1</span>] = <span class="hljs-keyword">true</span>;
+    dis[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (!Q.empty()) {
+        <span class="hljs-keyword">int</span> u = Q.front();
+        Q.pop_front();
+        inq[u] = <span class="hljs-keyword">false</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = u + <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+            <span class="hljs-keyword">if</span> (dis[i] &gt; dis[u] + G[u][i]) {
+                dis[i] = dis[u] + G[u][i];
+                <span class="hljs-keyword">if</span> (!inq[i]) {
+                    <span class="hljs-keyword">if</span> (dis[i] &lt;= dis[Q.front()]) Q.push_front(i);
+                    <span class="hljs-keyword">else</span> Q.push_back(i);
+                    inq[i] = <span class="hljs-keyword">true</span>;
+                }
+            }
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; dis[n];
+}</code></pre>
+
+
+
+<h2 id="二llllarge-label-last优化">二、LLL（Large Label Last）优化</h2>
+
+<p>它的策略是：<strong>对每个要出对的元素u，比较dis[u]和队列中dis的平均值，如果dis[u]更大，那么将它弹出放到队尾，取队首元素在进行重复判断，直至存在dis[x]小于平均值</strong></p>
+
+<pre class="prettyprint"><code class=" hljs perl"><span class="hljs-comment">#include &lt;iostream&gt;</span>
+<span class="hljs-comment">#include &lt;cstring&gt;</span>
+<span class="hljs-comment">#include &lt;queue&gt;</span>
+using namespace std;
+
+const <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">205</span>;
+<span class="hljs-keyword">int</span> n, dis[maxn], sum = <span class="hljs-number">0</span>, cnt = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">int</span> G[maxn][maxn] = {};
+bool in<span class="hljs-string">q[maxn]</span> = {};
+
+<span class="hljs-keyword">int</span> main()
+{
+    memset(dis, <span class="hljs-number">0x3f</span>, sizeof(dis));
+    cin &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = i + <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            cin &gt;&gt; G[i][j];
+        }
+    }
+    queue&lt;<span class="hljs-keyword">int</span>&gt; Q;
+    Q.<span class="hljs-keyword">push</span>(<span class="hljs-number">1</span>);
+    in<span class="hljs-string">q[1]</span> = true;
+    dis[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+    cnt = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">while</span> (!Q.empty()) {
+        <span class="hljs-keyword">int</span> u = Q.front();
+        <span class="hljs-keyword">while</span> (dis[u]<span class="hljs-variable">*cnt</span> &gt; sum) {
+            Q.<span class="hljs-keyword">pop</span>();
+            Q.<span class="hljs-keyword">push</span>(u);
+            u = Q.front();
+        }
+        Q.<span class="hljs-keyword">pop</span>();
+        cnt--;
+        sum -= dis[u];
+        in<span class="hljs-string">q[u]</span> = false;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = u + <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+            <span class="hljs-keyword">if</span> (dis[i] &gt; dis[u] + G[u][i]) {
+                dis[i] = dis[u] + G[u][i];
+                <span class="hljs-keyword">if</span> (!in<span class="hljs-string">q[i]</span>) {
+                    Q.<span class="hljs-keyword">push</span>(i);
+                    sum += dis[i];
+                    cnt++;
+                }
+            }
+        }
+    }
+    cout &lt;&lt; dis[n];
+}</code></pre>
+
+
+
+<h2 id="三slf-lll同时优化版">三、SLF + LLL同时优化版</h2>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">205</span>;
+<span class="hljs-keyword">int</span> n, dis[maxn], sum = <span class="hljs-number">0</span>, cnt = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">int</span> G[maxn][maxn] = {};
+<span class="hljs-keyword">bool</span> inq[maxn] = {};
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">memset</span>(dis, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span>(dis));
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = i + <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; G[i][j];
+        }
+    }
+    <span class="hljs-stl_container"><span class="hljs-built_in">deque</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> Q;
+    Q.push_back(<span class="hljs-number">1</span>);
+    inq[<span class="hljs-number">1</span>] = <span class="hljs-keyword">true</span>;
+    dis[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+    cnt = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">while</span> (!Q.empty()) {
+        <span class="hljs-keyword">int</span> u = Q.front();
+        <span class="hljs-keyword">while</span> (cnt*dis[u] &gt; sum) {
+            Q.pop_back();
+            Q.push_back(u);
+            u = Q.front();
+        }
+        Q.pop_front();
+        cnt--;
+        sum -= dis[u];
+        inq[u] = <span class="hljs-keyword">false</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = u + <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+            <span class="hljs-keyword">if</span> (dis[i] &gt; dis[u] + G[u][i]) {
+                dis[i] = dis[u] + G[u][i];
+                <span class="hljs-keyword">if</span> (!inq[i]) {
+                    <span class="hljs-keyword">if</span> (dis[i] &lt;= dis[Q.front()]) Q.push_front(i);
+                    <span class="hljs-keyword">else</span> Q.push_back(i);
+                    inq[i] = <span class="hljs-keyword">true</span>;
+                    sum += dis[i];
+                    cnt++;
+                }
+            }
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; dis[n];
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

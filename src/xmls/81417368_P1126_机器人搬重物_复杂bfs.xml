@@ -1,0 +1,108 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81417368				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>P1126 机器人搬重物 <a href="https://www.luogu.org/problemnew/show/P1126" rel="nofollow">传送门</a></p>
+
+<p>说实话这道题蛮复杂度, 需要注意的东西比较多.</p>
+
+<p>如</p>
+
+<ul>
+<li><strong>机器人是球形且有直径，它的中心是点而非方格. 所以可以选定一个方格作为机器人的位置</strong></li>
+<li><strong>一个障碍物直接占满一个格子，而同样因为机器人的直径问题，不能到这些格子的格点上去, 需要特殊判断</strong></li>
+<li><strong>在移动时机器人不能跨过障碍物，即遇到障碍物就必须停止。可用break直接实现.</strong></li>
+</ul>
+
+<p>对于一个坐标, <strong><em>可能有四个方向的情况, 所以vis数组用三维来表示.</em></strong></p>
+
+<p>机器人的旋转和方向是用num%4来表示的, num为0代表向南, 为1代表向东, 为2代表向北, 为3代表向西, <strong>那么只要我根据前一个状态的方向num, 调整num(+1或-1), 然后取模, 就可以得到现在的方向.</strong></p>
+
+<p>此题对条件的判断稍复杂, 需要非常细心. 索性第一次提交90分, 发现<strong>起点就是终点这种情况</strong>没有考虑进去. </p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-preprocessor">#define MP(x, y) make_pair(x, y)</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">typedef</span> pair&lt;<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>&gt; II;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">55</span>;
+<span class="hljs-keyword">int</span> n, m, sx, sy, ex, ey, num;
+<span class="hljs-keyword">int</span> mov[<span class="hljs-number">4</span>][<span class="hljs-number">2</span>] = {{<span class="hljs-number">1</span>, <span class="hljs-number">0</span>}, {<span class="hljs-number">0</span>, <span class="hljs-number">1</span>}, {-<span class="hljs-number">1</span>, <span class="hljs-number">0</span>}, {<span class="hljs-number">0</span>, -<span class="hljs-number">1</span>}};
+<span class="hljs-keyword">int</span> <span class="hljs-built_in">map</span>[maxn][maxn], vis[maxn][maxn][<span class="hljs-number">4</span>];
+<span class="hljs-keyword">char</span> start;
+
+<span class="hljs-keyword">bool</span> bfs()
+{
+    vis[sx][sy][num % <span class="hljs-number">4</span>] = <span class="hljs-number">0</span>;
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;pair&lt;II, <span class="hljs-keyword">int</span>&gt;</span> &gt; Q;
+    Q.push(make_pair(MP(sx, sy), num % <span class="hljs-number">4</span>));
+    <span class="hljs-keyword">while</span> (!Q.empty()) {
+        pair&lt;II, <span class="hljs-keyword">int</span>&gt; now = Q.front();
+        Q.pop();
+        <span class="hljs-keyword">int</span> x = now.first.first, y = now.first.second;
+        num = now.second;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>, u, v, w; i &lt;= <span class="hljs-number">3</span>; ++i) {
+            u = x + i * mov[num % <span class="hljs-number">4</span>][<span class="hljs-number">0</span>];
+            v = y + i * mov[num % <span class="hljs-number">4</span>][<span class="hljs-number">1</span>];
+            w = now.second;
+            <span class="hljs-keyword">if</span> (u &lt; <span class="hljs-number">1</span> || u &gt;= n || v &lt; <span class="hljs-number">1</span> || v &gt;= m || vis[u][v][w]) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">map</span>[u][v] || <span class="hljs-built_in">map</span>[u][v + <span class="hljs-number">1</span>] || <span class="hljs-built_in">map</span>[u + <span class="hljs-number">1</span>][v] || <span class="hljs-built_in">map</span>[u + <span class="hljs-number">1</span>][v + <span class="hljs-number">1</span>]) <span class="hljs-keyword">break</span>;
+            vis[u][v][w] = vis[x][y][w] + <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">if</span> (u == ex &amp;&amp; v == ey) <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+            Q.push(make_pair(MP(u, v), num % <span class="hljs-number">4</span>));
+        }
+        <span class="hljs-keyword">if</span> (!vis[x][y][(num + <span class="hljs-number">1</span>) % <span class="hljs-number">4</span>]) {
+            vis[x][y][(num + <span class="hljs-number">1</span>) % <span class="hljs-number">4</span>] = vis[x][y][num] + <span class="hljs-number">1</span>;
+            Q.push(make_pair(MP(x, y), (num + <span class="hljs-number">1</span>) % <span class="hljs-number">4</span>));
+        }
+        <span class="hljs-keyword">if</span> (num == <span class="hljs-number">0</span>) num = <span class="hljs-number">4</span>;
+        <span class="hljs-keyword">if</span> (!vis[x][y][(num - <span class="hljs-number">1</span>) % <span class="hljs-number">4</span>]) {
+            vis[x][y][(num - <span class="hljs-number">1</span>) % <span class="hljs-number">4</span>] = vis[x][y][num] + <span class="hljs-number">1</span>;
+            Q.push(make_pair(MP(x, y), (num - <span class="hljs-number">1</span>) % <span class="hljs-number">4</span>));
+        }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= m; ++j) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; <span class="hljs-built_in">map</span>[i][j];
+        }
+    }
+    <span class="hljs-built_in">cin</span> &gt;&gt; sx &gt;&gt; sy &gt;&gt; ex &gt;&gt; ey &gt;&gt; start;
+    <span class="hljs-keyword">if</span> (start == <span class="hljs-string">'S'</span>) num = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (start == <span class="hljs-string">'E'</span>) num = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (start == <span class="hljs-string">'N'</span>) num = <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (start == <span class="hljs-string">'W'</span>) num = <span class="hljs-number">3</span>;
+    <span class="hljs-built_in">memset</span>(vis, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(vis));
+    <span class="hljs-keyword">if</span> (sx == ex &amp;&amp; sy == ey) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    }
+    bfs();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; ++i) {
+        <span class="hljs-keyword">if</span> (vis[ex][ey][i]) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; vis[ex][ey][i];
+            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; -<span class="hljs-number">1</span>;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

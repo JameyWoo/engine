@@ -1,0 +1,68 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/84190203				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h3><a id="_0"></a>贝叶斯方法完整代码</h3>
+<pre><code class="prism language-py"><span class="token keyword">import</span> seaborn <span class="token keyword">as</span> sns  
+iris <span class="token operator">=</span> sns<span class="token punctuation">.</span>load_dataset<span class="token punctuation">(</span><span class="token string">'iris'</span><span class="token punctuation">)</span>
+
+X_iris <span class="token operator">=</span> iris<span class="token punctuation">.</span>drop<span class="token punctuation">(</span><span class="token string">'species'</span><span class="token punctuation">,</span> axis<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+y_iris <span class="token operator">=</span> iris<span class="token punctuation">[</span><span class="token string">'species'</span><span class="token punctuation">]</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>X_iris<span class="token punctuation">)</span>
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>cross_validation <span class="token keyword">import</span> train_test_split
+Xtrain<span class="token punctuation">,</span> Xtest<span class="token punctuation">,</span> ytrain<span class="token punctuation">,</span> ytest <span class="token operator">=</span> train_test_split<span class="token punctuation">(</span>X_iris<span class="token punctuation">,</span> y_iris<span class="token punctuation">,</span> random_state<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>naive_bayes <span class="token keyword">import</span> GaussianNB
+model <span class="token operator">=</span> GaussianNB<span class="token punctuation">(</span><span class="token punctuation">)</span>
+model<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>Xtrain<span class="token punctuation">,</span> ytrain<span class="token punctuation">)</span>
+y_model <span class="token operator">=</span> model<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>Xtest<span class="token punctuation">)</span>
+
+<span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>metrics <span class="token keyword">import</span> accuracy_score
+accuracy_score<span class="token punctuation">(</span>ytest<span class="token punctuation">,</span> y_model<span class="token punctuation">)</span>
+</code></pre>
+<hr>
+<h2><a id="_23"></a>步骤分析</h2>
+<h3><a id="_25"></a>一-首先获取数据.</h3>
+<p>这里我们在线导入seaborn库的iris(鸢尾花)数据</p>
+<pre><code class="prism language-python"><span class="token keyword">import</span> seaborn <span class="token keyword">as</span> sns
+iris <span class="token operator">=</span> sns<span class="token punctuation">.</span>load_dataset<span class="token punctuation">(</span><span class="token string">'iris'</span><span class="token punctuation">)</span>
+</code></pre>
+<p><a href="https://github.com/mwaskom/seaborn-data" rel="nofollow">这是github上的说明</a>, 可直接下载csv文件</p>
+<h3><a id="_35"></a>二-将数据格式化</h3>
+<pre><code class="prism language-py">X_iris <span class="token operator">=</span> iris<span class="token punctuation">.</span>drop<span class="token punctuation">(</span><span class="token string">'species'</span><span class="token punctuation">,</span> axis<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+y_iris <span class="token operator">=</span> iris<span class="token punctuation">[</span><span class="token string">'species'</span><span class="token punctuation">]</span>
+</code></pre>
+<p>将类别那一列删除生成新的对象赋值给X_iris, y_iris为分类.<br>
+<a href="https://blog.csdn.net/sinat_32547403/article/details/73822660" rel="nofollow">pandas的drop方法参考</a></p>
+<h3><a id="_44"></a>三-将数据切分为训练数据和测试数据</h3>
+<pre><code class="prism language-py"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>cross_validation <span class="token keyword">import</span> train_test_split
+Xtrain<span class="token punctuation">,</span> Xtest<span class="token punctuation">,</span> ytrain<span class="token punctuation">,</span> ytest <span class="token operator">=</span> train_test_split<span class="token punctuation">(</span>X_iris<span class="token punctuation">,</span> y_iris<span class="token punctuation">,</span> random_state<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+</code></pre>
+<p><code>cross validation</code>是<strong>交叉验证</strong>的意思, <a href="https://blog.csdn.net/CherDW/article/details/54881167" rel="nofollow">参考文章</a><br>
+参数<code>random_state</code>是固定的随机种子, <a href="http://sofasofa.io/forum_main_post.php?postid=1001204" rel="nofollow">参考文章</a></p>
+<h3><a id="_54"></a>四-调用高斯朴素贝叶斯实现训练</h3>
+<pre><code class="prism language-cpp">from sklearn<span class="token punctuation">.</span>naive_bayes import GaussianNB
+model <span class="token operator">=</span> <span class="token function">GaussianNB</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+model<span class="token punctuation">.</span><span class="token function">fit</span><span class="token punctuation">(</span>Xtrain<span class="token punctuation">,</span> ytrain<span class="token punctuation">)</span>
+y_model <span class="token operator">=</span> model<span class="token punctuation">.</span><span class="token function">predict</span><span class="token punctuation">(</span>Xtest<span class="token punctuation">)</span> # 进行预测
+</code></pre>
+<p>调用<code>Gaussian naive Bayes</code>模型, 并进行拟合, 预测</p>
+<h3><a id="_64"></a>五-对测试结果进行评估</h3>
+<p><a href="https://blog.csdn.net/CherDW/article/details/55813071" rel="nofollow">评估方法介绍</a></p>
+<pre><code class="prism language-py"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>metrics <span class="token keyword">import</span> accuracy_score
+accuracy_score<span class="token punctuation">(</span>ytest<span class="token punctuation">,</span> y_model<span class="token punctuation">)</span>
+</code></pre>
+<p>得到准确率为<code>0.9736842105263158</code><br>
+<code>metrics</code>是指标的意思.</p>
+<p>说明对特征明显的数据, 即使是非常简单的分类算法也可以高效地进行分析.</p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

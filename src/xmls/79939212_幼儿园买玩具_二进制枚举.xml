@@ -1,0 +1,87 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79939212				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><a href="https://www.jisuanke.com/minicourse/733/37632" rel="nofollow">.</a> <br>
+<strong>幼儿园买玩具</strong> <br>
+蒜厂幼儿园有 nn 个小朋友，每个小朋友都有自己想玩的玩具。身为幼儿园园长的你决定给幼儿园买一批玩具，由于经费有限，你只能买 mm 个玩具。已知玩具商店一共卖 kk 种玩具，编号为 1,2,3,…k1,2,3,…k，你让每个小朋友把想玩的玩具编号都写在了纸上。你希望满足尽可能多的小朋友的需求，请计算出最多同时能满足多少个小朋友的玩具需求。</p>
+
+<p>输入格式 <br>
+第一行，输入三个整数 n,m,k(1 \leq n \leq 100, 1 \leq m \leq k \leq 15)n,m,k(1≤n≤100,1≤m≤k≤15)，中间用空格分开。</p>
+
+<p>接下来 nn 行，第 i+1(0 \leq i &lt; n)i+1(0≤i &lt; n) 行的第一个数字 a_ia  <br>
+i <br>
+​     代表第 ii 个小朋友想玩的玩具数量，接下来有 a_ia  <br>
+i <br>
+​     个数字，代表这 a_ia  <br>
+i <br>
+​     个玩具的编号。</p>
+
+<p>输出格式 <br>
+输出一个整数，表示最多能满足多少小朋友的玩具需求。</p>
+
+<p>样例输入 <br>
+5 3 5 <br>
+2 1 4 <br>
+0 <br>
+2 3 1 <br>
+3 2 3 4 <br>
+2 4 5 <br>
+样例输出 <br>
+3</p>
+
+<p>比较简单的二进制枚举题目. 暴力枚举然后条件判断</p>
+
+<p><strong>Warning: 数组a一定要初始化 ! 初始化 ! 初始化 !</strong></p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;assert.h&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, m, k, a[<span class="hljs-number">105</span>][<span class="hljs-number">16</span>] = {}, b[<span class="hljs-number">105</span>] = {}, x, Max = -INF;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m &gt;&gt; k;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; b[i];
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; b[i]; ++j) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; x;
+            a[i][x] = <span class="hljs-number">1</span>;
+        }
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; (<span class="hljs-number">1</span> &lt;&lt; k); ++i) {
+        <span class="hljs-keyword">int</span> sum = <span class="hljs-number">0</span>, ans = <span class="hljs-number">0</span>;
+        <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> v;
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; k; ++j) {
+            <span class="hljs-keyword">if</span>(i &amp; (<span class="hljs-number">1</span> &lt;&lt; j)) {
+                v.push_back(j + <span class="hljs-number">1</span>);
+                sum++;
+            }
+        }
+        <span class="hljs-keyword">if</span>(sum != m) <span class="hljs-keyword">continue</span>;
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+            <span class="hljs-keyword">int</span> cnt = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; v.size(); ++j) {
+                <span class="hljs-keyword">if</span>(a[i][v[j]]) cnt++;
+            }
+            <span class="hljs-keyword">if</span>(cnt == b[i]) {
+                ans++;
+            }
+        }
+        Max = max(Max, ans);
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; Max;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

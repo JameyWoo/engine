@@ -1,0 +1,99 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79313600				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>nth_element()函数是STL中的一个函数, 在algorithm头文件中, 作用是<strong>给容器的第k个元素排序.</strong></p>
+
+<p>没错, 就是给一个元素排序, 可以到第k个元素是什么, 时间复杂度为O(n)</p>
+
+<p>函数模板</p>
+
+<blockquote>
+<pre><code>template&lt; class _RanIt&gt;  
+void nth_element(_RanIt _First, _RanIt _Nth, _RanIt _Last);  
+</code></pre>
+</blockquote>
+
+<p>也即是</p>
+
+<blockquote>
+  <p>nth_element(first, nth, last);</p>
+</blockquote>
+
+<p>普通使用方法</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs autohotkey">void nth()
+{
+    int <span class="hljs-literal">a</span>[<span class="hljs-number">7</span>] = {<span class="hljs-number">12</span>, -<span class="hljs-number">33</span>, <span class="hljs-number">78</span>, <span class="hljs-number">2</span>, <span class="hljs-number">776</span>, <span class="hljs-number">374</span>, -<span class="hljs-number">3</span>}<span class="hljs-comment">;</span>
+    nth_element(<span class="hljs-literal">a</span>, <span class="hljs-literal">a</span> + <span class="hljs-number">3</span>, <span class="hljs-literal">a</span>+<span class="hljs-number">7</span>)<span class="hljs-comment">; //中间的a + i为给a[i]排序</span>
+    cout &lt;&lt; <span class="hljs-literal">a</span>[<span class="hljs-number">3</span>]<span class="hljs-comment">;</span>
+}</code></pre>
+
+<p>如果想给整个容器排序的话, 依次给每个元素排序. 不推荐</p>
+
+<pre class="prettyprint"><code class=" hljs matlab">void nth()
+<span class="hljs-cell">{
+    int a[<span class="hljs-number">7</span>] = {<span class="hljs-number">12</span>, -<span class="hljs-number">33</span>, <span class="hljs-number">78</span>, <span class="hljs-number">2</span>, <span class="hljs-number">776</span>, <span class="hljs-number">374</span>, -<span class="hljs-number">3</span>}</span>;
+    <span class="hljs-keyword">for</span>(int <span class="hljs-built_in">i</span> = <span class="hljs-number">0</span>; <span class="hljs-built_in">i</span> &lt; <span class="hljs-number">7</span>; ++<span class="hljs-built_in">i</span>) <span class="hljs-cell">{
+        nth_element(a, a+i, a+<span class="hljs-number">7</span>);
+        cout &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }</span>
+}</code></pre>
+
+<p>看一段已排序序列的nth_element()</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> a[<span class="hljs-number">10</span>] = {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>};
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">10</span>; ++j) {
+        nth_element(a, a+j, a+<span class="hljs-number">10</span>);
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i)
+            <span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">' '</span>;
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl &lt;&lt; endl;
+    }
+}</code></pre>
+
+<p>希望从中可以找出排序规则, 但是显然找不出…</p>
+
+<p>百度了它的源码, 很复杂, 目前还看不懂…</p>
+
+<p><strong>默认的排序规则是升序, 但是规则是可以自定义的</strong></p>
+
+<p>同其他STL一样, 加个cmp函数</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-keyword">bool</span> cmp(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)
+{
+    <span class="hljs-keyword">return</span> a &gt; b;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> a[<span class="hljs-number">7</span>] = {<span class="hljs-number">12</span>, -<span class="hljs-number">33</span>, <span class="hljs-number">78</span>, <span class="hljs-number">2</span>, <span class="hljs-number">776</span>, <span class="hljs-number">374</span>, -<span class="hljs-number">3</span>};
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">7</span>; ++i) {
+        nth_element(a, a + i, a + <span class="hljs-number">7</span>, cmp);
+        <span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+}</code></pre>
+
+<p>因为时间复杂度只有O(n), 所以只要得到第k个元素时, 不必给整个容器排序, 效率较高</p>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

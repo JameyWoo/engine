@@ -1,0 +1,424 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81010714				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><div class="toc"><div class="toc">
+<ul>
+<li><ul>
+<li><ul>
+<li><a href="#dag最长路" rel="nofollow">DAG最长路</a></li>
+<li><a href="#dag最长路径" rel="nofollow">DAG最长路径</a></li>
+<li><a href="#以i为终点的最长路径" rel="nofollow">以i为终点的最长路径</a></li>
+<li><a href="#关键路径" rel="nofollow">关键路径</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</p>
+
+
+
+<h3 id="dag最长路">DAG最长路</h3>
+
+<p>DAG指的是<strong>有向无环图</strong>, 求它的最长路径有一种DP方法.</p>
+
+<p>我们建立一个数组dp[n+1], dp[i]代表从这个结点出发的最长路径, 那么要求出dp[i], <strong>我们只要求出从i出发的下一结点的dp[j], 使得dp[i] = max(dp[i], dp[j] + G[i][j]), 这就是它的状态转移方程.</strong></p>
+
+<p>可是dp[j] 怎么求呢? 同理,<strong>我们如果求出它的后一个结点的dp[k], 我们就可以相应求出dp[j]. </strong></p>
+
+<p>经过上面的分析, 不难发现, 整个的过程<strong>可以用递归实现</strong>. 当i结点的出度为0时, 我们就可以给出dp[i] = 0, 从而实现整个问题的求解.</p>
+
+<p>并且要注意的是, 只对一个节点进行递归求解是不行的, 因为有其他入度为0的结点将不会被考虑进去. <strong>我的理解是, 找出所有入度为0的结点i, 然后solve(i)即可.</strong></p>
+
+<p>完整代码如下</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-comment">//DAG最短路问题, 动态规划算法, 所有路径里面最长的 </span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">105</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;
+<span class="hljs-keyword">int</span> G[maxn][maxn] = {};
+<span class="hljs-keyword">int</span> dp[maxn] = {}, n, in[maxn] = {};  <span class="hljs-comment">// 作为结果的数组</span>
+
+<span class="hljs-keyword">int</span> solve(<span class="hljs-keyword">int</span> id)
+{
+    <span class="hljs-keyword">if</span> (dp[id] &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> dp[id];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (G[id][i] != INF) dp[id] = max(dp[id], solve(i) + G[id][i]);
+    }
+    <span class="hljs-keyword">return</span> dp[id];
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">memset</span>(G, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span>(G));
+    <span class="hljs-keyword">int</span> m, x, y, z;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y &gt;&gt; z;
+        G[x][y] = z;  <span class="hljs-comment">// 存好图 </span>
+        in[y]++;  <span class="hljs-comment">// 入度 </span>
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (in[i] == <span class="hljs-number">0</span>) solve(i);  <span class="hljs-comment">// 不必所有的, 只需找到入度为0 的结点. </span>
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">':'</span> &lt;&lt; dp[i] &lt;&lt; <span class="hljs-string">'\n'</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}
+<span class="hljs-comment">/*
+9 12
+1 3 2
+3 6 3
+6 8 2
+1 4 2
+4 6 3
+6 9 3
+2 4 3
+4 7 2
+2 5 2
+5 7 1
+7 9 2
+7 8 2
+
+9
+*/</span></code></pre>
+
+
+
+<h3 id="dag最长路径">DAG最长路径</h3>
+
+<p>上面的代码我们可以求得最长路径的值, 但是我们想要求解路径该怎么办呢? 只要稍微改动一点, 在dp的过程中存储下一个结点, 最后获取路径即可.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">105</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;
+<span class="hljs-keyword">int</span> G[maxn][maxn], n, choice[maxn] = {};
+<span class="hljs-keyword">int</span> dp[maxn] = {}, in[maxn] = {};
+
+<span class="hljs-keyword">int</span> solve(<span class="hljs-keyword">int</span> i)
+{
+    <span class="hljs-keyword">if</span> (dp[i]) <span class="hljs-keyword">return</span> dp[i];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+        <span class="hljs-keyword">if</span> (G[i][j] != INF) {
+            <span class="hljs-keyword">if</span> (dp[i] &lt; solve(j) + G[i][j]) {
+                dp[i] = solve(j) + G[i][j];
+                choice[i] = j;
+            }
+        }
+    }
+    <span class="hljs-keyword">return</span> dp[i];
+}
+
+<span class="hljs-keyword">void</span> getPath(<span class="hljs-keyword">int</span> k)
+{
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"DAG最长路 : "</span> &lt;&lt; dp[k] &lt;&lt; endl &lt;&lt; <span class="hljs-string">"路径为: "</span>; 
+    <span class="hljs-keyword">while</span> (k != <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; k &lt;&lt; <span class="hljs-string">" "</span>;
+        k = choice[k];
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">memset</span>(G, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span>(G));
+    <span class="hljs-keyword">int</span> m, x, y, z, it = -<span class="hljs-number">1</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y &gt;&gt; z;
+        in[y] ++;
+        G[x][y] = z;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (!in[i]) solve(i);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (dp[<span class="hljs-number">0</span>] &lt; dp[i]) {
+            it = i;
+            dp[<span class="hljs-number">0</span>] = dp[i];
+        }
+    }
+    getPath(it);
+}
+<span class="hljs-comment">/*
+9 12
+1 3 2
+3 6 3
+6 8 2
+1 4 2
+4 6 3
+6 9 3
+2 4 3
+4 7 2
+2 5 2
+5 7 1
+7 9 2
+7 8 2
+*/</span></code></pre>
+
+
+
+<h3 id="以i为终点的最长路径">以i为终点的最长路径</h3>
+
+<p>上面两个都是以i为出发点的最长路径, 如果是以i为结尾的最长路径呢? 其实也是差不多的.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">105</span>;
+<span class="hljs-keyword">int</span> G[maxn][maxn], n, last[maxn] = {};
+<span class="hljs-keyword">int</span> out[maxn] = {}, dp[maxn], vis[maxn] = {};
+
+<span class="hljs-keyword">int</span> solve(<span class="hljs-keyword">int</span> i)
+{
+    <span class="hljs-keyword">if</span> (vis[i]) <span class="hljs-keyword">return</span> dp[i];
+    vis[i] = <span class="hljs-keyword">true</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+        <span class="hljs-keyword">if</span> (G[j][i] != INF) {
+            <span class="hljs-keyword">if</span> (dp[i] &lt; G[j][i] + solve(j)) {
+                dp[i] = G[j][i] + solve(j);
+                last[i] = j;
+            }
+        }
+    }
+    <span class="hljs-keyword">return</span> dp[i];
+}
+
+<span class="hljs-keyword">void</span> getPath(<span class="hljs-keyword">int</span> k)
+{
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"DAG最长路长: "</span> &lt;&lt; dp[k] &lt;&lt; <span class="hljs-string">"\n路径: "</span>;
+    <span class="hljs-keyword">while</span> (k != <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; k &lt;&lt; <span class="hljs-string">' '</span>;
+        k = last[k];
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">memset</span>(G, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span>(G));
+    <span class="hljs-built_in">memset</span>(dp, <span class="hljs-number">0x3f</span>, <span class="hljs-keyword">sizeof</span>(dp));
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; maxn; ++i)
+        dp[i] = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">int</span> m, x, y, z, k = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y &gt;&gt; z;
+        G[x][y] = z;
+        out[y] ++;
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (out[i]) solve(i);
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span> (dp[i] &gt; dp[<span class="hljs-number">0</span>]) {
+            dp[<span class="hljs-number">0</span>] = dp[i];
+            k = i;
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"k = "</span> &lt;&lt; k &lt;&lt; endl;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">" : "</span> &lt;&lt; dp[i] &lt;&lt; endl;
+    }
+    getPath(k);
+}
+<span class="hljs-comment">/*
+9 12
+1 3 2
+3 6 3
+6 8 2
+1 4 2
+4 6 3
+6 9 3
+2 4 3
+4 7 2
+2 5 2
+5 7 1
+7 9 2
+7 8 2
+*/</span></code></pre>
+
+<h3 id="关键路径">关键路径</h3>
+
+<p>求DAG最长路也可以用关键路径的方法求解.</p>
+
+<p>其核心思路是:</p>
+
+<p><strong>有两组数组, 分别为ve[n], 节点的最早时间, vl[n]结点的最晚时间.</strong> <br>
+<strong>e[n], 边的最早时间, l[n], 边的最晚时间.</strong></p>
+
+<p>在实际应用中结点代表事件, 而边代表活动. 活动是需要时间的.</p>
+
+<p><strong>ve和e的关系是: e[i] = e[j], j为与i指向的下一个结点.</strong> <br>
+<strong>vl和l的关系是: l[i] = l[j] - w[i][j], j为i指向的下一个结点.</strong></p>
+
+<p><strong>当e[i] 和 v[i]相等, 那么i就是关键路径上的结点.</strong></p>
+
+<p>这种关键路径可以有很多条, 最后可以使用dfs遍历出来. 不过我写的代码这个过程不知道那里出错了…</p>
+
+<p>用这种关键路径的方法求最长路相比于动态规划方法比较麻烦. 不过其实求最长路的长度, 只是这个方法中的前一部分就可以求解了.</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;cstring&gt;</span>
+<span class="hljs-preprocessor">#include &lt;stack&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">struct</span> Node {
+    <span class="hljs-keyword">int</span> v, w; <span class="hljs-comment">// v means the next node, and w means the value of the edge</span>
+    Node (<span class="hljs-keyword">int</span> y, <span class="hljs-keyword">int</span> z) : v(y), w(z){}
+};
+
+<span class="hljs-comment">// how to initialize these arries?</span>
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">105</span>, INF = <span class="hljs-number">0x3f3f3f3f</span>;
+<span class="hljs-keyword">int</span> ve[maxn] = {}, vl[maxn], n;
+<span class="hljs-keyword">int</span> e[maxn], l[maxn], inDeg[maxn] = {};
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Node&gt;</span> G[maxn];
+<span class="hljs-stl_container"><span class="hljs-built_in">stack</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> topOrder; <span class="hljs-comment">// the opposite topology order of stack</span>
+<span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> topSort; <span class="hljs-comment">// the topology order of queue</span>
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;</span> path[maxn]; <span class="hljs-comment">// dfs the path </span>
+
+<span class="hljs-keyword">void</span> getVe()
+{
+    <span class="hljs-built_in">memset</span>(ve, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(ve)); <span class="hljs-comment">// initialize to zero</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) {
+        <span class="hljs-keyword">if</span> (inDeg[i] == <span class="hljs-number">0</span>) {
+            topSort.push(i);
+            topOrder.push(i);
+        }
+    }
+    <span class="hljs-keyword">while</span> (!topSort.empty()) {
+        <span class="hljs-keyword">int</span> d = topSort.front();
+        topSort.pop();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; G[d].size(); ++i) {
+            <span class="hljs-keyword">int</span> v = G[d][i].v;
+            ve[v] = max(ve[v], ve[d] + G[d][i].w);
+            <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"v = "</span> &lt;&lt; v &lt;&lt; <span class="hljs-string">"  ve[v] = "</span> &lt;&lt; ve[v] &lt;&lt; endl;
+            inDeg[v]--;
+            <span class="hljs-keyword">if</span> (inDeg[v] == <span class="hljs-number">0</span>) {
+                topSort.push(v);
+                topOrder.push(v);
+            }
+        }
+    }
+}
+
+<span class="hljs-keyword">void</span> getVl()
+{
+    <span class="hljs-keyword">while</span> (!topOrder.empty()) {
+        <span class="hljs-keyword">int</span> d = topOrder.top();
+        topOrder.pop();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; G[d].size(); ++i) {
+            <span class="hljs-keyword">int</span> v = G[d][i].v;
+            vl[d] = min(vl[d], vl[v] - G[d][i].w);
+        }
+    }
+}
+
+<span class="hljs-keyword">void</span> getImport() <span class="hljs-comment">// get critical path</span>
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; G[i].size(); ++j) {
+            <span class="hljs-keyword">int</span> v = G[i][j].v;
+            <span class="hljs-keyword">int</span> e = ve[i], l = vl[v] - G[i][j].w;
+            <span class="hljs-keyword">if</span> (e == l) path[i].push_back(v);
+        }
+    }
+}
+
+<span class="hljs-keyword">void</span> dfs(<span class="hljs-keyword">int</span> u)
+{
+    <span class="hljs-keyword">bool</span> flag = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; G[u].size(); ++i) {
+        <span class="hljs-comment">//if (u == 1) cout &lt;&lt; "u == 1\n";</span>
+        <span class="hljs-keyword">int</span> v = path[u][i];
+        flag = <span class="hljs-number">1</span>;
+        <span class="hljs-built_in">cout</span> &lt;&lt; u &lt;&lt; <span class="hljs-string">"---&gt;"</span>;
+        dfs(v);
+    }
+    <span class="hljs-keyword">if</span> (flag == <span class="hljs-number">0</span>) <span class="hljs-built_in">cout</span> &lt;&lt; u &lt;&lt; endl;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> x, y, z, m, ans = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y &gt;&gt; z;
+        G[x].push_back(Node(y, z)); <span class="hljs-comment">// save the graphic</span>
+        inDeg[y]++; <span class="hljs-comment">// in degrees </span>
+    }
+    getVe();
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"ve[1...n] = "</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        ans = max(ans, ve[i]);
+        <span class="hljs-built_in">cout</span> &lt;&lt; ve[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"最长路径为 "</span> &lt;&lt; ans &lt;&lt; endl; 
+    fill(vl, vl + n + <span class="hljs-number">1</span>, ans);
+    getVl();
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"vl[1...n] = "</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; vl[i] &lt;&lt; <span class="hljs-string">' '</span>;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    getImport();
+    <span class="hljs-comment">/*for (int i = 1; i &lt;= n; ++i) {
+        if (vl[i] == 0 &amp;&amp; ve[i] == 0) dfs(i);
+    }*/</span>
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"test: \n"</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"id = "</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">"  :  "</span>;
+        <span class="hljs-built_in">cout</span> &lt;&lt; path[i].size();
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+    dfs(<span class="hljs-number">1</span>); <span class="hljs-comment">// 不知道最后遍历关键路径图的过程中出了什么问题 </span>
+}
+<span class="hljs-comment">/*
+6 6
+1 2 30
+1 4 40
+2 3 50
+4 5 80
+5 6 20
+3 5 70
+
+6 6
+1 2 30
+1 4 70
+2 3 50
+4 5 80
+5 6 20
+3 5 70
+*/</span></code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

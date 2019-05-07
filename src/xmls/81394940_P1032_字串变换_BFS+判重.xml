@@ -1,0 +1,120 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81394940				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>P1032 字串变换 <a href="https://www.luogu.org/problemnew/show/P1032" rel="nofollow">传送门</a></p>
+
+<p>不描述题目了.</p>
+
+<p>应该说作为BFS题目还是不难的, 看着就有思路, 题目的数据也是比较小的了. </p>
+
+<p>思路就是: <strong>BFS+模拟匹配+去重</strong></p>
+
+<p>注意, 去重是万万不可少的, 不然程序可能会运行很长的时间, 而去重可以大大减少时间.</p>
+
+<p>还要注意不满足条件是<code>NO ANSWER!</code>, 这里有个感叹号.</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;queue&gt;</span>
+<span class="hljs-preprocessor">#include &lt;set&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-built_in">string</span>&gt;</span> see;
+
+<span class="hljs-built_in">string</span> change(<span class="hljs-built_in">string</span> now, pair&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">string</span>&gt; vs, <span class="hljs-keyword">int</span> start)
+{
+    <span class="hljs-built_in">string</span> pattern = vs.first, prod = vs.second;
+    <span class="hljs-keyword">int</span> i;
+    <span class="hljs-keyword">for</span> (i = start; i &lt; start + pattern.size(); ++i) {
+        <span class="hljs-keyword">if</span> (now[i] != pattern[i - start]) <span class="hljs-keyword">return</span> <span class="hljs-string">""</span>;
+    }
+    <span class="hljs-built_in">string</span> ret;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; start; ++j) {
+        ret += now[j];
+    }
+    ret += prod;
+    <span class="hljs-keyword">while</span> (i != now.size()) {
+        ret += now[i];
+        i++;
+    }
+    <span class="hljs-keyword">return</span> ret;
+}
+
+<span class="hljs-keyword">int</span> bfs(<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;pair&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">string</span>&gt;</span> &gt; vs, <span class="hljs-built_in">string</span> str1, <span class="hljs-built_in">string</span> str2)
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">queue</span>&lt;pair&lt;<span class="hljs-built_in">string</span>, <span class="hljs-keyword">int</span>&gt;</span> &gt; que;
+    que.push(make_pair(str1, <span class="hljs-number">0</span>));
+    <span class="hljs-keyword">while</span> (!que.empty()) {
+        <span class="hljs-built_in">string</span> now = que.front().first;
+        <span class="hljs-keyword">int</span> time = que.front().second;
+        <span class="hljs-comment">//cout &lt;&lt; "now = " &lt;&lt; now &lt;&lt; "  time = " &lt;&lt; time &lt;&lt; endl; </span>
+        <span class="hljs-keyword">if</span> (time &gt; <span class="hljs-number">10</span>) <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>; 
+        que.pop();
+        <span class="hljs-keyword">if</span> (now == str2) <span class="hljs-keyword">return</span> time;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; vs.size(); ++i) {
+            <span class="hljs-comment">//cout &lt;&lt; "i = " &lt;&lt; i &lt;&lt; "  vs[i].first = " &lt;&lt; vs[i].first &lt;&lt; endl; </span>
+            <span class="hljs-keyword">if</span> (now.size() &lt; vs[i].first.size()) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt;= now.size() - vs[i].first.size(); ++j) {
+                <span class="hljs-comment">/*if (j == 1 &amp;&amp; vs[i].first == "ud") {
+                    cout &lt;&lt; "匹配结果: " &lt;&lt; change(now, vs[i], j) &lt;&lt; endl; 
+                }*/</span>
+                <span class="hljs-built_in">string</span> next = change(now, vs[i], j);
+                <span class="hljs-keyword">if</span> (see.count(next)) <span class="hljs-keyword">continue</span>;
+                <span class="hljs-keyword">else</span> see.insert(next);
+                <span class="hljs-comment">//cout &lt;&lt; "next = " &lt;&lt; next &lt;&lt; endl;</span>
+                <span class="hljs-keyword">if</span> (next == <span class="hljs-string">""</span>) <span class="hljs-keyword">continue</span>;
+                que.push(make_pair(next, time + <span class="hljs-number">1</span>));
+                <span class="hljs-comment">//break;</span>
+                <span class="hljs-comment">//cout &lt;&lt; "push le " &lt;&lt; next &lt;&lt; endl;</span>
+            }
+        }
+    }
+    <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">string</span> str1, str2, s1, s2;
+    <span class="hljs-built_in">cin</span> &gt;&gt; str1 &gt;&gt; str2;
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;pair&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">string</span>&gt;</span> &gt; vs;
+    <span class="hljs-keyword">while</span>(<span class="hljs-built_in">cin</span> &gt;&gt; s1 &gt;&gt; s2) {
+        vs.push_back(make_pair(s1, s2));
+    }
+    <span class="hljs-keyword">int</span> ans = bfs(vs, str1, str2);
+    <span class="hljs-keyword">if</span> (~ans) <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"NO ANSWER!"</span>;
+}
+<span class="hljs-comment">/*
+abaaaba abcdaba
+a b
+b d
+d e
+e f
+f g
+g c // 8
+*/</span>
+<span class="hljs-comment">/*
+abcd xyz
+abc xu
+ud y
+y yz
+*/</span> 
+<span class="hljs-comment">/*
+BFS模拟遍历过程
+找到可匹配的字符串,加入队列当中
+不断匹配直到成功或次数达到限制
+有一个坑就是一个字符串可能有多个可以匹配的段. 
+*/</span> </code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

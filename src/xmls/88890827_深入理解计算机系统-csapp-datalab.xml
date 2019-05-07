@@ -1,0 +1,428 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/88890827				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>打广告打广告<br>
+<a href="https://fiveplus.top" rel="nofollow">个人博客</a></p>
+<p>同步发布于个人博客：<br>
+<a href="https://fiveplus.top/2019/03/29/csapp-datalab%E5%AE%9E%E9%AA%8C/#more" rel="nofollow">深入理解计算机系统-csapp-datalab</a></p>
+<hr>
+<p>csapp 的lab还是挺难的，虽然这只是第一个lab。。。</p>
+<p>有好多题自己都想不出来，借鉴了很多大神的思路，终于全都写完了。</p>
+<hr>
+<p>阅读LAB的readme文档，LAB给出了一些工具和用法</p>
+<p>1）dlc 工具：用来检查bits.c文件中各个函数是否有违法的符号。<br>
+<img src="https://img-blog.csdnimg.cn/20190329163223635.png" alt="在这里插入图片描述"></p>
+<p>2）使用btest来测试bits.c 的正确通过样例数，每次测试都需要使用make编译。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190329163235661.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>可以单独测试某一个函数是否正确<br>
+<img src="https://img-blog.csdnimg.cn/20190329163244828.png" alt="在这里插入图片描述"><br>
+或者全部的函数：<br>
+<img src="https://img-blog.csdnimg.cn/20190329163250567.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>3）还可以使用LAB提供的工具：ishow和fshow来查看一个数据。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190329163259443.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<hr>
+<p>以下是代码和注释</p>
+<pre><code class="prism language-cpp"><span class="token comment">/* 
+ * CS:APP Data Lab 
+ * 
+ * &lt;Please put your name and userid here&gt;
+ * 
+ * bits.c - Source file with your solutions to the Lab.
+ *          This is the file you will hand in to your instructor.
+ *
+ * WARNING: Do not include the &lt;stdio.h&gt; header; it confuses the dlc
+ * compiler. You can still use printf for debugging without including
+ * &lt;stdio.h&gt;, although you might get a compiler warning. In general,
+ * it's not good practice to ignore compiler warnings, but in this
+ * case it's OK.  
+ */</span>
+
+<span class="token macro property">#<span class="token directive keyword">if</span> 0</span>
+<span class="token comment">/*
+ * Instructions to Students:
+ *
+ * STEP 1: Read the following instructions carefully.
+ */</span>
+
+You will provide your solution to the Data Lab by
+editing the collection of functions in <span class="token keyword">this</span> source file<span class="token punctuation">.</span>
+
+INTEGER CODING RULES<span class="token operator">:</span>
+ 
+  Replace the <span class="token string">"return"</span> statement in each function with one
+  <span class="token operator">or</span> more lines of C code that implements the function<span class="token punctuation">.</span> Your code 
+  must conform to the following style<span class="token operator">:</span>
+ 
+  <span class="token keyword">int</span> <span class="token function">Funct</span><span class="token punctuation">(</span>arg1<span class="token punctuation">,</span> arg2<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">/* brief description of how your implementation works */</span>
+      <span class="token keyword">int</span> var1 <span class="token operator">=</span> Expr1<span class="token punctuation">;</span>
+      <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+      <span class="token keyword">int</span> varM <span class="token operator">=</span> ExprM<span class="token punctuation">;</span>
+
+      varJ <span class="token operator">=</span> ExprJ<span class="token punctuation">;</span>
+      <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+      varN <span class="token operator">=</span> ExprN<span class="token punctuation">;</span>
+      <span class="token keyword">return</span> ExprR<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  Each <span class="token string">"Expr"</span> is an expression <span class="token keyword">using</span> ONLY the following<span class="token operator">:</span>
+  <span class="token number">1.</span> Integer constants <span class="token number">0</span> through <span class="token number">255</span> <span class="token punctuation">(</span><span class="token number">0xFF</span><span class="token punctuation">)</span><span class="token punctuation">,</span> inclusive<span class="token punctuation">.</span> You are
+      <span class="token operator">not</span> allowed to use big constants such as <span class="token number">0xffffffff</span><span class="token punctuation">.</span>
+  <span class="token number">2.</span> Function arguments <span class="token operator">and</span> local variables <span class="token punctuation">(</span>no global variables<span class="token punctuation">)</span><span class="token punctuation">.</span>
+  <span class="token number">3.</span> Unary integer operations <span class="token operator">!</span> <span class="token operator">~</span>
+  <span class="token number">4.</span> Binary integer operations <span class="token operator">&amp;</span> <span class="token operator">^</span> <span class="token operator">|</span> <span class="token operator">+</span> <span class="token operator">&lt;&lt;</span> <span class="token operator">&gt;&gt;</span>
+    
+  Some of the problems restrict the set of allowed operators even further<span class="token punctuation">.</span>
+  Each <span class="token string">"Expr"</span> may consist of multiple operators<span class="token punctuation">.</span> You are <span class="token operator">not</span> restricted to
+  one <span class="token keyword">operator</span> per line<span class="token punctuation">.</span>
+
+  You are expressly forbidden to<span class="token operator">:</span>
+  <span class="token number">1.</span> Use any control constructs such as <span class="token keyword">if</span><span class="token punctuation">,</span> <span class="token keyword">do</span><span class="token punctuation">,</span> <span class="token keyword">while</span><span class="token punctuation">,</span> <span class="token keyword">for</span><span class="token punctuation">,</span> <span class="token keyword">switch</span><span class="token punctuation">,</span> etc<span class="token punctuation">.</span>
+  <span class="token number">2.</span> Define <span class="token operator">or</span> use any macros<span class="token punctuation">.</span>
+  <span class="token number">3.</span> Define any additional functions in <span class="token keyword">this</span> file<span class="token punctuation">.</span>
+  <span class="token number">4.</span> Call any functions<span class="token punctuation">.</span>
+  <span class="token number">5.</span> Use any other operations<span class="token punctuation">,</span> such as <span class="token operator">&amp;&amp;</span><span class="token punctuation">,</span> <span class="token operator">||</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token punctuation">,</span> <span class="token operator">or</span> <span class="token operator">?</span><span class="token operator">:</span>
+  <span class="token number">6.</span> Use any form of casting<span class="token punctuation">.</span>
+  <span class="token number">7.</span> Use any data type other than <span class="token keyword">int</span><span class="token punctuation">.</span>  This implies that you
+     cannot use arrays<span class="token punctuation">,</span> structs<span class="token punctuation">,</span> <span class="token operator">or</span> unions<span class="token punctuation">.</span>
+
+ 
+  You may assume that your machine<span class="token operator">:</span>
+  <span class="token number">1.</span> Uses <span class="token number">2</span>s complement<span class="token punctuation">,</span> <span class="token number">32</span><span class="token operator">-</span>bit representations of integers<span class="token punctuation">.</span>
+  <span class="token number">2.</span> Performs right shifts arithmetically<span class="token punctuation">.</span>
+  <span class="token number">3.</span> Has unpredictable behavior when shifting an integer by more
+     than the word size<span class="token punctuation">.</span>
+
+EXAMPLES OF ACCEPTABLE CODING STYLE<span class="token operator">:</span>
+  <span class="token comment">/*
+   * pow2plus1 - returns 2^x + 1, where 0 &lt;= x &lt;= 31
+   */</span>
+  <span class="token keyword">int</span> <span class="token function">pow2plus1</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+     <span class="token comment">/* exploit ability of shifts to compute powers of 2 */</span>
+     <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> x<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">/*
+   * pow2plus4 - returns 2^x + 4, where 0 &lt;= x &lt;= 31
+   */</span>
+  <span class="token keyword">int</span> <span class="token function">pow2plus4</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+     <span class="token comment">/* exploit ability of shifts to compute powers of 2 */</span>
+     <span class="token keyword">int</span> result <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     result <span class="token operator">+</span><span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
+     <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+FLOATING POINT CODING RULES
+
+For the problems that require you to implent floating<span class="token operator">-</span>point operations<span class="token punctuation">,</span>
+the coding rules are less strict<span class="token punctuation">.</span>  You are allowed to use looping <span class="token operator">and</span>
+conditional control<span class="token punctuation">.</span>  You are allowed to use both ints <span class="token operator">and</span> unsigneds<span class="token punctuation">.</span>
+You can use arbitrary integer <span class="token operator">and</span> <span class="token keyword">unsigned</span> constants<span class="token punctuation">.</span>
+
+You are expressly forbidden to<span class="token operator">:</span>
+  <span class="token number">1.</span> Define <span class="token operator">or</span> use any macros<span class="token punctuation">.</span>
+  <span class="token number">2.</span> Define any additional functions in <span class="token keyword">this</span> file<span class="token punctuation">.</span>
+  <span class="token number">3.</span> Call any functions<span class="token punctuation">.</span>
+  <span class="token number">4.</span> Use any form of casting<span class="token punctuation">.</span>
+  <span class="token number">5.</span> Use any data type other than <span class="token keyword">int</span> <span class="token operator">or</span> <span class="token keyword">unsigned</span><span class="token punctuation">.</span>  This means that you
+     cannot use arrays<span class="token punctuation">,</span> structs<span class="token punctuation">,</span> <span class="token operator">or</span> unions<span class="token punctuation">.</span>
+  <span class="token number">6.</span> Use any floating point data types<span class="token punctuation">,</span> operations<span class="token punctuation">,</span> <span class="token operator">or</span> constants<span class="token punctuation">.</span>
+
+
+NOTES<span class="token operator">:</span>
+  <span class="token number">1.</span> Use the dlc <span class="token punctuation">(</span>data lab checker<span class="token punctuation">)</span> compiler <span class="token punctuation">(</span>described in the handout<span class="token punctuation">)</span> to 
+     check the legality of your solutions<span class="token punctuation">.</span>
+  <span class="token number">2.</span> Each function has a maximum number of operators <span class="token punctuation">(</span><span class="token operator">!</span> <span class="token operator">~</span> <span class="token operator">&amp;</span> <span class="token operator">^</span> <span class="token operator">|</span> <span class="token operator">+</span> <span class="token operator">&lt;&lt;</span> <span class="token operator">&gt;&gt;</span><span class="token punctuation">)</span>
+     that you are allowed to use <span class="token keyword">for</span> your implementation of the function<span class="token punctuation">.</span> 
+     The max <span class="token keyword">operator</span> count is checked by dlc<span class="token punctuation">.</span> Note that <span class="token string">'='</span> is <span class="token operator">not</span> 
+     counted<span class="token punctuation">;</span> you may use as many of these as you want without penalty<span class="token punctuation">.</span>
+  <span class="token number">3.</span> Use the btest test harness to check your functions <span class="token keyword">for</span> correctness<span class="token punctuation">.</span>
+  <span class="token number">4.</span> Use the BDD checker to formally verify your functions
+  <span class="token number">5.</span> The maximum number of ops <span class="token keyword">for</span> each function is given in the
+     header comment <span class="token keyword">for</span> each function<span class="token punctuation">.</span> If there are any inconsistencies 
+     between the maximum ops in the writeup <span class="token operator">and</span> in <span class="token keyword">this</span> file<span class="token punctuation">,</span> consider
+     <span class="token keyword">this</span> file the authoritative source<span class="token punctuation">.</span>
+
+<span class="token comment">/*
+ * STEP 2: Modify the following functions according the coding rules.
+ * 
+ *   IMPORTANT. TO AVOID GRADING SURPRISES:
+ *   1. Use the dlc compiler to check that your solutions conform
+ *      to the coding rules.
+ *   2. Use the BDD checker to formally verify that your solutions produce 
+ *      the correct answers.
+ */</span>
+
+
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+<span class="token comment">/* 
+ * bitAnd - x&amp;y using only ~ and | 
+ *   Example: bitAnd(6, 5) = 4
+ *   Legal ops: ~ |
+ *   Max ops: 8
+ *   Rating: 1
+ */</span>
+<span class="token keyword">int</span> <span class="token function">bitAnd</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> y<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token operator">~</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token operator">~</span>x<span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span><span class="token operator">~</span>y<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/* 
+ * getByte - Extract byte n from word x
+ *   Bytes numbered from 0 (LSB) to 3 (MSB)
+ *   Examples: getByte(0x12345678,1) = 0x56
+ *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+ *   Max ops: 6
+ *   Rating: 2
+ */</span> 
+<span class="token keyword">int</span> <span class="token function">getByte</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+	<span class="token keyword">int</span> tmp <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>x <span class="token operator">&lt;&lt;</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">4</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token operator">~</span>n<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&gt;&gt;</span> <span class="token number">24</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	
+	<span class="token keyword">return</span> tmp<span class="token operator">&amp;</span><span class="token number">0x000000ff</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span>
+<span class="token comment">/*
+获取某个Byte，先左移使有效位到最左边，然后使其右移24位到最右边。将其移动到最左边的位数可通过n计算，由于不可以使用减号，通过使(3 - n = 3 + ~n + 1) &lt;&lt; 3的到左移的位数。
+*/</span>
+<span class="token comment">/* 
+ * logicalShift - shift x to the right by n, using a logical shift
+ *   Can assume that 0 &lt;= n &lt;= 31
+ *   Examples: logicalShift(0x87654321,4) = 0x08765432
+ *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+ *   Max ops: 20
+ *   Rating: 3 
+ */</span>
+<span class="token keyword">int</span> <span class="token function">logicalShift</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">int</span> t <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">0x1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">31</span><span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token operator">!</span>n<span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token number">31</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">return</span> <span class="token punctuation">(</span>x <span class="token operator">&gt;&gt;</span> n<span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token operator">~</span><span class="token punctuation">(</span>t <span class="token operator">&gt;&gt;</span> <span class="token punctuation">(</span>n <span class="token operator">+</span> <span class="token operator">~</span><span class="token number">1</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/*
+逻辑移位，右移补零，当负数时，应当消去前面的1，特殊情况时当n = 0的时候，会误消，因此需要特别注意。
+*/</span>
+<span class="token comment">/*
+ * bitCount - returns count of number of 1's in word
+ *   Examples: bitCount(5) = 2, bitCount(7) = 3
+ *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+ *   Max ops: 40
+ *   Rating: 4
+ */</span>
+<span class="token keyword">int</span> <span class="token function">bitCount</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// 使用二分法，从小到大依次获取2、4、8、16、32个01位中1的个数。 </span>
+    <span class="token keyword">int</span> bitcount<span class="token punctuation">;</span>
+    
+    <span class="token keyword">int</span> tmp1 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">0x55</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span><span class="token number">0x55</span><span class="token operator">&lt;&lt;</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> mask1 <span class="token operator">=</span> <span class="token punctuation">(</span>tmp1<span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span>tmp1<span class="token operator">&lt;&lt;</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//得到掩码： 01010101……01010101</span>
+    
+    <span class="token keyword">int</span> tmp2 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">0x33</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span><span class="token number">0x33</span><span class="token operator">&lt;&lt;</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> mask2 <span class="token operator">=</span> <span class="token punctuation">(</span>tmp2<span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span>tmp2<span class="token operator">&lt;&lt;</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//得到掩码： 00110011……00110011</span>
+    
+    <span class="token keyword">int</span> tmp3 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">0x0f</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span><span class="token number">0x0f</span><span class="token operator">&lt;&lt;</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> mask3 <span class="token operator">=</span> <span class="token punctuation">(</span>tmp3<span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span>tmp3<span class="token operator">&lt;&lt;</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//得到掩码： 00001111……00001111</span>
+    
+    <span class="token keyword">int</span> mask4 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">0xff</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span><span class="token number">0xff</span><span class="token operator">&lt;&lt;</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>          <span class="token comment">//得到掩码： 0000 0000 1111 1111 0000 0000 1111 1111</span>
+    
+    <span class="token keyword">int</span> mask5 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">0xff</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span><span class="token number">0xff</span><span class="token operator">&lt;&lt;</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">;</span>           <span class="token comment">//得到掩码： 0000 0000 0000 0000 1111 1111 1111 1111</span>
+    
+    bitcount <span class="token operator">=</span> <span class="token punctuation">(</span>x <span class="token operator">&amp;</span> mask1<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>x<span class="token operator">&gt;&gt;</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> mask1<span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token comment">//分别计算每组2位中，低位的1的个数；再移位求每组2位中，高位的1的个数，下面类似 </span>
+    bitcount <span class="token operator">=</span> <span class="token punctuation">(</span>bitcount <span class="token operator">&amp;</span> mask2<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>bitcount <span class="token operator">&gt;&gt;</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> mask2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    bitcount <span class="token operator">=</span> <span class="token punctuation">(</span>bitcount <span class="token operator">+</span> <span class="token punctuation">(</span>bitcount <span class="token operator">&gt;&gt;</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> mask3<span class="token punctuation">;</span>
+    bitcount <span class="token operator">=</span> <span class="token punctuation">(</span>bitcount <span class="token operator">+</span> <span class="token punctuation">(</span>bitcount <span class="token operator">&gt;&gt;</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> mask4<span class="token punctuation">;</span>
+    bitcount <span class="token operator">=</span> <span class="token punctuation">(</span>bitcount <span class="token operator">+</span> <span class="token punctuation">(</span>bitcount <span class="token operator">&gt;&gt;</span> <span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> mask5<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> bitcount<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/* 
+ * bang - Compute !x without using !
+ *   Examples: bang(3) = 0, bang(0) = 1
+ *   Legal ops: ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+ *   Max ops: 12
+ *   Rating: 4 
+ */</span>
+<span class="token keyword">int</span> <span class="token function">bang</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">int</span> t <span class="token operator">=</span> <span class="token operator">~</span>x <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+	<span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>t <span class="token operator">|</span> x<span class="token punctuation">)</span> <span class="token operator">&gt;&gt;</span> <span class="token number">31</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">//只有0取反+1后会变成0，然后或上x即0之后，右移31位还是0，+1后就得到了1. 而其它的任何数，由于一个数与其负数相或，结果一定是负数，因此右移31位后，一定是-1，+1后即变成了0.</span>
+<span class="token comment">/* 
+ * tmin - return minimum two's complement integer 
+ *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+ *   Max ops: 4
+ *   Rating: 1
+ */</span>
+<span class="token keyword">int</span> <span class="token function">tmin</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">31</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 返回最小的二进制数，将1直接左移31位，把最小的正就变成了最小的负数了。</span>
+<span class="token comment">/* 
+ * fitsBits - return 1 if x can be represented as an 
+ *  n-bit, two's complement integer.
+ *   1 &lt;= n &lt;= 32
+ *   Examples: fitsBits(5,3) = 0, fitsBits(-4,3) = 1
+ *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+ *   Max ops: 15
+ *   Rating: 2
+ */</span>
+<span class="token keyword">int</span> <span class="token function">fitsBits</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> n<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// x能否只用n位表示？ 左移32-n位再右移32-n位，然后和原数比较 </span>
+	<span class="token keyword">int</span> shift <span class="token operator">=</span> <span class="token number">32</span> <span class="token operator">+</span> <span class="token operator">~</span>n <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> t <span class="token operator">=</span> x <span class="token operator">&lt;&lt;</span> shift <span class="token operator">&gt;&gt;</span> shift<span class="token punctuation">;</span>
+	<span class="token keyword">return</span> <span class="token operator">!</span><span class="token punctuation">(</span>t <span class="token operator">^</span> x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// x能否只用低n位表示？ 左移32-n位再右移32-n位，然后使用异或操作和原数比较。</span>
+<span class="token comment">/* 
+ * divpwr2 - Compute x/(2^n), for 0 &lt;= n &lt;= 30
+ *  Round toward zero
+ *   Examples: divpwr2(15,1) = 7, divpwr2(-33,4) = -2
+ *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+ *   Max ops: 15
+ *   Rating: 2
+ */</span>
+
+<span class="token keyword">int</span> <span class="token function">divpwr2</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> n<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// 因为是有符号数（补码）的移位操作，所以，需要对符号位进行一下判断，防止出现-5/2 = -3的情况 </span>
+    <span class="token keyword">int</span> sign <span class="token operator">=</span> x <span class="token operator">&gt;&gt;</span> <span class="token number">31</span><span class="token punctuation">;</span> <span class="token comment">// 符号 </span>
+<span class="token comment">//    cout &lt;&lt; (1 &lt;&lt; n) + ~0 &lt;&lt; endl; </span>
+<span class="token comment">//    cout &lt;&lt; "(sign &amp; ((1 &lt;&lt; n) + ~0)) = " &lt;&lt; (sign &amp; ((1 &lt;&lt; n) + ~0)) &lt;&lt; endl;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>x <span class="token operator">+</span> <span class="token punctuation">(</span>sign <span class="token operator">&amp;</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> n<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token operator">~</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&gt;&gt;</span> n<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 如果是正数或者0，可以直接移位；如果是负数，为避免出现-5/2 = -3的情况（应该向0舍入），对符号进行一下判断，如果是负奇数，则加一然后移位，否则直接移位。</span>
+<span class="token comment">/* 
+ * negate - return -x 
+ *   Example: negate(1) = -1.
+ *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+ *   Max ops: 5
+ *   Rating: 2
+ */</span>
+<span class="token keyword">int</span> <span class="token function">negate</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token operator">~</span>x <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 求负数，先求反然后+1.</span>
+<span class="token comment">/* 
+ * isPositive - return 1 if x &gt; 0, return 0 otherwise 
+ *   Example: isPositive(-1) = 0.
+ *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+ *   Max ops: 8
+ *   Rating: 3
+ */</span>
+<span class="token keyword">int</span> <span class="token function">isPositive</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span><span class="token punctuation">(</span>x <span class="token operator">&gt;&gt;</span> <span class="token number">31</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token operator">!</span><span class="token operator">!</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 取符号位，同时判断是否为0</span>
+ <span class="token comment">// 还要小心正偶数，因为是判断最低位</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 取符号位，同时判断是否为0</span>
+<span class="token comment">/* 
+ * isLessOrEqual - if x &lt;= y  then return 1, else return 0 
+ *   Example: isLessOrEqual(4,5) = 1.
+ *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+ *   Max ops: 24
+ *   Rating: 3
+ */</span>
+
+<span class="token keyword">int</span> <span class="token function">isLessOrEqual</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> y<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// 小心溢出！分情况讨论</span>
+<span class="token keyword">int</span> xl <span class="token operator">=</span> <span class="token punctuation">(</span>x <span class="token operator">&gt;&gt;</span> <span class="token number">31</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> yl <span class="token operator">=</span> <span class="token punctuation">(</span>y <span class="token operator">&gt;&gt;</span> <span class="token number">31</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> zl <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>y <span class="token operator">+</span> <span class="token operator">~</span>x <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">&gt;&gt;</span> <span class="token number">31</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>xl <span class="token operator">^</span> yl<span class="token punctuation">)</span> <span class="token operator">&amp;</span> xl<span class="token punctuation">)</span> <span class="token operator">|</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>xl <span class="token operator">^</span> yl<span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token operator">!</span>zl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 小于或等于，不可以简单地调用isPositive来实现，因为相减时会溢出，需要分情况讨论。</span>
+<span class="token comment">// 首先取他们的符号位，判断是否是x&lt;0且y&gt;=0,如果是则直接返回1；否则如果同号，则判断y-x的符号，如果为0，说明x小于等于y；</span>
+
+<span class="token comment">/*
+ * ilog2 - return floor(log base 2 of x), where x &gt; 0
+ *   Example: ilog2(16) = 4
+ *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+ *   Max ops: 90
+ *   Rating: 4
+ */</span>
+<span class="token keyword">int</span> <span class="token function">ilog2</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// 二分法找最高位1，注意+的优先级比&lt;&lt;要高，括号要打清楚 </span>
+	<span class="token keyword">int</span> id<span class="token punctuation">;</span>
+	id <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token operator">!</span><span class="token punctuation">(</span>x <span class="token operator">&gt;&gt;</span> <span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token number">4</span><span class="token punctuation">;</span>
+	id <span class="token operator">=</span> id <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token operator">!</span><span class="token punctuation">(</span>x <span class="token operator">&gt;&gt;</span> <span class="token punctuation">(</span>id <span class="token operator">+</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	id <span class="token operator">=</span> id <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token operator">!</span><span class="token punctuation">(</span>x <span class="token operator">&gt;&gt;</span> <span class="token punctuation">(</span>id <span class="token operator">+</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	id <span class="token operator">=</span> id <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token operator">!</span><span class="token punctuation">(</span>x <span class="token operator">&gt;&gt;</span> <span class="token punctuation">(</span>id <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	id <span class="token operator">=</span> id <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token operator">!</span><span class="token punctuation">(</span>x <span class="token operator">&gt;&gt;</span> <span class="token punctuation">(</span>id <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">return</span> id<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 使用二分法求log2，log2n的结果就是最高位的1，那么这道题就是找这个最高位的1的位。首先找第16位为分界点，然后依次缩小范围，调整id，最后得到的id就是结果。注意+的优先级比&lt;&lt;要高，括号要打清楚 </span>
+<span class="token comment">/* 
+ * float_neg - Return bit-level equivalent of expression -f for
+ *   floating point argument f.
+ *   Both the argument and result are passed as unsigned int's, but
+ *   they are to be interpreted as the bit-level representations of
+ *   single-precision floating point values.
+ *   When argument is NaN, return argument.
+ *   Legal ops: Any integer/unsigned operations incl. ||, &amp;&amp;. also if, while
+ *   Max ops: 10
+ *   Rating: 2
+ */</span>
+<span class="token keyword">unsigned</span> <span class="token function">float_neg</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span> uf<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">unsigned</span> tmp <span class="token operator">=</span> <span class="token punctuation">(</span>uf <span class="token operator">&lt;&lt;</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>tmp <span class="token operator">&amp;</span> <span class="token number">0xFF000000</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0xFF000000</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>tmp <span class="token operator">!=</span> <span class="token number">0xFF000000</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> uf<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>uf <span class="token operator">+</span> <span class="token number">0x80000000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 1、首先判断是不是NAN，如果是，则直接返回NAN</span>
+<span class="token comment">// 2、如果不是，那么将其符号位取反之后返回。由于浮点数存储数据不是补码形式，所以只要给最高位（符号位）+1即可反转。或者使用以活操作。</span>
+
+<span class="token comment">/* 
+ * float_i2f - Return bit-level equivalent of expression (float) x
+ *   Result is returned as unsigned int, but
+ *   it is to be interpreted as the bit-level representation of a
+ *   single-precision floating point values.
+ *   Legal ops: Any integer/unsigned operations incl. ||, &amp;&amp;. also if, while
+ *   Max ops: 30
+ *   Rating: 4
+ */</span>
+<span class="token keyword">unsigned</span> <span class="token function">float_i2f</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// 符号位、指数位、尾数位分别获取，关键是舍入部分，向偶数舍入 </span>
+	<span class="token keyword">int</span> sign<span class="token punctuation">,</span> id<span class="token punctuation">,</span> shr<span class="token punctuation">,</span> mid<span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> tmp<span class="token punctuation">;</span> 
+	<span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+	sign <span class="token operator">=</span> x <span class="token operator">&amp;</span> <span class="token number">0x80000000</span><span class="token punctuation">;</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span>sign<span class="token punctuation">)</span> x <span class="token operator">=</span> <span class="token operator">-</span>x<span class="token punctuation">;</span>
+	id <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+	tmp <span class="token operator">=</span> x<span class="token punctuation">;</span>
+	<span class="token keyword">while</span> <span class="token punctuation">(</span>tmp<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		tmp <span class="token operator">&gt;&gt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+		id<span class="token operator">++</span><span class="token punctuation">;</span> <span class="token comment">// x = 5, id = 2, 获取最高位的1的位 </span>
+	<span class="token punctuation">}</span>
+	tmp <span class="token operator">=</span> x <span class="token operator">&lt;&lt;</span> <span class="token punctuation">(</span><span class="token number">32</span> <span class="token operator">-</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 23位尾数移到最左端 </span>
+	shr <span class="token operator">=</span> <span class="token punctuation">(</span>tmp <span class="token operator">&amp;</span> <span class="token number">0x1ff</span><span class="token punctuation">)</span> <span class="token operator">&gt;&gt;</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">// 判断舍入 </span>
+	tmp <span class="token operator">=</span> tmp <span class="token operator">&gt;&gt;</span> <span class="token number">9</span><span class="token punctuation">;</span> <span class="token comment">// 移到尾数位</span>
+	mid <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">127</span> <span class="token operator">+</span> id<span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token number">23</span><span class="token punctuation">;</span> <span class="token comment">// 指数位</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span>shr <span class="token operator">&gt;</span> <span class="token number">128</span> <span class="token operator">||</span> <span class="token punctuation">(</span>shr <span class="token operator">==</span> <span class="token number">128</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>tmp <span class="token operator">&amp;</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		tmp <span class="token operator">=</span> tmp <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">return</span> <span class="token punctuation">(</span>tmp <span class="token operator">+</span> mid <span class="token operator">+</span> sign<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/* 
+ * float_twice - Return bit-level equivalent of expression 2*f for
+ *   floating point argument f.
+ *   Both the argument and result are passed as unsigned int's, but
+ *   they are to be interfrpreted as the bit-level representation of
+ *   single-precision floating point values.
+ *   When argument is NaN, return argument
+ *   Legal ops: Any integer/unsigned operations incl. ||, &amp;&amp;. also if, while
+ *   Max ops: 30
+ *   Rating: 4
+ */</span>
+<span class="token keyword">unsigned</span> <span class="token function">float_twice</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span> uf<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">int</span> s <span class="token operator">=</span> uf <span class="token operator">&amp;</span> <span class="token number">0x80000000</span><span class="token punctuation">;</span>
+  <span class="token keyword">int</span> e <span class="token operator">=</span> uf <span class="token operator">&amp;</span> <span class="token number">0x7f800000</span><span class="token punctuation">;</span>
+  <span class="token keyword">int</span> m <span class="token operator">=</span> uf <span class="token operator">&amp;</span> <span class="token number">0x007fffff</span><span class="token punctuation">;</span>
+  <span class="token keyword">int</span> ans <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>e <span class="token operator">==</span> <span class="token number">0x7f800000</span><span class="token punctuation">)</span> <span class="token keyword">return</span> uf<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>e <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> ans <span class="token operator">=</span> s <span class="token operator">+</span> <span class="token punctuation">(</span>m <span class="token operator">&lt;&lt;</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">else</span>  ans <span class="token operator">=</span> s <span class="token operator">+</span> e <span class="token operator">+</span> <span class="token number">0x00800000</span> <span class="token operator">+</span> m<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> ans<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 分别获取符号位、指数位、M位，然后分情况讨论。</span>
+</code></pre>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

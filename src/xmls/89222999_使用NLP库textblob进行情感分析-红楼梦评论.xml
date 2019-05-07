@@ -1,0 +1,83 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/89222999				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>最近做了一个分析国外读者对红楼梦评价的小项目。这部分是使用textblob库对评论进行情感分析，得到情感值，并且进行分类，生成词云。<br>
+生成直方图、条形图的数据分析过程见<a href="https://blog.csdn.net/wjh2622075127/article/details/89222887" rel="nofollow">我的这篇文章</a></p>
+<p>读入的数据是这样的格式。包含两行，一行评论，一行url来源。<br>
+<img src="https://img-blog.csdnimg.cn/20190411235109754.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+生成的结果是这样的result.csv文件<br>
+<img src="https://img-blog.csdnimg.cn/20190411235153903.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+词云图片：<br>
+<img src="https://img-blog.csdnimg.cn/20190411235212539.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+代码如下</p>
+<pre><code class="prism language-py"><span class="token keyword">from</span> textblob <span class="token keyword">import</span> TextBlob
+<span class="token keyword">from</span> wordcloud <span class="token keyword">import</span> WordCloud
+<span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+<span class="token keyword">import</span> csv
+<span class="token keyword">from</span> os <span class="token keyword">import</span> listdir
+
+<span class="token keyword">def</span> <span class="token function">getComments</span><span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># 获取评论列表、评论中所有的单词，以空格分隔</span>
+    comments <span class="token operator">=</span> np<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+    words <span class="token operator">=</span> <span class="token string">''</span>
+    com_file <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span>filename<span class="token punctuation">)</span>
+    comments <span class="token operator">=</span> np<span class="token punctuation">.</span>append<span class="token punctuation">(</span>comments<span class="token punctuation">,</span> com_file<span class="token punctuation">[</span><span class="token string">'comment'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> each <span class="token keyword">in</span> comments<span class="token punctuation">:</span>
+        words <span class="token operator">+=</span> each
+    replace_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">','</span><span class="token punctuation">,</span> <span class="token string">'.'</span><span class="token punctuation">,</span> <span class="token string">'\''</span><span class="token punctuation">,</span> <span class="token string">'\"'</span><span class="token punctuation">]</span>
+    <span class="token keyword">for</span> each <span class="token keyword">in</span> replace_list<span class="token punctuation">:</span>
+        words <span class="token operator">=</span> words<span class="token punctuation">.</span>replace<span class="token punctuation">(</span>each<span class="token punctuation">,</span> <span class="token string">' '</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> comments<span class="token punctuation">,</span> words
+
+<span class="token keyword">def</span> <span class="token function">getWordCloud</span><span class="token punctuation">(</span>text_str<span class="token punctuation">,</span> picture_name<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># 生成词云</span>
+    wordcloud <span class="token operator">=</span> WordCloud<span class="token punctuation">(</span>background_color<span class="token operator">=</span><span class="token string">"white"</span><span class="token punctuation">,</span>width<span class="token operator">=</span><span class="token number">1980</span><span class="token punctuation">,</span> height<span class="token operator">=</span><span class="token number">1080</span><span class="token punctuation">,</span> margin<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> random_state<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>generate<span class="token punctuation">(</span>text_str<span class="token punctuation">)</span>
+    wordcloud<span class="token punctuation">.</span>to_file<span class="token punctuation">(</span>picture_name<span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">get_p_or_n</span><span class="token punctuation">(</span>comments<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># 获取情绪极化评分，并划定阈值确定是积极、消极或中立</span>
+    <span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">'result.csv'</span><span class="token punctuation">,</span> <span class="token string">'w'</span><span class="token punctuation">,</span> encoding<span class="token operator">=</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> csvfile<span class="token punctuation">:</span>
+        <span class="token builtin">id</span> <span class="token operator">=</span> <span class="token number">0</span>
+        writer <span class="token operator">=</span> csv<span class="token punctuation">.</span>writer<span class="token punctuation">(</span>csvfile<span class="token punctuation">)</span>
+        writer<span class="token punctuation">.</span>writerow<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'id'</span><span class="token punctuation">,</span> <span class="token string">'result'</span><span class="token punctuation">,</span> <span class="token string">'score'</span><span class="token punctuation">,</span> <span class="token string">'comment'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">'samples.csv'</span><span class="token punctuation">,</span> <span class="token string">'w'</span><span class="token punctuation">,</span> encoding<span class="token operator">=</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> samples_file<span class="token punctuation">:</span>
+            writer_samples <span class="token operator">=</span> csv<span class="token punctuation">.</span>writer<span class="token punctuation">(</span>samples_file<span class="token punctuation">)</span>
+            writer_samples<span class="token punctuation">.</span>writerow<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'id'</span><span class="token punctuation">,</span> <span class="token string">'result'</span><span class="token punctuation">,</span> <span class="token string">'score'</span><span class="token punctuation">,</span> <span class="token string">'OurJudge'</span><span class="token punctuation">,</span> <span class="token string">'comment'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+            <span class="token keyword">for</span> each <span class="token keyword">in</span> comments<span class="token punctuation">:</span>
+                judge <span class="token operator">=</span> TextBlob<span class="token punctuation">(</span>each<span class="token punctuation">)</span>
+                <span class="token comment"># print(each)</span>
+                result <span class="token operator">=</span> <span class="token string">''</span>
+                score <span class="token operator">=</span> judge<span class="token punctuation">.</span>sentiment<span class="token punctuation">.</span>polarity
+                <span class="token keyword">if</span> score <span class="token operator">&gt;</span> <span class="token number">0.05</span><span class="token punctuation">:</span>
+                    result <span class="token operator">=</span> <span class="token string">'积极'</span>
+                <span class="token keyword">elif</span> score <span class="token operator">&lt;</span> <span class="token operator">-</span><span class="token number">0.03</span><span class="token punctuation">:</span>
+                    result <span class="token operator">=</span> <span class="token string">'消极'</span>
+                <span class="token keyword">else</span><span class="token punctuation">:</span>
+                    result <span class="token operator">=</span> <span class="token string">'中立'</span>
+                <span class="token builtin">id</span> <span class="token operator">+=</span> <span class="token number">1</span>
+                writer<span class="token punctuation">.</span>writerow<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token builtin">id</span><span class="token punctuation">,</span> result<span class="token punctuation">,</span> score<span class="token punctuation">,</span> each<span class="token punctuation">]</span><span class="token punctuation">)</span>
+                <span class="token keyword">if</span> <span class="token builtin">id</span><span class="token operator">%</span><span class="token number">5</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+                    writer_samples<span class="token punctuation">.</span>writerow<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token builtin">id</span><span class="token punctuation">,</span> result<span class="token punctuation">,</span> score<span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">,</span> each<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    filename <span class="token operator">=</span> <span class="token string">"comments.csv"</span>
+    comments<span class="token punctuation">,</span> words <span class="token operator">=</span> getComments<span class="token punctuation">(</span>filename<span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>comments<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    getWordCloud<span class="token punctuation">(</span>words<span class="token punctuation">,</span> <span class="token string">"WordCloud.png"</span><span class="token punctuation">)</span>
+    get_p_or_n<span class="token punctuation">(</span>comments<span class="token punctuation">)</span>
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
+    main<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

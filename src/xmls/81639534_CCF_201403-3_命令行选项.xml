@@ -1,0 +1,96 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/81639534				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>CCF 201403-3 命令行选项 <a href="http://118.190.20.162/view.page?gpid=T8" rel="nofollow">传送门</a></p>
+
+<p>一道比较复杂度模拟题, 提交上去突然看到100分有点小惊喜. 之前上一版改了好多次都只有10分20分, 然后重写一版, 结果一次过了.</p>
+
+<p>总结一下需要注意的点</p>
+
+<ul>
+<li><p><strong>存选项时带着<code>-</code>一起存, 这样后面查找选项时可以直接用<code>map</code>的<code>count</code>方法, 而不需要拆开<code>-</code>, 而导致没有考虑到特殊情况, 比如选项可能有<code>-ab</code>, 而你略过了<code>-</code>, 读取到它的选项是<code>a</code>, 这就错了, 而前面说的方法可以避免这一点.</strong></p></li>
+<li><p><strong>使用<code>stringstream</code>可方便的将参数选项分离开来, 注意输入<code>n</code>之后要<code>cin.get()</code>或<code>getchar()</code>.</strong></p></li>
+<li><p><strong>使用<code>set</code>存储选项, 因为题目要求按字母顺序输出, 而<code>set</code>可以自动排序, 处理更方便.</strong></p></li>
+<li><p><strong>使用<code>map</code>存储选项映射的参数, 这样更新方便</strong></p></li>
+<li><p><strong>注意对题目对参数的描述:<code>后者则是该选项的参数,是由小写字母,数字和减号组成的非空字符串</code>, 这意味着参数格式是不规则的, 这道题不用判断参数是否合法</strong></p></li>
+</ul>
+
+<p>100分代码</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;algorithm&gt;</span>
+<span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;sstream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-preprocessor">#include &lt;map&gt;</span>
+<span class="hljs-preprocessor">#include &lt;set&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-stl_container"><span class="hljs-built_in">map</span>&lt;<span class="hljs-built_in">string</span>, <span class="hljs-keyword">int</span>&gt;</span> orig;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">string</span> cmd;
+    <span class="hljs-built_in">cin</span> &gt;&gt; cmd;
+    <span class="hljs-keyword">for</span> (size_t i = <span class="hljs-number">0</span>; i &lt; cmd.size(); ++i) {
+        <span class="hljs-keyword">if</span> (i &lt; cmd.size() - <span class="hljs-number">1</span> &amp;&amp; cmd[i + <span class="hljs-number">1</span>] == <span class="hljs-string">':'</span>) {
+            <span class="hljs-built_in">string</span> tmp;
+            tmp += <span class="hljs-string">'-'</span>;
+            tmp += cmd[i];
+            orig[tmp] = <span class="hljs-number">1</span>;
+            ++i;
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-built_in">string</span> tmp;
+            tmp += <span class="hljs-string">'-'</span>;
+            tmp += cmd[i];
+            orig[tmp] = <span class="hljs-number">0</span>;
+        }
+    }
+    <span class="hljs-keyword">int</span> n, t = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n;
+    <span class="hljs-built_in">cin</span>.get();
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt;</span> str(n);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">0</span>; k &lt; n; ++k) {
+        getline(<span class="hljs-built_in">cin</span>, str[k]);
+        <span class="hljs-built_in">stringstream</span> ss(str[k]);
+        <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt;</span> param;
+        <span class="hljs-built_in">string</span> tmp;
+        <span class="hljs-keyword">while</span> (ss &gt;&gt; tmp) {
+            param.push_back(tmp);
+        }
+        param.erase(param.begin());
+        <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-built_in">string</span>&gt;</span> ops;
+        <span class="hljs-stl_container"><span class="hljs-built_in">map</span>&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">string</span>&gt;</span> mp;
+        <span class="hljs-keyword">for</span> (size_t i = <span class="hljs-number">0</span>; i &lt; param.size(); ++i) {
+            <span class="hljs-keyword">if</span> (orig.count(param[i]) == <span class="hljs-number">0</span>) <span class="hljs-keyword">break</span>; <span class="hljs-comment">// 输入选项不存在即不合法,直接跳出</span>
+            <span class="hljs-keyword">if</span> (orig[param[i]] == <span class="hljs-number">0</span>) { <span class="hljs-comment">// 无参数的情况.</span>
+                ops.insert(param[i]);
+            } <span class="hljs-keyword">else</span> { <span class="hljs-comment">// 有参数的情况</span>
+                <span class="hljs-keyword">if</span> (i &lt; param.size() - <span class="hljs-number">1</span>) { <span class="hljs-comment">// 找参数, 但是参数的格式?</span>
+                    ops.insert(param[i]);
+                    ++i;
+                    mp[param[i - <span class="hljs-number">1</span>]] = param[i];
+                } <span class="hljs-keyword">else</span> <span class="hljs-keyword">break</span>; <span class="hljs-comment">// 选项是最后一个,说明没有参数</span>
+            }
+        }
+        <span class="hljs-stl_container"><span class="hljs-built_in">set</span>&lt;<span class="hljs-built_in">string</span>&gt;</span>::iterator is = ops.begin();
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Case "</span> &lt;&lt; ++t &lt;&lt; <span class="hljs-string">": "</span>;
+        <span class="hljs-keyword">while</span> (is != ops.end()) {
+            <span class="hljs-built_in">cout</span> &lt;&lt; *is &lt;&lt; <span class="hljs-string">' '</span>;
+            <span class="hljs-keyword">if</span> (mp.count(*is)) <span class="hljs-built_in">cout</span> &lt;&lt; mp[*is] &lt;&lt; <span class="hljs-string">' '</span>;
+            is++;
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

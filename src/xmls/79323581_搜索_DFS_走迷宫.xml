@@ -1,0 +1,88 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79323581				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p>今天学了搜索, 不过暂时还停留在较为初级的阶段</p>
+
+<p>这节介绍DFS和回溯.</p>
+
+<p><a href="https://www.luogu.org/problemnew/show/P1238" rel="nofollow">比较基础的DFS回溯题:走迷宫</a></p>
+
+<p>这道题不是裸的深搜题, 中间要记录走过的点, 用vector结构体储存</p>
+
+<p>期间出过几个小错误, 比如<strong>边界条件弄错</strong></p>
+
+<p>发现这种格式比较复杂的题目中, 还是用printf()函数比较舒服 <br>
+难怪Python也是这样用的</p>
+
+<p>注意回溯法的几个要点</p>
+
+<ul>
+<li>初始状态</li>
+<li>目标状态 </li>
+<li><strong>状态恢复</strong>  // 尤其要注意</li>
+</ul>
+
+<p>DFS的核心是递归地建立一棵<strong>搜索树</strong>, 用剪枝来进行优化 <br>
+尤其要理解搜索树这个概念, 因为理解了搜索树, 就能比较形象地理解DFS地含义了</p>
+
+<p>剪枝的过程中计算一些作为条件的变量所花费的时间称为代价</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;bits/stdc++.h&gt;</span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-keyword">bool</span> Map[<span class="hljs-number">16</span>][<span class="hljs-number">16</span>] = {}, vis[<span class="hljs-number">16</span>][<span class="hljs-number">16</span>] = {};
+<span class="hljs-keyword">int</span> sx, sy, ex, ey, m, n, ans = <span class="hljs-number">0</span>;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span> &lt;pair&lt;<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>&gt;</span> &gt;loc;
+
+<span class="hljs-keyword">void</span> dfs(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)
+{
+    <span class="hljs-comment">//cout &lt;&lt; "x = " &lt;&lt; x &lt;&lt; ' ' &lt;&lt; "y =" &lt;&lt; y &lt;&lt; endl;</span>
+    <span class="hljs-keyword">if</span>(x == <span class="hljs-number">0</span> || y == <span class="hljs-number">0</span> || x == m+<span class="hljs-number">1</span> || y == n+<span class="hljs-number">1</span>)
+        <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">if</span>(vis[x][y] || !Map[x][y]) <span class="hljs-keyword">return</span>;
+    vis[x][y] = <span class="hljs-number">1</span>; loc.push_back(make_pair(x, y));
+    dfs(x, y - <span class="hljs-number">1</span>);
+    dfs(x - <span class="hljs-number">1</span>, y);
+    dfs(x, y + <span class="hljs-number">1</span>);
+    dfs(x + <span class="hljs-number">1</span>, y);
+    <span class="hljs-keyword">if</span>(x == ex &amp;&amp; y == ey) {
+        ans++;
+        <span class="hljs-stl_container"><span class="hljs-built_in">vector</span> &lt;pair&lt;<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>&gt;</span> &gt;::iterator it = loc.begin();
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"(%d,%d)"</span>, it-&gt;first, it-&gt;second);
+        it++;
+        <span class="hljs-keyword">while</span>(it != loc.end()) {
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">"-&gt;(%d,%d)"</span>, it-&gt;first, it-&gt;second);
+            it++;
+        }
+        <span class="hljs-built_in">cout</span> &lt;&lt; endl;
+    }
+    vis[x][y] = <span class="hljs-number">0</span>; loc.pop_back();
+    <span class="hljs-comment">//cout &lt;&lt; "in the end : x = " &lt;&lt; x &lt;&lt; ' ' &lt;&lt; "y =" &lt;&lt; y &lt;&lt; endl;</span>
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-built_in">cin</span> &gt;&gt; m &gt;&gt; n;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= m; ++i) {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= n; ++j) {
+            <span class="hljs-built_in">cin</span> &gt;&gt; Map[i][j];
+        }
+    }
+    <span class="hljs-built_in">cin</span> &gt;&gt; sx &gt;&gt; sy &gt;&gt; ex &gt;&gt; ey;
+    dfs(sx, sy);
+    <span class="hljs-keyword">if</span>(ans == <span class="hljs-number">0</span>) <span class="hljs-built_in">cout</span> &lt;&lt; -<span class="hljs-number">1</span>;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

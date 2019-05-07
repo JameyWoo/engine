@@ -1,0 +1,89 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					<svg class="icon" title="CSDN认证原创" aria-hidden="true" style="width:53px; height: 18px; vertical-align: -4px;">
+							<use xlink:href="#CSDN_Cert"></use>
+					</svg>
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/79933462				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<p><a href="https://www.luogu.org/problemnew/show/P1636" rel="nofollow">.</a> <br>
+<a href="https://blog.csdn.net/nameix/article/details/52288755" rel="nofollow">参考</a> <br>
+P1636 Einstein学画画</p>
+
+<p>这道题据说是半欧拉图问题. </p>
+
+<p>关于半欧拉图是什么</p>
+
+<blockquote>
+  <p>具有欧拉回路的图称为欧拉图，具有欧拉通路而无欧拉回路的图称为半欧拉图。</p>
+</blockquote>
+
+<p>不过我觉得这道题有问题, 因为如果图中存在环, 或者说欧拉回路的话, 他就算错了, 不能解决这种问题.</p>
+
+<p>不过做了这道题还是学到了不少, 对图有了更多的理解.</p>
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, m, a[<span class="hljs-number">1005</span>] = {}, ans = <span class="hljs-number">0</span>, x, y;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y;
+        a[x]++, a[y]++;
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span>(a[i]%<span class="hljs-number">2</span>) ans++;
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; (ans ? ans/<span class="hljs-number">2</span> : <span class="hljs-number">1</span>);
+}</code></pre>
+
+<p>最开始的思路是用dfs判断图中一共有几个连通块, 结果值得了27/100分. 不知道是为什么.</p>
+
+<p>以下是dfs代码</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-preprocessor">#include &lt;iostream&gt;</span>
+<span class="hljs-preprocessor">#include &lt;vector&gt;</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+<span class="hljs-stl_container"><span class="hljs-built_in">vector</span> &lt;<span class="hljs-keyword">int</span>&gt;</span> v[<span class="hljs-number">1005</span>];
+<span class="hljs-keyword">int</span> vis[<span class="hljs-number">1005</span>] = {};
+
+<span class="hljs-keyword">void</span> dfs(<span class="hljs-keyword">int</span> n)
+{
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; v[n].size(); ++i) {
+        <span class="hljs-keyword">if</span>(vis[v[n][i]] == <span class="hljs-number">0</span>) {
+            vis[v[n][i]] = <span class="hljs-number">1</span>;
+            dfs(v[n][i]);
+        }
+    }
+}
+
+<span class="hljs-keyword">int</span> main()
+{
+    <span class="hljs-keyword">int</span> n, m, x, y, ans = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">cin</span> &gt;&gt; n &gt;&gt; m;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; ++i) {  <span class="hljs-comment">//构造一张图 </span>
+        <span class="hljs-built_in">cin</span> &gt;&gt; x &gt;&gt; y;
+        v[x].push_back(y);
+        v[y].push_back(x);
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= n; ++i) {
+        <span class="hljs-keyword">if</span>(v[i].empty()) ans--;
+        <span class="hljs-keyword">if</span>(vis[i] == <span class="hljs-number">0</span>) {
+            vis[i] = <span class="hljs-number">1</span>;
+            dfs(i);
+            ans++;
+        }
+    }
+    <span class="hljs-built_in">cout</span> &lt;&lt; ans;
+}</code></pre>            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>

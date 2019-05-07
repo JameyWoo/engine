@@ -1,0 +1,51 @@
+<article class="baidu_pl">
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+								<div class="article-copyright">
+                  					
+					版权声明：看我干嘛? 你又没打算转载我的博客~					https://blog.csdn.net/wjh2622075127/article/details/89842206				</div>
+								<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-f57960eb32.css" />
+        								            <div id="content_views" class="markdown_views prism-atom-one-light">
+							<!-- flowchart 箭头图标 勿删 -->
+							<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg>
+							<h2><a id="Anaconda_0"></a>Anaconda虚拟环境</h2>
+<p>1、<code>conda create --name your_env_name python=3.6</code><br>
+或者<br>
+<code>conda create -n your_env_name python=3.7</code><br>
+新建一个环境</p>
+<p>2、进入Anaconda Prompt，使用<code>conda info -e</code>查看所有环境和当前环境</p>
+<p>3、使用<code>activate py36</code> 激活虚拟环境</p>
+<p>4、复制环境老环境到新的环境中<br>
+<code>conda create --name new_env_name --clone old_env_name</code></p>
+<p>5、删除某个环境<br>
+<code>conda remove --name your_env_name --all</code></p>
+<p>6、导出和导入环境（分享）</p>
+<p>切换到了要导出的环境之后，使用命令<br>
+<code>conda env export &gt; environment.yml</code><br>
+将当前环境导出</p>
+<p>使用命令<br>
+<code>conda env create -f environment.yml</code><br>
+建立（导入）新的环境</p>
+<p>7、查看指定环境的包<br>
+<code>conda list -n your_env_name</code></p>
+<p>8、为某个指定环境安装包<br>
+<code>conda install -n env_name package_name</code></p>
+<p>参考：<a href="https://blog.csdn.net/menc15/article/details/71477949/" rel="nofollow">https://blog.csdn.net/menc15/article/details/71477949/</a></p>
+<hr>
+<h2><a id="PyCharm_37"></a>PyCharm项目环境配置</h2>
+<p>之前每次新建一个PyCharm项目，他给我的环境都是一个新的虚拟环境，所以很不方便而且还要项目文件很冗余，打开项目的速度又慢。于是设置了默认的本地python环境。</p>
+<p>1、找到<code>file-&gt;settings-&gt;project interpreter</code>，里面有很多的project interpreter。点击右边的设置，然后点击+，即可添加新的环境。如果他没有检索到我们使用的python环境，就需要手动添加。<br>
+<img src="https://img-blog.csdnimg.cn/2019050511454362.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+2、选择Existing environment，从目录里面选择自己需要使用的python环境。<br>
+如我在anaconda里面添加的新的虚拟环境就在下面这个目录下，找到<code>python.exe</code>添加即可。<br>
+<img src="https://img-blog.csdnimg.cn/2019050511483083.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+3、需要注意的是，在我的电脑里面，<code>C:\ProgramData</code>这个目录默认是隐藏的，所以无法直接从pycharm中找到这个目录。只需要找到这个隐藏文件夹，取消隐藏即可。<br>
+<img src="https://img-blog.csdnimg.cn/2019050511494853.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>
+4、选择好了环境之后，我们可以设置当前项目的环境<br>
+<img src="https://img-blog.csdnimg.cn/20190505115049588.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>5、在新建一个项目时，我们可以设置环境为已存在的，找到目录中这个环境，并勾选对所有项目生效。这样我们的默认环境设置就大功告成了。<br>
+<img src="https://img-blog.csdnimg.cn/20190505115214175.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dqaDI2MjIwNzUxMjc=,size_16,color_FFFFFF,t_70" alt=" "></p>
+
+            </div>
+						<link href="https://csdnimg.cn/release/phoenix/mdeditor/markdown_views-258a4616f7.css" rel="stylesheet">
+                      </div>
+	</article>
